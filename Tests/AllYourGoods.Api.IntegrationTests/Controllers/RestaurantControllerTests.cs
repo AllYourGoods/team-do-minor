@@ -19,6 +19,13 @@ public class RestaurantControllerTests
         _client = _factory.CreateClient();
     }
 
+    [TearDown]
+    public void TearDown()
+    {
+        _factory.Dispose();
+        _client.Dispose();
+    }
+
     [Test]
     public async Task GetRestaurants_ReturnsOkResult()
     {
