@@ -13,7 +13,7 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        var builder = Createbuilder(args);
+        var builder = CreateBuilder(args);
         var app = builder.Build(); 
         
         InitializeDatabase(app);
@@ -32,7 +32,7 @@ public class Program
         app.Run();
     }
 
-    private static WebApplicationBuilder Createbuilder(string[] args)
+    private static WebApplicationBuilder CreateBuilder(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
