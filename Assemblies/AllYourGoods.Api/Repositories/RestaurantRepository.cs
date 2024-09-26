@@ -15,6 +15,8 @@ public class RestaurantRepository : IRestaurantRepository
 
     public async Task<IEnumerable<Restaurant>> GetRestaurants()
     {
-        return await _context.Restaurants.ToListAsync();
+        return await _context.Restaurants
+            .Include(r => r.Tags)
+            .ToListAsync();
     }
 }

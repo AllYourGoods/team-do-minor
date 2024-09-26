@@ -25,7 +25,7 @@ public class DbInitializer
                 HouseNumber = "1",
                 Name = "De Klok",
                 Description = "Gezellig café",
-                Tags = "Café",
+                Tags = new List<Tag> {new ("Cafe"), new ("Lokaal")},
                 Radius = 1,
                 ImageLink = "https://www.google.com"
             },
@@ -38,7 +38,7 @@ public class DbInitializer
                 HouseNumber = "2",
                 Name = "De Kroeg",
                 Description = "Gezellig café",
-                Tags = "Café",
+                Tags = new List<Tag> {new ("Cafe")},
                 Radius = 1,
                 ImageLink = "https://www.google.com"
             },
@@ -51,7 +51,7 @@ public class DbInitializer
                 HouseNumber = "3",
                 Name = "De Pub",
                 Description = "Gezellig café",
-                Tags = "Café",
+                Tags = new List<Tag> {new ("Cafe")},
                 Radius = 1,
                 ImageLink = "https://www.google.com"
             }

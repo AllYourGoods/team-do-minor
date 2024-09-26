@@ -9,7 +9,9 @@ public class Restaurant
     public string? HouseNumber { get; set; }
     public string? Name { get; set; }
     public string? Description { get; set; }
-    public string? Tags { get; set; }
     public double? Radius { get; set; }
     public string? ImageLink { get; set; }
+
+    // Navigation property to establish many-to-many relationship with Tag
+    public ICollection<Tag> Tags { get; set; } = new List<Tag>();
 }

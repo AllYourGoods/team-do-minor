@@ -8,6 +8,7 @@ public class RestaurantMappingProfile : Profile
 {
     public RestaurantMappingProfile()
     {
-        CreateMap<Restaurant, ViewRestaurantDto>();
+        CreateMap<Restaurant, ViewRestaurantDto>()
+            .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.Tags.Select(t => t.Name)));
     }
 }
