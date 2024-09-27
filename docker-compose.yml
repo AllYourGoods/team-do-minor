@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Assemblies/AllYourGoods.Api/Dockerfile
+    ports:
+      - "8080:80" 
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development 
+      - ConnectionStrings__DefaultConnection=Server=sql-db;Database=AllYourGoodsDb;User=sa;Password=DevGeheim01*;TrustServerCertificate=True;
+    depends_on:
+      - sql-db
+
+  sql-db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=DevGeheim01*
+      - MSSQL_TCP_PORT=1433
+    ports:
+      - "1433:1433"
+    volumes:
+      - sql-data:/var/opt/mssql
+
+volumes:
+  sql-data:
