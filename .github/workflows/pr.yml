@@ -1,0 +1,14 @@
+name: PR Build and Test
+
+on:
+  pull_request:
+    branches:
+      - dev
+      - test
+      - main
+
+jobs:
+  call-build-and-test:
+    uses: ./.github/workflows/reuseable-build-and-test.yml
+    with:
+      dotnet-version: '8.0.x'

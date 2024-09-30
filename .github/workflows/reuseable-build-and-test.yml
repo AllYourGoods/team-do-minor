@@ -1,0 +1,32 @@
+name: Build and Test
+
+on:
+  workflow_call:
+    inputs:
+      dotnet-version:
+        required: true
+        type: string
+
+jobs:
+  run-build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ inputs.dotnet-version }}
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --no-restore
+
+      - name: Test Unit Tests
+        run: dotnet test Tests/AllYourGoods.Api.UnitTests/AllYourGoods.Api.UnitTests.csproj --no-build --verbosity normal
+
+      - name: Test Integration Tests
+        run: dotnet test Tests/AllYourGoods.Api.IntegrationTests/AllYourGoods.Api.IntegrationTests.csproj --no-build --verbosity normal
