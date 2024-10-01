@@ -3,8 +3,10 @@ using AllYourGoods.Api.Data;
 using AllYourGoods.Api.Interfaces.Repositories;
 using AllYourGoods.Api.Interfaces.Services;
 using AllYourGoods.Api.Mappings;
+using AllYourGoods.Api.Models;
 using AllYourGoods.Api.Repositories;
 using AllYourGoods.Api.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace AllYourGoods.Api;
@@ -44,6 +46,10 @@ public class Program
         builder.Services.AddControllers();
         builder.Services.AddDbContext<ApplicationContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+        builder.Services.AddIdentity<User, IdentityRole>()
+        .AddEntityFrameworkStores<ApplicationContext>()
+        .AddDefaultTokenProviders();
 
         builder.Services.AddHealthChecks();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
