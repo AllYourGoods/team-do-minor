@@ -1,4 +1,4 @@
-﻿using AllYourGoods.Api.Interfaces.Services;
+using AllYourGoods.Api.Interfaces.Services;
 using AllYourGoods.Api.Models.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
@@ -10,16 +10,16 @@ namespace AllYourGoods.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-[ApiExplorerSettings(GroupName = "v1")]
-public class RestaurantController : ControllerBase
+public class TestController : ControllerBase
 {
     private readonly IRestaurantService _restaurantService;
-    public RestaurantController(IRestaurantService restaurantService)
+    public TestController(IRestaurantService restaurantService)
     {
         _restaurantService = restaurantService;
     }
 
     [HttpGet]
+    [Authorize]
     [ProducesResponseType(typeof(IEnumerable<ViewRestaurantDto>), 200)]
     public async Task<ActionResult<IEnumerable<ViewRestaurantDto>>> GetRestaurants()
     {
