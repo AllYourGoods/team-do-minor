@@ -23,4 +23,20 @@ public class RestaurantService : IRestaurantService
 
         return _mapper.Map<List<ViewRestaurantDto>>(restaurants);
     }
+    public async Task<ViewRestaurantDto> GetRestaurant(Guid id)
+    {
+        var restaurant = await _restaurantRepository.GetRestaurant(id);
+
+        return _mapper.Map<ViewRestaurantDto>(restaurant);
+    }
+
+    public Task<bool> DeleteRestaurant(Guid id)
+    {
+        return _restaurantRepository.DeleteRestaurant(id);
+    }
+
+    public Task<bool> UpdateRestaurant(Guid id, UpdateRestaurantDto updateRestaurantDto)
+    {
+        return _restaurantRepository.UpdateRestaurant(id, updateRestaurantDto);
+    }
 }

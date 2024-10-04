@@ -1,8 +1,10 @@
 ﻿using AllYourGoods.Api.Interfaces.Repositories;
 using AllYourGoods.Api.Mappings;
 using AllYourGoods.Api.Models;
+using AllYourGoods.Api.Models.Dtos;
 using AllYourGoods.Api.Services;
 using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 
 namespace AllYourGoods.Api.UnitTests.Services;
@@ -108,5 +110,129 @@ public class RestaurantServiceTests
         Assert.That(restaurant2Dto.Tags, Is.Not.Null);
         Assert.That(restaurant2Dto.Tags, Is.EqualTo(new List<string> { "Mexican" }));
     }
+
+    [Test]
+    public async Task GetRestaurant_ShouldReturnRestaurant_WithAllPropertiesMappedCorrectly()
+    {
+        // Arrange
+        var restaurantId = Guid.NewGuid();
+
+        // Mock restaurant data
+        var restaurant = new Restaurant
+        {
+            Id = restaurantId,
+            Name = "Test Restaurant",
+            OpeningTime = new TimeOnly(10, 0),
+            ClosingTime = new TimeOnly(22, 0),
+            StreetName = "Main St",
+            HouseNumber = "123",
+            Description = "A nice place",
+            Radius = 5.0,
+            ImageLink = "http://example.com/image.jpg",
+            Tags = new List<Tag>
+        {
+            new () { Id = Guid.NewGuid(), Name = "Italian" },
+            new () { Id = Guid.NewGuid(), Name = "Pizza" }
+        }
+        };
+
+        // Set up mock repository to return the restaurant
+        _mockRepository.Setup(x => x.GetRestaurant(restaurantId)).ReturnsAsync(restaurant);
+
+        // Act
+        var result = await _restaurantService.GetRestaurant(restaurantId);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.Id, Is.EqualTo(restaurantId));
+        Assert.That(result.Name, Is.EqualTo("Test Restaurant"));
+        Assert.That(result.OpeningTime, Is.EqualTo(new TimeOnly(10, 0)));
+        Assert.That(result.ClosingTime, Is.EqualTo(new TimeOnly(22, 0)));
+        Assert.That(result.StreetName, Is.EqualTo("Main St"));
+        Assert.That(result.HouseNumber, Is.EqualTo("123"));
+        Assert.That(result.Description, Is.EqualTo("A nice place"));
+        Assert.That(result.Radius, Is.EqualTo(5.0));
+        Assert.That(result.ImageLink, Is.EqualTo("http://example.com/image.jpg"));
+        Assert.That(result.Tags, Is.Not.Null);
+        Assert.That(result.Tags, Is.EqualTo(new List<string> { "Italian", "Pizza" }));
+
+    }
+
+
+    [Test]
+    public async Task DeleteRestaurant_ShouldDeleteRestaurant_WhenRestaurantExists()
+    {
+        // Arrange
+        var restaurantId = Guid.NewGuid();
+
+        // Mock existing restaurant data
+        var restaurant = new Restaurant
+        {
+            Id = restaurantId,
+            Name = "Test Restaurant"
+        };
+
+        // Set up mock repository to return the restaurant for deletion
+        _mockRepository.Setup(x => x.GetRestaurant(restaurantId)).ReturnsAsync(restaurant);
+
+        // Set up the mock repository to remove the restaurant
+        _mockRepository.Setup(x => x.DeleteRestaurant(restaurantId)).ReturnsAsync(true);
+
+        // Act
+        var result = await _restaurantService.DeleteRestaurant(restaurantId);
+
+        // Assert
+        Assert.That(result, Is.True);
+
+        // Verify that the DeleteRestaurant method was called once
+        _mockRepository.Verify(x => x.DeleteRestaurant(restaurantId), Times.Once);
+    }
+
+    [Test]
+    public async Task UpdateRestaurant_ShouldReturnOk_WhenRestaurantIsUpdated()
+    {
+        // Arrange
+        var restaurantId = Guid.NewGuid();
+        var updateDto = new UpdateRestaurantDto
+        {
+            Name = "Updated Name",
+            PhoneNumber = "123456789",
+            AboutUs = "Updated description",
+            Radius = 10,
+            Address = new AddressDto
+            {
+                Longitude = 12.345f,
+                Latitude = 67.890f,
+                HouseNumber = "123",
+                ZipCode = "12345",
+                City = "City",
+                StreetName = "Street"
+            },
+            Banner = new BannerDto
+            {
+                URL = "http://example.com/banner",
+                AltText = "Banner alt",
+                MimeType = "image/jpeg",
+                FileSize = 500
+            },
+            Logo = new LogoDto
+            {
+                URL = "http://example.com/logo",
+                AltText = "Logo alt",
+                MimeType = "image/jpeg",
+                FileSize = 200
+            },
+            OwnerID = Guid.NewGuid()
+        };
+
+        _mockRepository.Setup(x => x.UpdateRestaurant(restaurantId, updateDto)).ReturnsAsync(true);
+
+        // Act
+        var result = await _restaurantService.UpdateRestaurant(restaurantId, updateDto); 
+
+        // Assert
+        Assert.That(result, Is.True);
+    }
+
 
 }
