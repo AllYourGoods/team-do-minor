@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - test
-      - feature/story-21
   
 jobs:
   build-and-test:
