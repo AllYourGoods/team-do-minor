@@ -17,9 +17,9 @@ namespace AllYourGoods.Api.Controllers
 
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<ViewRestaurantDto>), 200)]
-        public async Task<ActionResult<IEnumerable<ViewRestaurantDto>>> GetRestaurants()
+        public async Task<ActionResult<IEnumerable<ViewRestaurantDto>>> GetRestaurants([FromQuery] FilterRestaurantDto filter = null)
         {
-            var restaurants = await _restaurantService.GetRestaurants();
+            var restaurants = await _restaurantService.GetRestaurants(filter);
             return Ok(restaurants);
         }
 

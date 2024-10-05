@@ -16,15 +16,15 @@ public class RestaurantService : IRestaurantService
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<ViewRestaurantDto>> GetRestaurants()
+    public async Task<IEnumerable<ViewRestaurantDto>> GetRestaurants(FilterRestaurantDto filter = null)
     {
-        var restaurants = await _restaurantRepository.GetRestaurants();
+        var restaurants = await _restaurantRepository.GetRestaurants(filter);
         return _mapper.Map<List<ViewRestaurantDto>>(restaurants);
     }
 
-    public async Task<ViewRestaurantDto> GetRestaurant(Guid id)
+    public async Task<ViewRestaurantDto> GetRestaurant(Guid id, FilterRestaurantDto filter = null)
     {
-        var restaurant = await _restaurantRepository.GetRestaurant(id);
+        var restaurant = await _restaurantRepository.GetRestaurant(id, filter);
 
         if (restaurant == null)
             throw new Exception("Restaurant not found");

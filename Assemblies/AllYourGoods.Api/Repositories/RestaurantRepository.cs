@@ -14,15 +14,34 @@ public class RestaurantRepository : IRestaurantRepository
     {
         _context = context;
     }
-
-    public async Task<IEnumerable<Restaurant>> GetRestaurants()
+    
+    public async Task<IEnumerable<Restaurant>> GetRestaurants(FilterRestaurantDto filter = null)
     {
-        return await _context.Restaurants.Include(r => r.Tags).ToListAsync();
+        var query = _context.Restaurants.Include(r => r.Tags).AsQueryable();
+
+        if (filter != null)
+        {
+            query = ApplyFilters(query, filter);
+
+            query = ApplySorting(query, filter); 
+
+            query = query.Skip((filter.CurrentPage - 1) * filter.PageSize)
+                .Take(filter.PageSize); 
+        }
+
+        return await query.ToListAsync(); 
     }
 
-    public async Task<Restaurant> GetRestaurant(Guid id)
+    public async Task<Restaurant> GetRestaurant(Guid id, FilterRestaurantDto filter = null)
     {
-        return await _context.Restaurants.Include(r => r.Tags).FirstOrDefaultAsync(r => r.Id == id);
+        var query = _context.Restaurants.Include(r => r.Tags).AsQueryable();
+        
+        if (filter != null)
+        {
+            query = ApplyFilters(query, filter);
+        }
+        
+        return await query.FirstOrDefaultAsync(r => r.Id == id);
     }
 
     public async Task DeleteRestaurant(Guid id)
@@ -62,6 +81,52 @@ public class RestaurantRepository : IRestaurantRepository
         _context.Restaurants.Add(restaurant);
         await _context.SaveChangesAsync();
         return restaurant;
+    }
+    
+    private IQueryable<Restaurant> ApplyFilters(IQueryable<Restaurant> query, FilterRestaurantDto filter)
+    {
+        if (!string.IsNullOrEmpty(filter.Name))
+        {
+            query = query.Where(r => r.Name.Contains(filter.Name));
+        }
+
+        if (filter.Radius.HasValue)
+        {
+            query = query.Where(r => r.Radius <= filter.Radius.Value);
+        }
+
+        if (filter.Tags != null && filter.Tags.Any())
+        {
+            query = query.Where(r => r.Tags.Any(t => filter.Tags.Contains(t.Name)));
+        }
+
+        if (filter.OpeningTime.HasValue)
+        {
+            query = query.Where(r => r.OpeningTime <= filter.OpeningTime.Value);
+        }
+
+        if (filter.ClosingTime.HasValue)
+        {
+            query = query.Where(r => r.ClosingTime >= filter.ClosingTime.Value);
+        }
+
+        return query;
+    }
+    
+    private IQueryable<Restaurant> ApplySorting(IQueryable<Restaurant> query, FilterRestaurantDto filter)
+    {
+        switch (filter.SortBy.ToLower())
+        {
+            case "radius":
+                query = filter.SortDirection.ToLower() == "asc" ? query.OrderBy(r => r.Radius) : query.OrderByDescending(r => r.Radius);
+                break;
+            
+            default:
+                query = filter.SortDirection.ToLower() == "asc" ? query.OrderBy(r => r.Name) : query.OrderByDescending(r => r.Name);
+                break;
+        }
+
+        return query;
     }
 }
 

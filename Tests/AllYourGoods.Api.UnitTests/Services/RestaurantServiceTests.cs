@@ -73,7 +73,7 @@ public class RestaurantServiceTests
     };
 
         // Setting up mock repository to return the list of restaurants
-        _mockRepository.Setup(x => x.GetRestaurants()).ReturnsAsync(restaurants);
+        _mockRepository.Setup(x => x.GetRestaurants(null)).ReturnsAsync(restaurants);
 
         // Act
         var result = (await _restaurantService.GetRestaurants()).ToList();
@@ -138,7 +138,7 @@ public class RestaurantServiceTests
         };
 
         // Set up mock repository to return the restaurant
-        _mockRepository.Setup(x => x.GetRestaurant(restaurantId)).ReturnsAsync(restaurant);
+        _mockRepository.Setup(x => x.GetRestaurant(restaurantId, null)).ReturnsAsync(restaurant);
 
         // Act
         var result = await _restaurantService.GetRestaurant(restaurantId);
@@ -171,7 +171,7 @@ public class RestaurantServiceTests
         };
 
         // Set up mock repository to return the restaurant for deletion
-        _mockRepository.Setup(x => x.GetRestaurant(restaurantId)).ReturnsAsync(restaurant);
+        _mockRepository.Setup(x => x.GetRestaurant(restaurantId, null)).ReturnsAsync(restaurant);
 
         // Act
         await _restaurantService.DeleteRestaurant(restaurantId);
