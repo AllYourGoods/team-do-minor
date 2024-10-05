@@ -3,5 +3,3 @@ Our teams name is TeamDOminor. The purpose of this repo's code is for the devops
 
 ## Description
 Probably for a backend service, but this is yet to be confirmed. 
-
-1

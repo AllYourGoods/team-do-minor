@@ -18,7 +18,7 @@ jobs:
     with:
       applicationName: 'AllYourGoodsApi'
       aspnetcoreEnvironment: 'Test'
-      environment: 'test-1'
+      environment: 'test1'
       location: 'uksouth'
     secrets:
       AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
