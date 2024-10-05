@@ -4,25 +4,36 @@ services:
   api:
     build:
       context: .
-      dockerfile: Assemblies/AllYourGoods.Api/Dockerfile
+      dockerfile: Assemblies/AllYourGoods.Api/Dockerfile.api
     ports:
       - "8080:80" 
     environment:
       - ASPNETCORE_ENVIRONMENT=Development 
       - ConnectionStrings__DefaultConnection=Server=sql-db;Database=AllYourGoodsDb;User=sa;Password=DevGeheim01*;TrustServerCertificate=True;
     depends_on:
-      - sql-db
+      sql-db:
+        condition: service_healthy
 
   sql-db:
+    build:
+      context: .
+      dockerfile: Assemblies/AllYourGoods.Api/Dockerfile.db
     image: mcr.microsoft.com/mssql/server:2022-latest
     environment:
-      - ACCEPT_EULA=Y
-      - MSSQL_SA_PASSWORD=DevGeheim01*
-      - MSSQL_TCP_PORT=1433
+      ACCEPT_EULA: Y
+      MYSQL_USER: sa
+      MSSQL_SA_PASSWORD: DevGeheim01*
+      MSSQL_TCP_PORT: 1433
     ports:
       - "1433:1433"
     volumes:
       - sql-data:/var/opt/mssql
+    healthcheck:
+      test: /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P 'DevGeheim01*' -Q "SELECT 1" -C
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 10s
 
 volumes:
   sql-data:
