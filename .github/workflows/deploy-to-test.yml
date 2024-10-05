@@ -14,7 +14,7 @@ jobs:
   
   deploy-to-azure:
     needs: build-and-test 
-    uses: ./.github/workflows/reusable-deploy.yml
+    uses: ./.github/workflows/reuseable-deploy.yml
     with:
       applicationName: 'AllYourGoodsApi'
       aspnetcoreEnvironment: 'Test'
