@@ -3,7 +3,7 @@ name: Build, Test and Deploy to Test Environment
 on:
   push:
     branches:
-      - test
+      - main
   
 jobs:
   build-and-test:
