@@ -30,3 +30,17 @@ jobs:
 
       - name: Test Integration Tests
         run: dotnet test Tests/AllYourGoods.Api.IntegrationTests/AllYourGoods.Api.IntegrationTests.csproj --no-build --verbosity normal
+     
+      - name: Publish Application
+        run: dotnet publish Assemblies/AllYourGoods.Api/AllYourGoods.Api.csproj -c Release -o publish-output
+
+      - name: Zip Publish Output
+        run: |
+          cd publish-output
+          zip -r ../publish-output.zip ./*
+      
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: allyourgoods-api-build
+          path: publish-output.zip

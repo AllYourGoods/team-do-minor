@@ -1,0 +1,25 @@
+name: Build, Test and Deploy to Test Environment
+
+on:
+  push:
+    branches:
+      - test
+      - feature/story-21
+  
+jobs:
+  build-and-test:
+    uses: ./.github/workflows/reuseable-build-and-test.yml
+    with:
+      dotnet-version: '8.0.x'
+  
+  deploy-to-azure:
+    needs: build-and-test 
+    uses: ./.github/workflows/reusable-deploy.yml
+    with:
+      applicationName: 'AllYourGoodsApi'
+      aspnetcoreEnvironment: 'Test'
+      environment: 'test'
+      location: 'uksouth'
+    secrets:
+      AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      SQL_ADMIN_PASSWORD: ${{ secrets.SQL_ADMIN_PASSWORD }}
