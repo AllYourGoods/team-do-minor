@@ -9,4 +9,6 @@ public interface IRestaurantRepository
     Task<Restaurant> GetRestaurant(Guid id);
     Task DeleteRestaurant(Guid id);
     Task UpdateRestaurant(Guid id, UpdateRestaurantDto updateRestaurantDto);
+    
+    Task<Restaurant> CreateRestaurant(CreateRestaurantDto restaurantDto);
 }

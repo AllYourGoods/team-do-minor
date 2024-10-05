@@ -8,4 +8,5 @@ public interface IRestaurantService
     Task<ViewRestaurantDto> GetRestaurant(Guid id);
     Task DeleteRestaurant(Guid id);
     Task UpdateRestaurant(Guid id, UpdateRestaurantDto updateRestaurantDto);
+    Task CreateRestaurant(CreateRestaurantDto restaurantDto);
 }

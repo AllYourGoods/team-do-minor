@@ -78,5 +78,27 @@ namespace AllYourGoods.Api.Controllers
                 return NotFound(ex.Message); 
             }
         }
+        
+        [HttpPost]
+        [ProducesResponseType(201)] // Resource created
+        [ProducesResponseType(400)] // Bad request
+        [ProducesResponseType(500)] // Internal server error
+        public async Task<IActionResult> CreateRestaurant([FromBody] CreateRestaurantDto createRestaurantDto)
+        {
+            if (createRestaurantDto == null)
+                return BadRequest(new { StatusMessage = "Event is empty.", StatusCode = 400 });
+            try
+            {
+                await _restaurantService.CreateRestaurant(createRestaurantDto);
+
+                return StatusCode(201, new { StatusMessage = "Restaurant created successfully.", StatusCode = 201 }); 
+            }
+            catch (Exception ex) 
+            {
+                return StatusCode(500, new { StatusMessage = ex.Message, StatusCode = 500 });
+            }
+        }
     }
+    
+    
 }

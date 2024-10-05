@@ -43,5 +43,25 @@ public class RestaurantRepository : IRestaurantRepository
 
         await _context.SaveChangesAsync();
     }
+    
+    public async Task<Restaurant> CreateRestaurant(CreateRestaurantDto restaurantDto)
+    {
+        var restaurant = new Restaurant
+        {
+            Id = Guid.NewGuid(),
+            Name = restaurantDto.Name,
+            OpeningTime = restaurantDto.OpeningTime,
+            ClosingTime = restaurantDto.ClosingTime,
+            StreetName = restaurantDto.StreetName,
+            HouseNumber = restaurantDto.HouseNumber,
+            Description = restaurantDto.Description,
+            Radius = restaurantDto.Radius,
+            ImageLink = restaurantDto.ImageLink,
+        };
+
+        _context.Restaurants.Add(restaurant);
+        await _context.SaveChangesAsync();
+        return restaurant;
+    }
 }
 

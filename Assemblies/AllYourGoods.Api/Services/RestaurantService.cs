@@ -51,5 +51,11 @@ public class RestaurantService : IRestaurantService
 
         await _restaurantRepository.UpdateRestaurant(id, updateRestaurantDto);
     }
+    
+    public async Task CreateRestaurant(CreateRestaurantDto restaurantDto)
+    {
+        await _restaurantRepository.CreateRestaurant(restaurantDto);
+    }
+
 }
 
