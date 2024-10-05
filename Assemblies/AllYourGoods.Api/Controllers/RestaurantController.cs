@@ -1,74 +1,82 @@
 ﻿using AllYourGoods.Api.Interfaces.Services;
-using AllYourGoods.Api.Models;
 using AllYourGoods.Api.Models.Dtos;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AllYourGoods.Api.Controllers;
-
-[Route("api/[controller]")]
-[ApiController]
-[ApiExplorerSettings(GroupName = "v1")]
-public class RestaurantController : ControllerBase
+namespace AllYourGoods.Api.Controllers
 {
-    private readonly IRestaurantService _restaurantService;
-    public RestaurantController(IRestaurantService restaurantService)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class RestaurantController : ControllerBase
     {
-        _restaurantService = restaurantService;
-    }
+        private readonly IRestaurantService _restaurantService;
 
-    [HttpGet]
-    [ProducesResponseType(typeof(IEnumerable<ViewRestaurantDto>), 200)]
-    public async Task<ActionResult<IEnumerable<ViewRestaurantDto>>> GetRestaurants()
-    {
-        var restaurants = await _restaurantService.GetRestaurants();
-        return Ok(restaurants);
-    }
-
-    [HttpGet("{RestaurantID}")]
-    [ProducesResponseType(typeof(ViewRestaurantDto), 200)]
-    [ProducesResponseType(404)]
-    public async Task<ActionResult<ViewRestaurantDto>> GetRestaurant(Guid RestaurantID)
-    {
-        var restaurant = await _restaurantService.GetRestaurant(RestaurantID);
-
-        if (restaurant == null)
-            return NotFound($"Restaurant with ID {RestaurantID} not found.");
-
-        return Ok(restaurant);
-    }
-
-    [HttpDelete("{RestaurantID}")]
-    [ProducesResponseType(204)] // No content on successful deletion
-    [ProducesResponseType(404)] // Not found if the restaurant does not exist
-    public async Task<IActionResult> DeleteRestaurant(Guid RestaurantID)
-    {
-        var restaurant = await _restaurantService.GetRestaurant(RestaurantID);
-
-        if (restaurant == null)
-        
-            return NotFound($"Restaurant with ID {RestaurantID} not found.");
-
-        await _restaurantService.DeleteRestaurant(RestaurantID);
-
-        return NoContent(); // Return 204 No Content after successful deletion
-    }
-
-    [HttpPut("{id:guid}")]
-    [ProducesResponseType(200)]
-    [ProducesResponseType(404)]
-    public async Task<IActionResult> UpdateRestaurant(Guid id, [FromBody] UpdateRestaurantDto updateRestaurantDto)
-    {
-        var updated = await _restaurantService.UpdateRestaurant(id, updateRestaurantDto);
-
-        if (!updated)
+        public RestaurantController(IRestaurantService restaurantService)
         {
-            return NotFound("Restaurant not found.");
+            _restaurantService = restaurantService;
         }
 
-        return Ok(new
+        [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<ViewRestaurantDto>), 200)]
+        public async Task<ActionResult<IEnumerable<ViewRestaurantDto>>> GetRestaurants()
         {
-            message = "Restaurant updated successfully.",
-            status = "Success"
-        });
+            var restaurants = await _restaurantService.GetRestaurants();
+            return Ok(restaurants);
+        }
+
+        [HttpGet("{RestaurantID}")]
+        [ProducesResponseType(typeof(ViewRestaurantDto), 200)]
+        [ProducesResponseType(404)]
+        public async Task<ActionResult<ViewRestaurantDto>> GetRestaurant(Guid RestaurantID)
+        {
+            try
+            {
+                var restaurant = await _restaurantService.GetRestaurant(RestaurantID);
+                if (restaurant == null)
+                    return NotFound($"Restaurant with ID {RestaurantID} not found.");
+                return Ok(restaurant);
+            }
+            catch (Exception ex) 
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpDelete("{RestaurantID}")]
+        [ProducesResponseType(204)] // No content on successful deletion
+        [ProducesResponseType(404)] // Not found if the restaurant does not exist
+        public async Task<IActionResult> DeleteRestaurant(Guid RestaurantID)
+        {
+            try
+            {
+                await _restaurantService.DeleteRestaurant(RestaurantID);
+                return NoContent(); 
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message); 
+            }
+        }
+
+        [HttpPut("{id:guid}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> UpdateRestaurant(Guid id, [FromBody] UpdateRestaurantDto updateRestaurantDto)
+        {
+            if (updateRestaurantDto == null)
+                return BadRequest("UpdateRestaurantDto cannot be null.");
+
+            try
+            {
+                await _restaurantService.UpdateRestaurant(id, updateRestaurantDto);
+              
+
+                return Ok("Restaurant updated successfully."); 
+            }
+            catch (Exception ex) 
+            {
+                return NotFound(ex.Message); 
+            }
+        }
     }
 }

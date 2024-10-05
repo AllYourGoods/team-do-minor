@@ -6,6 +6,6 @@ public interface IRestaurantService
 {
     Task<IEnumerable<ViewRestaurantDto>> GetRestaurants();
     Task<ViewRestaurantDto> GetRestaurant(Guid id);
-    Task<bool> DeleteRestaurant(Guid id);
-    Task<bool> UpdateRestaurant(Guid id, UpdateRestaurantDto updateRestaurantDto);
+    Task DeleteRestaurant(Guid id);
+    Task UpdateRestaurant(Guid id, UpdateRestaurantDto updateRestaurantDto);
 }

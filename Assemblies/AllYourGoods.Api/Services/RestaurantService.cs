@@ -16,27 +16,40 @@ public class RestaurantService : IRestaurantService
         _mapper = mapper;
     }
 
-
     public async Task<IEnumerable<ViewRestaurantDto>> GetRestaurants()
     {
         var restaurants = await _restaurantRepository.GetRestaurants();
-
         return _mapper.Map<List<ViewRestaurantDto>>(restaurants);
     }
+
     public async Task<ViewRestaurantDto> GetRestaurant(Guid id)
     {
         var restaurant = await _restaurantRepository.GetRestaurant(id);
 
+        if (restaurant == null)
+            throw new Exception("Restaurant not found");
+
         return _mapper.Map<ViewRestaurantDto>(restaurant);
     }
 
-    public Task<bool> DeleteRestaurant(Guid id)
+    public async Task DeleteRestaurant(Guid id)
     {
-        return _restaurantRepository.DeleteRestaurant(id);
+        var restaurant = await _restaurantRepository.GetRestaurant(id);
+
+        if (restaurant == null)
+            throw new Exception("Restaurant not found");
+
+        await _restaurantRepository.DeleteRestaurant(id);
     }
 
-    public Task<bool> UpdateRestaurant(Guid id, UpdateRestaurantDto updateRestaurantDto)
+    public async Task UpdateRestaurant(Guid id, UpdateRestaurantDto updateRestaurantDto)
     {
-        return _restaurantRepository.UpdateRestaurant(id, updateRestaurantDto);
+        var restaurant = await _restaurantRepository.GetRestaurant(id);
+
+        if (restaurant == null)
+            throw new Exception("Restaurant not found");
+
+        await _restaurantRepository.UpdateRestaurant(id, updateRestaurantDto);
     }
 }
+
