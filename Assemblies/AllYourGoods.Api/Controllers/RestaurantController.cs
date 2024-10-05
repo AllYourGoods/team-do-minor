@@ -16,8 +16,8 @@ namespace AllYourGoods.Api.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<ViewRestaurantDto>), 200)]
-        public async Task<ActionResult<IEnumerable<ViewRestaurantDto>>> GetRestaurants([FromQuery] FilterRestaurantDto filter = null)
+        [ProducesResponseType(200)]
+        public async Task<IActionResult> GetRestaurants([FromQuery] FilterRestaurantDto filter = null)
         {
             var restaurants = await _restaurantService.GetRestaurants(filter);
             return Ok(restaurants);
@@ -57,18 +57,18 @@ namespace AllYourGoods.Api.Controllers
             }
         }
 
-        [HttpPut("{id:guid}")]
+        [HttpPut("{RestaurantID}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> UpdateRestaurant(Guid id, [FromBody] UpdateRestaurantDto updateRestaurantDto)
+        public async Task<IActionResult> UpdateRestaurant(Guid RestaurantID, [FromBody] UpdateRestaurantDto updateRestaurantDto)
         {
             if (updateRestaurantDto == null)
                 return BadRequest("UpdateRestaurantDto cannot be null.");
 
             try
             {
-                await _restaurantService.UpdateRestaurant(id, updateRestaurantDto);
+                await _restaurantService.UpdateRestaurant(RestaurantID, updateRestaurantDto);
               
 
                 return Ok("Restaurant updated successfully."); 
@@ -85,8 +85,16 @@ namespace AllYourGoods.Api.Controllers
         [ProducesResponseType(500)] // Internal server error
         public async Task<IActionResult> CreateRestaurant([FromBody] CreateRestaurantDto createRestaurantDto)
         {
-            if (createRestaurantDto == null)
-                return BadRequest(new { StatusMessage = "Event is empty.", StatusCode = 400 });
+            
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new 
+                { 
+                    StatusMessage = "One or more validation errors occurred.", 
+                    StatusCode = 400, 
+                    Errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage) 
+                });
+            }
             try
             {
                 await _restaurantService.CreateRestaurant(createRestaurantDto);

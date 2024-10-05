@@ -32,14 +32,9 @@ public class RestaurantRepository : IRestaurantRepository
         return await query.ToListAsync(); 
     }
 
-    public async Task<Restaurant> GetRestaurant(Guid id, FilterRestaurantDto filter = null)
+    public async Task<Restaurant> GetRestaurant(Guid id)
     {
         var query = _context.Restaurants.Include(r => r.Tags).AsQueryable();
-        
-        if (filter != null)
-        {
-            query = ApplyFilters(query, filter);
-        }
         
         return await query.FirstOrDefaultAsync(r => r.Id == id);
     }
@@ -87,7 +82,7 @@ public class RestaurantRepository : IRestaurantRepository
     {
         if (!string.IsNullOrEmpty(filter.Name))
         {
-            query = query.Where(r => r.Name.Contains(filter.Name));
+            query = query.Where(r => r.Name.ToLower().Contains(filter.Name.ToLower()));
         }
 
         if (filter.Radius.HasValue)
@@ -100,14 +95,21 @@ public class RestaurantRepository : IRestaurantRepository
             query = query.Where(r => r.Tags.Any(t => filter.Tags.Contains(t.Name)));
         }
 
-        if (filter.OpeningTime.HasValue)
+        if (filter.OpeningTime.HasValue && filter.ClosingTime.HasValue)
         {
-            query = query.Where(r => r.OpeningTime <= filter.OpeningTime.Value);
+            query = query.Where(r => r.OpeningTime <= filter.OpeningTime.Value && r.ClosingTime >= filter.ClosingTime.Value);
         }
-
-        if (filter.ClosingTime.HasValue)
+        else
         {
-            query = query.Where(r => r.ClosingTime >= filter.ClosingTime.Value);
+            if (filter.OpeningTime.HasValue)
+            {
+                query = query.Where(r => r.OpeningTime <= filter.OpeningTime.Value);
+            }
+
+            if (filter.ClosingTime.HasValue)
+            {
+                query = query.Where(r => r.ClosingTime >= filter.ClosingTime.Value);
+            }
         }
 
         return query;

@@ -22,9 +22,9 @@ public class RestaurantService : IRestaurantService
         return _mapper.Map<List<ViewRestaurantDto>>(restaurants);
     }
 
-    public async Task<ViewRestaurantDto> GetRestaurant(Guid id, FilterRestaurantDto filter = null)
+    public async Task<ViewRestaurantDto> GetRestaurant(Guid id)
     {
-        var restaurant = await _restaurantRepository.GetRestaurant(id, filter);
+        var restaurant = await _restaurantRepository.GetRestaurant(id);
 
         if (restaurant == null)
             throw new Exception("Restaurant not found");
