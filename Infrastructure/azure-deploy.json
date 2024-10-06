@@ -1,0 +1,241 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "type": "string",
+      "defaultValue": "northeurope",
+      "metadata": {
+        "description": "The Azure region where the resources will be created."
+      }
+    },
+    "appName": {
+      "type": "string",
+      "defaultValue": "myapp",
+      "metadata": {
+        "description": "The base name of the application."
+      }
+    },
+    "environment": {
+      "type": "string",
+      "defaultValue": "prod",
+      "metadata": {
+        "description": "Environment name (e.g., dev, test, prod) used to distinguish the resources."
+      }
+    },
+    "aspnetcoreEnvironment": {
+      "type": "string",
+      "defaultValue": "Production",
+      "metadata": {
+        "description": "AspeNetCore Environment name (e.g., Development, Test, Production) used to distinguish the environment."
+      }
+    },
+    "sqlAdminUser": {
+      "type": "string",
+      "defaultValue": "sqladmin",
+      "metadata": {
+        "description": "SQL Admin Username."
+      }
+    },
+    "sqlAdminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "SQL Admin Password."
+      }
+    }
+  },
+  "variables": {
+    "resourcePrefix": "[concat(parameters('appName'), '-', parameters('environment'))]",
+    "appServicePlanName": "[concat(variables('resourcePrefix'), '-plan')]",
+    "appServiceName": "[concat(variables('resourcePrefix'), '-app')]",
+    "sqlServerName": "[concat(variables('resourcePrefix'), '-sqlsrv')]",
+    "sqlDatabaseName": "[concat(variables('resourcePrefix'), '-sqldb')]",
+    "keyVaultName": "[concat(variables('resourcePrefix'), '-kv')]",
+    "appInsightsName": "[concat(variables('resourcePrefix'), '-ai')]",
+    "logAnalyticsWorkspaceName": "[concat(variables('resourcePrefix'), '-law')]",
+    "logAnalyticsWorkspaceId": "[resourceId('Microsoft.OperationalInsights/workspaces', variables('logAnalyticsWorkspaceName'))]",
+    "sqlConnectionString": "[concat('Server=tcp:', variables('sqlServerName'), '.database.windows.net,1433;Initial Catalog=', variables('sqlDatabaseName'), ';Persist Security Info=False;User ID=', parameters('sqlAdminUser'), ';Password=', parameters('sqlAdminPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Web/serverfarms",
+      "apiVersion": "2022-09-01",
+      "name": "[variables('appServicePlanName')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "B1"
+      },
+      "properties": {
+        "reserved": true
+      }
+    },
+    {
+      "type": "Microsoft.Web/sites",
+      "apiVersion": "2022-09-01",
+      "name": "[variables('appServiceName')]",
+      "location": "[parameters('location')]",
+      "kind": "linux",
+      "properties": {
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName'))]",
+        "httpsOnly": true,
+        "siteConfig": {
+          "linuxFxVersion": "DOTNETCORE|8.0",
+          "alwaysOn": true,
+          "healthCheckPath": "/health",
+          "appSettings": [
+            {
+              "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+              "value": "[reference(resourceId('microsoft.insights/components', variables('appInsightsName'))).ConnectionString]"
+            },
+            {
+              "name": "WEBSITE_RUN_FROM_PACKAGE",
+              "value": "1"
+            },
+            {
+              "name": "ASPNETCORE_ENVIRONMENT",
+              "value": "[parameters('aspnetcoreEnvironment')]"
+            },
+            {
+              "name": "KEY_VAULT_URI",
+              "value": "[concat('https://', variables('keyVaultName'), '.vault.azure.net/')]"
+            }
+          ]
+        }
+      },
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName'))]",
+        "[resourceId('microsoft.insights/components', variables('appInsightsName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.OperationalInsights/workspaces",
+      "apiVersion": "2021-06-01",
+      "name": "[variables('logAnalyticsWorkspaceName')]",
+      "location": "[parameters('location')]",
+      "properties": {}
+    },
+    {
+      "type": "microsoft.insights/components",
+      "apiVersion": "2020-02-02",
+      "name": "[variables('appInsightsName')]",
+      "location": "[parameters('location')]",
+      "kind": "web",
+      "properties": {
+        "Application_Type": "web",
+        "WorkspaceResourceId": "[variables('logAnalyticsWorkspaceId')]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.OperationalInsights/workspaces', variables('logAnalyticsWorkspaceName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Sql/servers",
+      "apiVersion": "2022-02-01-preview",
+      "name": "[variables('sqlServerName')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "administratorLogin": "[parameters('sqlAdminUser')]",
+        "administratorLoginPassword": "[parameters('sqlAdminPassword')]",
+        "version": "12.0"
+      }
+    },
+    {
+      "type": "Microsoft.Sql/servers/firewallRules",
+      "apiVersion": "2023-08-01-preview",
+      "name": "[concat(variables('sqlServerName'), '/AllowAllWindowsAzureIps')]",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Sql/servers', variables('sqlServerName'))]"
+      ],
+      "properties": {
+        "startIpAddress": "0.0.0.0",
+        "endIpAddress": "0.0.0.0"
+      }
+    },
+    {
+      "type": "Microsoft.Sql/servers/databases",
+      "apiVersion": "2022-02-01-preview",
+      "name": "[concat(variables('sqlServerName'), '/', variables('sqlDatabaseName'))]",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Sql/servers', variables('sqlServerName'))]"
+      ],
+      "properties": {
+        "collation": "SQL_Latin1_General_CP1_CI_AS"
+      },
+      "sku": {
+        "name": "S0"
+      }
+    },
+    {
+      "type": "Microsoft.KeyVault/vaults",
+      "apiVersion": "2021-06-01-preview",
+      "name": "[variables('keyVaultName')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "sku": {
+          "family": "A",
+          "name": "standard"
+        },
+        "tenantId": "[subscription().tenantId]",
+        "accessPolicies": [],
+        "enableRbacAuthorization": true
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', variables('appServiceName'))]"
+      ],
+      "resources": [
+        {
+          "type": "Microsoft.KeyVault/vaults/providers/roleAssignments",
+          "apiVersion": "2020-04-01-preview",
+          "name": "[concat(variables('keyVaultName'), '/Microsoft.Authorization/', guid(subscription().subscriptionId, variables('keyVaultName'), variables('appServiceName'), 'KeyVaultSecretsOfficer'))]",
+          "properties": {
+            "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '4633458b-17de-408a-b874-0445c86b69e6')]",
+            "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('appServiceName')), '2019-08-01', 'Full').identity.principalId]",
+            "principalType": "ServicePrincipal"
+          },
+          "dependsOn": [
+            "[resourceId('Microsoft.Web/sites', variables('appServiceName'))]",
+            "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Microsoft.KeyVault/vaults/secrets",
+      "apiVersion": "2021-06-01-preview",
+      "name": "[concat(variables('keyVaultName'), '/ConnectionStrings--SqlConnectionString')]",
+      "properties": {
+        "value": "[variables('sqlConnectionString')]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]"
+      ]
+    }
+  ],
+  "outputs": {
+    "logAnalyticsWorkspaceId": {
+      "type": "string",
+      "value": "[variables('logAnalyticsWorkspaceId')]"
+    },
+    "appServicePlanName": {
+      "type": "string",
+      "value": "[variables('appServicePlanName')]"
+    },
+    "appServiceName": {
+      "type": "string",
+      "value": "[variables('appServiceName')]"
+    },
+    "sqlServerName": {
+      "type": "string",
+      "value": "[variables('sqlServerName')]"
+    },
+    "keyVaultUri": {
+      "type": "string",
+      "value": "[concat('https://', variables('keyVaultName'), '.vault.azure.net/')]"
+    }
+  }
+}
