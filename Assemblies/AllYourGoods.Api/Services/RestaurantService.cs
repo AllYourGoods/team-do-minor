@@ -1,9 +1,12 @@
 ﻿using AllYourGoods.Api.Interfaces.Repositories;
 using AllYourGoods.Api.Interfaces.Services;
 using AllYourGoods.Api.Models;
+using AllYourGoods.Api.Models.Dtos.Creates;
+using AllYourGoods.Api.Models.Dtos.Responses;
 using AllYourGoods.Api.Models.Dtos.Updates;
 using AllYourGoods.Api.Models.Dtos.Views;
 using AutoMapper;
+using System.Linq.Expressions;
 
 namespace AllYourGoods.Api.Services;
 
@@ -18,13 +21,16 @@ public class RestaurantService : IRestaurantService
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<ViewRestaurantDto>> GetRestaurants()
+    public async Task<ResponseRestaurantDto> CreateRestaurantAsync(CreateRestaurantDto restaurantDto)
     {
-        var restaurants = await _unitOfWork.Repository<Restaurant>().GetAllAsync();
-        return _mapper.Map<List<ViewRestaurantDto>>(restaurants);
+        var restaurant = _mapper.Map<Restaurant>(restaurantDto);
+
+        _unitOfWork.Repository<Restaurant>().Add(restaurant);
+        await _unitOfWork.SaveAsync();
+        return _mapper.Map<ResponseRestaurantDto>(restaurant);
     }
 
-    public async Task<ViewRestaurantDto> GetRestaurant(Guid restaurantId)
+    public async Task<ResponseRestaurantDto> GetRestaurantByIdAsync(Guid restaurantId)
     {
         var restaurant = await _unitOfWork.Repository<Restaurant>().GetByIdAsync(restaurantId);
 
@@ -33,10 +39,25 @@ public class RestaurantService : IRestaurantService
             throw new KeyNotFoundException($"Restaurant with Id: {restaurantId} not found");
         }
 
-        return _mapper.Map<ViewRestaurantDto>(restaurant);
+        return _mapper.Map<ResponseRestaurantDto>(restaurant);
     }
 
-    public async Task DeleteRestaurant(Guid restaurantId)
+    public async Task<PaginatedList<ResponseRestaurantDto>> GetPaginatedRestaurantsAsync(int pageNumber, int pageSize, Expression<Func<Restaurant, bool>>? filter = null)
+    {
+        var totalCount = await _unitOfWork.Repository<Restaurant>().CountAsync(filter);
+
+        var items = await _unitOfWork.Repository<Restaurant>().GetAllAsync(
+            filter: filter,
+            orderBy: query => query.OrderBy(r => r.Id),
+            skip: (pageNumber - 1) * pageSize,
+            take: pageSize
+        );
+
+        return new PaginatedList<ResponseRestaurantDto>(_mapper.Map<List<ResponseRestaurantDto>>(items), totalCount, pageNumber, pageSize);
+    }
+
+
+    public async Task DeleteRestaurantAsync(Guid restaurantId)
     {
         var restaurant = await _unitOfWork.Repository<Restaurant>().GetByIdAsync(restaurantId);
 
@@ -49,7 +70,7 @@ public class RestaurantService : IRestaurantService
         await _unitOfWork.SaveAsync();
     }
 
-    public async Task UpdateRestaurant(Guid restaurantId, UpdateRestaurantDto updateRestaurantDto)
+    public async Task<ResponseRestaurantDto> UpdateRestaurantAsync(Guid restaurantId, UpdateRestaurantDto updateRestaurantDto)
     {
         var restaurant = await _unitOfWork.Repository<Restaurant>().GetByIdAsync(restaurantId);
 
@@ -64,6 +85,8 @@ public class RestaurantService : IRestaurantService
 
         _unitOfWork.Repository<Restaurant>().Update(restaurant);
         await _unitOfWork.SaveAsync();
+
+        return _mapper.Map<ResponseRestaurantDto>(restaurant);
     }
 }
 

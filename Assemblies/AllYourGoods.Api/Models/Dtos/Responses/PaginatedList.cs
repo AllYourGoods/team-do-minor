@@ -1,4 +1,4 @@
-﻿namespace AllYourGoods.Api.Models;
+﻿namespace AllYourGoods.Api.Models.Dtos.Responses;
 
 public class PaginatedList<T>
 {

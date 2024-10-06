@@ -1,8 +1,10 @@
-﻿using System.Net.Http.Json;
-using AllYourGoods.Api.Data;
-using AllYourGoods.Api.Models;
+﻿using AllYourGoods.Api.Data;
+using AllYourGoods.Api.Models.Dtos.Creates;
 using AllYourGoods.Api.Models.Dtos.Views;
 using Microsoft.Extensions.DependencyInjection;
+using System.Net.Http.Json;
+using System.Net;
+using Microsoft.EntityFrameworkCore;
 
 namespace AllYourGoods.Api.IntegrationTests.Controllers;
 
@@ -27,115 +29,85 @@ public class RestaurantControllerTests
     }
 
     [Test]
-    public async Task GetRestaurants_ReturnsOkResult_WithAllProperties()
+    public async Task CreateRestaurant_ValidData_ReturnsCreatedResponseAndStoresInDatabase()
     {
-        //  Arrange
-        await AddTestRestaurants();
-
-        // Act
-        var response = await _client.GetAsync("/api/Restaurant");
-        response.EnsureSuccessStatusCode();
-        var restaurants = await response.Content.ReadFromJsonAsync<List<ViewRestaurantDto>>();
-
-        // Assert that the list of restaurants is not null and has the correct count
-        Assert.That(restaurants, Is.Not.Null);
-        Assert.That(restaurants.Count, Is.EqualTo(3));
-
-        // Assert the first restaurant's properties
-        var restaurant1 = restaurants.FirstOrDefault(r => r.Name == "De Klok");
-        Assert.That(restaurant1, Is.Not.Null);
-        Assert.That(restaurant1.Name, Is.EqualTo("De Klok"));
-        Assert.That(restaurant1.OpeningTime, Is.EqualTo(new TimeOnly(8, 0)));
-        Assert.That(restaurant1.ClosingTime, Is.EqualTo(new TimeOnly(22, 0)));
-        Assert.That(restaurant1.StreetName, Is.EqualTo("Kerkstraat"));
-        Assert.That(restaurant1.HouseNumber, Is.EqualTo("1"));
-        Assert.That(restaurant1.Description, Is.EqualTo("Gezellig café"));
-        Assert.That(restaurant1.Radius, Is.EqualTo(1));
-        Assert.That(restaurant1.ImageLink, Is.EqualTo("https://www.google.com"));
-        Assert.That(restaurant1.Tags, Is.Not.Null);
-        Assert.That(restaurant1.Tags, Has.Count.EqualTo(2));
-        Assert.That(restaurant1.Tags, Does.Contain("Cafe"));
-        Assert.That(restaurant1.Tags, Does.Contain("Lokaal"));
-
-        // Assert the second restaurant's properties
-        var restaurant2 = restaurants.FirstOrDefault(r => r.Name == "De Kroeg");
-        Assert.That(restaurant2, Is.Not.Null);
-        Assert.That(restaurant2.Name, Is.EqualTo("De Kroeg"));
-        Assert.That(restaurant2.OpeningTime, Is.EqualTo(new TimeOnly(9, 0)));
-        Assert.That(restaurant2.ClosingTime, Is.EqualTo(new TimeOnly(23, 0)));
-        Assert.That(restaurant2.StreetName, Is.EqualTo("Kerkstraat"));
-        Assert.That(restaurant2.HouseNumber, Is.EqualTo("2"));
-        Assert.That(restaurant2.Description, Is.EqualTo("Gezellig café"));
-        Assert.That(restaurant2.Radius, Is.EqualTo(1));
-        Assert.That(restaurant2.ImageLink, Is.EqualTo("https://www.google.com"));
-        Assert.That(restaurant2.Tags, Is.Not.Null);
-        Assert.That(restaurant2.Tags, Has.Count.EqualTo(1));
-        Assert.That(restaurant2.Tags, Does.Contain("Cafe"));
-
-        // Assert the third restaurant's properties
-        var restaurant3 = restaurants.FirstOrDefault(r => r.Name == "De Pub");
-        Assert.That(restaurant3, Is.Not.Null);
-        Assert.That(restaurant3.Name, Is.EqualTo("De Pub"));
-        Assert.That(restaurant3.OpeningTime, Is.EqualTo(new TimeOnly(10, 0)));
-        Assert.That(restaurant3.ClosingTime, Is.EqualTo(new TimeOnly(0, 0))); // Midnight
-        Assert.That(restaurant3.StreetName, Is.EqualTo("Kerkstraat"));
-        Assert.That(restaurant3.HouseNumber, Is.EqualTo("3"));
-        Assert.That(restaurant3.Description, Is.EqualTo("Gezellig café"));
-        Assert.That(restaurant3.Radius, Is.EqualTo(1));
-        Assert.That(restaurant3.ImageLink, Is.EqualTo("https://www.google.com"));
-        Assert.That(restaurant3.Tags, Is.Not.Null);
-        Assert.That(restaurant3.Tags, Has.Count.EqualTo(1));
-        Assert.That(restaurant3.Tags, Does.Contain("Cafe"));
-    }
-
-    private async Task AddTestRestaurants()
-    {
-        using var scope = _factory.Services.CreateScope();
-        var context = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
-        var restaurants = new Restaurant[]
+        // Arrange
+        var createDto = new CreateRestaurantDto(
+            "Test Restaurant", 
+            "123456773", 
+            new CreateAddress("12", "2312RF", "Rotterdam", "TestStreet"), 
+            new CreateBanner("TestBannerUrl", "TestBannerMimetype", 2323),
+            new CreateLogo("TestLogoUrl", "TestLogoMimeType", 1212 ))
         {
-            new ()
-            {
-                Id = Guid.NewGuid(),
-                OpeningTime = new TimeOnly(8, 0),
-                ClosingTime = new TimeOnly(22, 0),
-                StreetName = "Kerkstraat",
-                HouseNumber = "1",
-                Name = "De Klok",
-                Description = "Gezellig café",
-                Tags = new List<Tag> { new Tag("Cafe"), new Tag("Lokaal") },
-                Radius = 1,
-                ImageLink = "https://www.google.com"
-            },
-            new ()
-            {
-                Id = Guid.NewGuid(),
-                OpeningTime = new TimeOnly(9, 0),
-                ClosingTime = new TimeOnly(23, 0),
-                StreetName = "Kerkstraat",
-                HouseNumber = "2",
-                Name = "De Kroeg",
-                Description = "Gezellig café",
-                Tags = new List<Tag> { new Tag("Cafe") },
-                Radius = 1,
-                ImageLink = "https://www.google.com"
-            },
-            new ()
-            {
-                Id = Guid.NewGuid(),
-                OpeningTime = new TimeOnly(10, 0),
-                ClosingTime = new TimeOnly(0, 0),
-                StreetName = "Kerkstraat",
-                HouseNumber = "3",
-                Name = "De Pub",
-                Description = "Gezellig café",
-                Tags = new List<Tag> { new Tag("Cafe") },
-                Radius = 1,
-                ImageLink = "https://www.google.com"
-            }
+          AboutUs  = "This is a text about us",
+          Radius = 34
         };
 
-        context.Restaurants.AddRange(restaurants);
-        await context.SaveChangesAsync();
+        // Act
+        var response = await _client.PostAsJsonAsync("/api/restaurant", createDto);
+
+        // Assert
+        // 1. Check for 201 Created status
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Created), "Expected response code is 201 Created.");
+
+        // 2. Check that the response contains a valid ResponseRestaurantDto
+        var returnedDto = await response.Content.ReadFromJsonAsync<ResponseRestaurantDto>();
+        Assert.That(returnedDto, Is.Not.Null, "Response body should not be null.");
+
+        // 3. Assert returned DTO values match the input values
+        Assert.That(returnedDto.Name, Is.EqualTo(createDto.Name), "Name does not match.");
+        Assert.That(returnedDto.PhoneNumber, Is.EqualTo(createDto.PhoneNumber), "Phone number does not match.");
+        Assert.That(returnedDto.AboutUs, Is.EqualTo(createDto.AboutUs), "AboutUs does not match.");
+        Assert.That(returnedDto.Radius, Is.EqualTo(createDto.Radius), "Radius does not match.");
+
+        // 4. Assert Address values
+        Assert.That(returnedDto.Address.HouseNumber, Is.EqualTo(createDto.Address.HouseNumber), "Address house number does not match.");
+        Assert.That(returnedDto.Address.ZipCode, Is.EqualTo(createDto.Address.ZipCode), "Address postal code does not match.");
+        Assert.That(returnedDto.Address.City, Is.EqualTo(createDto.Address.City), "Address city does not match.");
+        Assert.That(returnedDto.Address.StreetName, Is.EqualTo(createDto.Address.StreetName), "Address street does not match.");
+
+        // 5. Assert Banner values
+        Assert.That(returnedDto.Banner.Url, Is.EqualTo(createDto.Banner.Url), "Banner URL does not match.");
+        Assert.That(returnedDto.Banner.MimeType, Is.EqualTo(createDto.Banner.MimeType), "Banner MimeType does not match.");
+        Assert.That(returnedDto.Banner.FileSize, Is.EqualTo(createDto.Banner.FileSize), "Banner Size does not match.");
+
+        // 6. Assert Logo values
+        Assert.That(returnedDto.Logo.Url, Is.EqualTo(createDto.Logo.Url), "Logo URL does not match.");
+        Assert.That(returnedDto.Logo.MimeType, Is.EqualTo(createDto.Logo.MimeType), "Logo MimeType does not match.");
+        Assert.That(returnedDto.Logo.FileSize, Is.EqualTo(createDto.Logo.FileSize), "Logo Size does not match.");
+
+        // 7. Verify that the restaurant is stored correctly in the database
+        using var scope = _factory.Services.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
+
+        var restaurantInDb = context.Restaurants
+            .Include(r => r.Address)
+            .Include(r => r.Logo)
+            .Include(r => r.Banner)
+            .FirstOrDefault(r => r.Id == returnedDto.Id);
+        
+        Assert.That(restaurantInDb, Is.Not.Null, "Restaurant should exist in the database.");
+
+        // Assert basic properties
+        Assert.That(restaurantInDb.Name, Is.EqualTo(createDto.Name), "Stored Name does not match.");
+        Assert.That(restaurantInDb.PhoneNumber, Is.EqualTo(createDto.PhoneNumber), "Stored Phone number does not match.");
+        Assert.That(restaurantInDb.AboutUs, Is.EqualTo(createDto.AboutUs), "Stored AboutUs does not match.");
+        Assert.That(restaurantInDb.Radius, Is.EqualTo(createDto.Radius), "Stored Radius does not match.");
+
+        // Assert Address values in database
+        Assert.That(restaurantInDb.Address.HouseNumber, Is.EqualTo(createDto.Address.HouseNumber), "Stored Address house number does not match.");
+        Assert.That(restaurantInDb.Address.ZipCode, Is.EqualTo(createDto.Address.ZipCode), "Stored Address postal code does not match.");
+        Assert.That(restaurantInDb.Address.City, Is.EqualTo(createDto.Address.City), "Stored Address city does not match.");
+        Assert.That(restaurantInDb.Address.StreetName,Is.EqualTo(createDto.Address.StreetName), "Stored Address street does not match.");
+
+        // Assert Banner values in database
+        Assert.That(restaurantInDb.Banner.Url, Is.EqualTo(createDto.Banner.Url), "Stored Banner URL does not match.");
+        Assert.That(restaurantInDb.Banner.MimeType, Is.EqualTo(createDto.Banner.MimeType), "Stored Banner MimeType does not match.");
+        Assert.That(restaurantInDb.Banner.FileSize, Is.EqualTo(createDto.Banner.FileSize), "Stored Banner Size does not match.");
+
+        // Assert Logo values in database
+        Assert.That(restaurantInDb.Logo.Url, Is.EqualTo(createDto.Logo.Url), "Stored Logo URL does not match.");
+        Assert.That(restaurantInDb.Logo.MimeType, Is.EqualTo(createDto.Logo.MimeType), "Stored Logo MimeType does not match.");
+        Assert.That(restaurantInDb.Logo.FileSize, Is.EqualTo(createDto.Logo.FileSize), "Stored Logo Size does not match.");
     }
 }

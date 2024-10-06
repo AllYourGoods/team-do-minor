@@ -4,10 +4,11 @@ namespace AllYourGoods.Api.Models;
 
 public class Restaurant : BaseEntity
 {
-    [StringLength(255)]
-    public string? Name { get; set; }
-    [StringLength(15)]
-    public string? PhoneNumber { get; set; }
+    [StringLength(255)] 
+    public string Name { get; set; } = null!;
+
+    [StringLength(15)] 
+    public string PhoneNumber { get; set; } = null!;
     public string? AboutUs { get; set; }
     public double? Radius { get; set; }
 
@@ -17,9 +18,9 @@ public class Restaurant : BaseEntity
     public Guid? OwnerId { get; set; }
 
     // Navigation properties
-    public virtual ImageFile? Logo { get; set; }
-    public virtual Address? Address { get; set; }
-    public virtual ImageFile? Banner { get; set; }
+    public virtual ImageFile Logo { get; set; } = null!;
+    public virtual Address Address { get; set; } = null!;
+    public virtual ImageFile Banner { get; set; } = null!;
     public virtual User? Owner { get; set; }
     public virtual ICollection<OpeningsTime>? OpeningsTimes { get; set; }
 }

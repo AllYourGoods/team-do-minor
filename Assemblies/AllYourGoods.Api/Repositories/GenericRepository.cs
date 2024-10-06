@@ -1,7 +1,6 @@
 ﻿using AllYourGoods.Api.Data;
 using AllYourGoods.Api.Interfaces.Model;
 using AllYourGoods.Api.Interfaces.Repositories;
-using AllYourGoods.Api.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
@@ -29,6 +28,11 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class, IEnti
         return entity;
     }
 
+    public async Task<int> CountAsync(Expression<Func<T, bool>>? filter = null)
+    {
+        return await(filter != null ? _dbSet.CountAsync(filter) : _dbSet.CountAsync());
+    }
+
     public void Delete(T entity)
     {
         if (entity == null)
@@ -39,7 +43,12 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class, IEnti
         _dbSet.Remove(entity);
     }
 
-    public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, params Expression<Func<T, object>>[] includes)
+    public async Task<List<T>> GetAllAsync(
+        Expression<Func<T, bool>>? filter = null,
+        Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
+        int? skip = null,
+        int? take = null,
+        params Expression<Func<T, object>>[] includes)
     {
         IQueryable<T> query = _dbSet;
 
@@ -55,6 +64,15 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class, IEnti
             query = orderBy(query);
         }
 
+        if (skip.HasValue)
+        {
+            query = query.Skip(skip.Value);
+        }
+        if (take.HasValue)
+        {
+            query = query.Take(take.Value);
+        }
+
         return await query.ToListAsync();
     }
 
@@ -63,17 +81,6 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class, IEnti
         IQueryable<T> query = _dbSet;
         query = ApplyIncludes(query, includes);
         return await query.FirstOrDefaultAsync(e => e.Id == id);
-    }
-
-    public async Task<PaginatedList<T>> GetPagedAsync(int pageNumber, int pageSize, Expression<Func<T, bool>>? filter = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, params Expression<Func<T, object>>[] includes)
-    {
-        IQueryable<T> query = _dbSet;
-        if (filter != null) query = query.Where(filter);
-        query = ApplyIncludes(query, includes);
-        query = orderBy != null ? orderBy(query) : query.OrderBy(e => e.Id);
-        var totalCount = await query.CountAsync();
-        var items = await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
-        return new PaginatedList<T>(items, totalCount, pageNumber, pageSize);
     }
 
     public void Update(T entity)
