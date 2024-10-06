@@ -1,5 +1,6 @@
 ﻿using AllYourGoods.Api.Interfaces.Services;
-using AllYourGoods.Api.Models.Dtos;
+using AllYourGoods.Api.Models.Dtos.Updates;
+using AllYourGoods.Api.Models.Dtos.Views;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AllYourGoods.Api.Controllers

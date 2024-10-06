@@ -1,5 +1,5 @@
 ﻿using AllYourGoods.Api.Models;
-using AllYourGoods.Api.Models.Dtos;
+using AllYourGoods.Api.Models.Dtos.Views;
 using AutoMapper;
 
 namespace AllYourGoods.Api.Mappings;

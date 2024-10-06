@@ -1,7 +1,7 @@
 ﻿using System.Net.Http.Json;
 using AllYourGoods.Api.Data;
 using AllYourGoods.Api.Models;
-using AllYourGoods.Api.Models.Dtos;
+using AllYourGoods.Api.Models.Dtos.Views;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AllYourGoods.Api.IntegrationTests.Controllers;

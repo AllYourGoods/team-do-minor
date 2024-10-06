@@ -60,7 +60,8 @@ public class Program
 
         // Add services to the container.
         builder.Services.AddAutoMapper(typeof(RestaurantMappingProfile));
-        builder.Services.AddScoped<IRestaurantRepository, RestaurantRepository>();
+        builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
         builder.Services.AddScoped<IRestaurantService, RestaurantService>();
 
         builder.Services.AddControllers();

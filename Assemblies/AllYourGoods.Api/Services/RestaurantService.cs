@@ -1,55 +1,69 @@
 ﻿using AllYourGoods.Api.Interfaces.Repositories;
 using AllYourGoods.Api.Interfaces.Services;
-using AllYourGoods.Api.Models.Dtos;
+using AllYourGoods.Api.Models;
+using AllYourGoods.Api.Models.Dtos.Updates;
+using AllYourGoods.Api.Models.Dtos.Views;
 using AutoMapper;
 
 namespace AllYourGoods.Api.Services;
 
 public class RestaurantService : IRestaurantService
 {
-    private readonly IRestaurantRepository _restaurantRepository;
+    private readonly IUnitOfWork _unitOfWork; 
     private readonly IMapper _mapper;
 
-    public RestaurantService(IRestaurantRepository restaurantRepository, IMapper mapper)
+    public RestaurantService(IUnitOfWork unitOfWork, IMapper mapper)
     {
-        _restaurantRepository = restaurantRepository;
+        _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
 
     public async Task<IEnumerable<ViewRestaurantDto>> GetRestaurants()
     {
-        var restaurants = await _restaurantRepository.GetRestaurants();
+        var restaurants = await _unitOfWork.Repository<Restaurant>().GetAllAsync();
         return _mapper.Map<List<ViewRestaurantDto>>(restaurants);
     }
 
-    public async Task<ViewRestaurantDto> GetRestaurant(Guid id)
+    public async Task<ViewRestaurantDto> GetRestaurant(Guid restaurantId)
     {
-        var restaurant = await _restaurantRepository.GetRestaurant(id);
+        var restaurant = await _unitOfWork.Repository<Restaurant>().GetByIdAsync(restaurantId);
 
         if (restaurant == null)
-            throw new Exception("Restaurant not found");
+        {
+            throw new KeyNotFoundException($"Restaurant with Id: {restaurantId} not found");
+        }
 
         return _mapper.Map<ViewRestaurantDto>(restaurant);
     }
 
-    public async Task DeleteRestaurant(Guid id)
+    public async Task DeleteRestaurant(Guid restaurantId)
     {
-        var restaurant = await _restaurantRepository.GetRestaurant(id);
+        var restaurant = await _unitOfWork.Repository<Restaurant>().GetByIdAsync(restaurantId);
 
         if (restaurant == null)
-            throw new Exception("Restaurant not found");
+        {
+            throw new KeyNotFoundException($"Restaurant with Id: {restaurantId} not found");
+        }
 
-        await _restaurantRepository.DeleteRestaurant(id);
+        _unitOfWork.Repository<Restaurant>().Delete(restaurant);
+        await _unitOfWork.SaveAsync();
     }
 
-    public async Task UpdateRestaurant(Guid id, UpdateRestaurantDto updateRestaurantDto)
+    public async Task UpdateRestaurant(Guid restaurantId, UpdateRestaurantDto updateRestaurantDto)
     {
-        var restaurant = await _restaurantRepository.GetRestaurant(id);
+        var restaurant = await _unitOfWork.Repository<Restaurant>().GetByIdAsync(restaurantId);
 
         if (restaurant == null)
-            throw new Exception("Restaurant not found");
+        {
+            throw new KeyNotFoundException($"Restaurant with Id: {restaurantId} not found");
+        }
 
-        await _restaurantRepository.UpdateRestaurant(id, updateRestaurantDto);
+        // update Restaurant here with updateRestaurantDto
+           restaurant.Name = updateRestaurantDto.Name;
+        // etc etc
+
+        _unitOfWork.Repository<Restaurant>().Update(restaurant);
+        await _unitOfWork.SaveAsync();
     }
 }
 

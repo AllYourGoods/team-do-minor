@@ -1,4 +1,5 @@
-﻿using AllYourGoods.Api.Models.Dtos;
+﻿using AllYourGoods.Api.Models.Dtos.Updates;
+using AllYourGoods.Api.Models.Dtos.Views;
 
 namespace AllYourGoods.Api.Interfaces.Services;
 

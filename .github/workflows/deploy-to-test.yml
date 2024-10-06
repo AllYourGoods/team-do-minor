@@ -15,9 +15,9 @@ jobs:
     needs: build-and-test 
     uses: ./.github/workflows/reuseable-deploy.yml
     with:
-      applicationName: 'AllYourGoodsApi'
+      applicationName: 'ayga-api'
       aspnetcoreEnvironment: 'Test'
-      environment: 'test1'
+      environment: 'test-1'
       location: 'uksouth'
     secrets:
       AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
