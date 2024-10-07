@@ -9,7 +9,7 @@ services:
       - "8080:80" 
     environment:
       - ASPNETCORE_ENVIRONMENT=Development 
-      - ConnectionStrings__DefaultConnection=Server=sql-db;Database=AllYourGoodsDb;User=sa;Password=DevGeheim01*;TrustServerCertificate=True;
+      - ConnectionStrings__SqlConnectionString=Server=sql-db;Database=AllYourGoodsDb;User=sa;Password=DevGeheim01*;TrustServerCertificate=True;
     depends_on:
       sql-db:
         condition: service_healthy
