@@ -40,6 +40,8 @@ public class Program
         builder.Services.AddAutoMapper(typeof(RestaurantMappingProfile));
         builder.Services.AddScoped<IRestaurantRepository, RestaurantRepository>();
         builder.Services.AddScoped<IRestaurantService, RestaurantService>();
+        builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+        builder.Services.AddScoped<IOrderService, OrderService>();
 
         builder.Services.AddControllers();
         builder.Services.AddDbContext<ApplicationContext>(options =>

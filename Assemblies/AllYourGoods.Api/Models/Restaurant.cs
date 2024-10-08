@@ -14,4 +14,7 @@ public class Restaurant
 
     // Navigation property to establish many-to-many relationship with Tag
     public ICollection<Tag> Tags { get; set; } = new List<Tag>();
+
+    // Navigation property to establish one-to-many relationship with Order
+    public ICollection<Order>? Orders { get; set; }  
 }
