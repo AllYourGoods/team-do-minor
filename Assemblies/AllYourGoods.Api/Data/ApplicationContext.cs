@@ -1,5 +1,4 @@
 ﻿using AllYourGoods.Api.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,6 +26,11 @@ public class ApplicationContext : IdentityDbContext<User>
 
         modelBuilder.Entity<User>().Property(u => u.UserName).HasMaxLength(15);
         modelBuilder.Entity<User>().Ignore(u => u.PhoneNumber);
+        modelBuilder.Entity<User>().Ignore(u => u.PhoneNumberConfirmed);
+        modelBuilder.Entity<User>().Ignore(u => u.EmailConfirmed);
+        modelBuilder.Entity<User>().Ignore(u => u.TwoFactorEnabled);
+        modelBuilder.Entity<User>().Ignore(u => u.LockoutEnd);
+        modelBuilder.Entity<User>().Ignore(u => u.LockoutEnabled);
     }
 }
 

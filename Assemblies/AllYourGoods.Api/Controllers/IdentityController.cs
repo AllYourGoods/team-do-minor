@@ -34,6 +34,10 @@ public class AuthController : ControllerBase
             var token = GenerateJwtToken(user);
             return Ok(new { token });
         }
+        else if (user != null) 
+        {
+            await _userManager.AccessFailedAsync(user);
+        }
         return Unauthorized();
     }
 
@@ -45,7 +49,7 @@ public class AuthController : ControllerBase
     }
 
 
-    [HttpPost("register")]
+    [HttpPost("register/group1")]
     public async Task<IActionResult> Register([FromBody] RegisterModel model)
     {
         if (!ModelState.IsValid)
@@ -53,13 +57,7 @@ public class AuthController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        var user = new User
-        {
-            UserName = model.Username,
-            Email = model.Email
-        };
-
-        var result = await _userManager.CreateAsync(user, model.Password);
+        var result = await addUser(model, Roles.group1);
 
         if (result.Succeeded)
         {
@@ -92,17 +90,25 @@ public class AuthController : ControllerBase
 
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
+
+    private async Task<IdentityResult> addUser(RegisterModel model, Roles role) {
+
+        var user = new User
+        {
+            UserName = model.Username,
+            Email = model.Email
+        };
+
+        var userResult = await _userManager.CreateAsync(user, model.Password);
+
+        if (!userResult.Succeeded) 
+        {
+            return userResult;
+        }
+
+        var roleResult = await _userManager.AddToRoleAsync(user, role.ToString());
+
+        return roleResult;
+
+    }
 }
-
-// public class LoginModel
-// {
-//     public string Username { get; set; }
-//     public string Password { get; set; }
-// }
-
-// public class RegisterModel
-// {
-//     public string Username { get; set; }
-//     public string Password { get; set; }
-//     public string Email { get; set; }
-// }

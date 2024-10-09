@@ -138,7 +138,7 @@ public class Program
         return builder;
     }
 
-    private static void InitializeDatabase(IHost app)
+    private static async Task InitializeDatabase(IHost app)
     {
         using var scope = app.Services.CreateScope();
         var services = scope.ServiceProvider;
@@ -146,7 +146,8 @@ public class Program
         try
         {
             var context = services.GetRequiredService<ApplicationContext>();
-            DbInitializer.Initialize(context);
+            var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+            await DbInitializer.Initialize(context, roleManager);
         }
         catch (Exception ex)
         {

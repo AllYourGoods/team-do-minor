@@ -1,9 +1,6 @@
 using AllYourGoods.Api.Interfaces.Services;
 using AllYourGoods.Api.Models.Dtos;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authorization;
 
 namespace AllYourGoods.Api.Controllers;
@@ -19,7 +16,8 @@ public class TestController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize]
+    // [Authorize] // this one is generic
+    [Authorize(Roles = "group1")]
     [ProducesResponseType(typeof(IEnumerable<ViewRestaurantDto>), 200)]
     public async Task<ActionResult<IEnumerable<ViewRestaurantDto>>> GetRestaurants()
     {

@@ -1,11 +1,12 @@
 ﻿using AllYourGoods.Api.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace AllYourGoods.Api.Data;
 
 public class DbInitializer
 {
-    public static void Initialize(ApplicationContext context)
+    public static async Task Initialize(ApplicationContext context, RoleManager<IdentityRole> roleManager)
     {
         context.Database.Migrate();
 
@@ -13,6 +14,17 @@ public class DbInitializer
         {
             return;
         }
+
+        foreach (Roles role in Enum.GetValues(typeof(Roles))) 
+        {
+            var exists = await roleManager.RoleExistsAsync(role.ToString());
+            
+            if (!exists)
+            {
+                await roleManager.CreateAsync(new IdentityRole(role.ToString()));
+            }
+        }
+
 
         var restaurants = new Restaurant[]
         {
