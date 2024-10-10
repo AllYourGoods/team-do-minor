@@ -90,16 +90,16 @@ namespace AllYourGoods.Api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateOnly?>("Closing")
-                        .HasColumnType("date");
+                    b.Property<TimeOnly?>("Closing")
+                        .HasColumnType("time");
 
                     b.Property<int?>("Day")
                         .HasColumnType("int");
 
-                    b.Property<DateOnly?>("Opening")
-                        .HasColumnType("date");
+                    b.Property<TimeOnly?>("Opening")
+                        .HasColumnType("time");
 
-                    b.Property<Guid>("RestaurantId")
+                    b.Property<Guid?>("RestaurantId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -181,9 +181,6 @@ namespace AllYourGoods.Api.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<Guid>("RestaurantId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<int?>("Role")
                         .HasColumnType("int");
 
@@ -194,13 +191,9 @@ namespace AllYourGoods.Api.Migrations
 
             modelBuilder.Entity("AllYourGoods.Api.Models.OpeningsTime", b =>
                 {
-                    b.HasOne("AllYourGoods.Api.Models.Restaurant", "Restaurant")
+                    b.HasOne("AllYourGoods.Api.Models.Restaurant", null)
                         .WithMany("OpeningsTimes")
-                        .HasForeignKey("RestaurantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Restaurant");
+                        .HasForeignKey("RestaurantId");
                 });
 
             modelBuilder.Entity("AllYourGoods.Api.Models.Restaurant", b =>
@@ -218,7 +211,7 @@ namespace AllYourGoods.Api.Migrations
                         .HasForeignKey("LogoId");
 
                     b.HasOne("AllYourGoods.Api.Models.User", "Owner")
-                        .WithMany("Restaurant")
+                        .WithMany()
                         .HasForeignKey("OwnerId");
 
                     b.Navigation("Address");
@@ -233,11 +226,6 @@ namespace AllYourGoods.Api.Migrations
             modelBuilder.Entity("AllYourGoods.Api.Models.Restaurant", b =>
                 {
                     b.Navigation("OpeningsTimes");
-                });
-
-            modelBuilder.Entity("AllYourGoods.Api.Models.User", b =>
-                {
-                    b.Navigation("Restaurant");
                 });
 #pragma warning restore 612, 618
         }

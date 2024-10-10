@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AllYourGoods.Api.Migrations
 {
     /// <inheritdoc />
-    public partial class initialCreate : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -52,8 +52,7 @@ namespace AllYourGoods.Api.Migrations
                     Role = table.Column<int>(type: "int", nullable: true),
                     Email = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     PasswordHash = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    PasswordSalt = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    RestaurantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    PasswordSalt = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -104,10 +103,10 @@ namespace AllYourGoods.Api.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Opening = table.Column<DateOnly>(type: "date", nullable: true),
-                    Closing = table.Column<DateOnly>(type: "date", nullable: true),
+                    Opening = table.Column<TimeOnly>(type: "time", nullable: true),
+                    Closing = table.Column<TimeOnly>(type: "time", nullable: true),
                     Day = table.Column<int>(type: "int", nullable: true),
-                    RestaurantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    RestaurantId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -116,8 +115,7 @@ namespace AllYourGoods.Api.Migrations
                         name: "FK_OpeningsTime_Restaurants_RestaurantId",
                         column: x => x.RestaurantId,
                         principalTable: "Restaurants",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(

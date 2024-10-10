@@ -16,9 +16,4 @@ public class User: BaseEntity
 
     [StringLength(255)] 
     public string PasswordSalt { get; set; } = null!;
-
-    public Guid RestaurantId { get; set; }
-
-    // Navigation properties
-    public virtual ICollection<Restaurant> Restaurant { get; set; } = null!;
 }
