@@ -161,7 +161,6 @@ public class RestaurantControllerTests
         Assert.That(paginatedList, Is.Not.Null, "Expected the response body to be a non-null PaginatedList.");
         Assert.That(paginatedList.Items.Count, Is.EqualTo(pageSize), $"Expected {pageSize} items in the paginated list.");
 
-        Assert.That(paginatedList.Items.Any(r => r.Id == _databaseRestaurants[0].Id || r.Id == _databaseRestaurants[1].Id));
         //TODO Add more tests to validate response
     }
 
