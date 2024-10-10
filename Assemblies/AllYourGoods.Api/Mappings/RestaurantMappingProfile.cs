@@ -10,14 +10,19 @@ public class RestaurantMappingProfile : Profile
 {
     public RestaurantMappingProfile()
     {
-        CreateMap<Restaurant, ResponseRestaurantDto>();
-        CreateMap<Address, ResponseAddressDto>();
-        CreateMap<ImageFile, ResponseBannerDto>();
-        CreateMap<ImageFile, ResponseLogoDto>();
+        CreateMap<Restaurant, ResponseRestaurantDto>(MemberList.Destination);
+        CreateMap<Address, ResponseAddressDto>(MemberList.Destination);
+        CreateMap<ImageFile, ResponseBannerDto>(MemberList.Destination);
+        CreateMap<ImageFile, ResponseLogoDto>(MemberList.Destination);
 
-        CreateMap<CreateRestaurantDto, Restaurant>();
-        CreateMap<CreateAddress, Address>();
-        CreateMap<CreateBanner, ImageFile>();
-        CreateMap<CreateLogo, ImageFile>();
+        CreateMap<CreateRestaurantDto, Restaurant>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()));
+        CreateMap<CreateAddress, Address>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()));
+        CreateMap<CreateBanner, ImageFile>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()));
+        CreateMap<CreateLogo, ImageFile>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()));
+
     }
 }

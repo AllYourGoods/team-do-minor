@@ -51,8 +51,8 @@ namespace AllYourGoods.Api.Migrations
 
                     b.Property<string>("ZipCode")
                         .IsRequired()
-                        .HasMaxLength(5)
-                        .HasColumnType("nvarchar(5)");
+                        .HasMaxLength(6)
+                        .HasColumnType("nvarchar(6)");
 
                     b.HasKey("Id");
 

@@ -16,11 +16,11 @@ public class CreateAddress
     public double? Latitude { get; set; }
 
     [Required]
-    [StringLength(5, ErrorMessage = "HouseNumber cannot exceed 255 characters.")]
+    [StringLength(5, ErrorMessage = "HouseNumber cannot exceed 5 characters.")]
     public string HouseNumber { get; set; }
 
     [Required]
-    [StringLength(6, ErrorMessage = "Street cannot exceed 255 characters.")]
+    [StringLength(6, ErrorMessage = "Zipcode cannot exceed 6 characters.")]
     public string ZipCode { get; set; }
 
     [Required]

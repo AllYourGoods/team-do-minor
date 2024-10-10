@@ -32,7 +32,13 @@ public class RestaurantService : IRestaurantService
 
     public async Task<ResponseRestaurantDto> GetRestaurantByIdAsync(Guid restaurantId)
     {
-        var restaurant = await _unitOfWork.Repository<Restaurant>().GetByIdAsync(restaurantId);
+        var restaurant = await _unitOfWork.Repository<Restaurant>().GetByIdAsync(
+            restaurantId,
+            r => r.Logo,
+            r => r.Address,
+            r => r.Banner,
+            r => r.Owner!,
+            r => r.OpeningsTimes!);
 
         if (restaurant == null)
         {
@@ -50,7 +56,15 @@ public class RestaurantService : IRestaurantService
             filter: filter,
             orderBy: query => query.OrderBy(r => r.Id),
             skip: (pageNumber - 1) * pageSize,
-            take: pageSize
+            take: pageSize,
+            includes: new Expression<Func<Restaurant, object>>[]
+            {
+                r => r.Logo,
+                r => r.Address,
+                r => r.Banner,
+                r => r.Owner!,
+                r => r.OpeningsTimes!
+            }
         );
 
         return new PaginatedList<ResponseRestaurantDto>(_mapper.Map<List<ResponseRestaurantDto>>(items), totalCount, pageNumber, pageSize);
@@ -59,11 +73,31 @@ public class RestaurantService : IRestaurantService
 
     public async Task DeleteRestaurantAsync(Guid restaurantId)
     {
-        var restaurant = await _unitOfWork.Repository<Restaurant>().GetByIdAsync(restaurantId);
+        var restaurant = await _unitOfWork.Repository<Restaurant>().GetByIdAsync(
+            restaurantId,
+            r => r.Logo,
+            r => r.Address,
+            r => r.Banner,
+            r => r.Owner!,
+            r => r.OpeningsTimes!);
 
         if (restaurant == null)
         {
             throw new KeyNotFoundException($"Restaurant with Id: {restaurantId} not found");
+        }
+
+        //TODO check what entities need to be deleted if a restaurant is deleted
+        _unitOfWork.Repository<Address>().Delete(restaurant.Address);
+        _unitOfWork.Repository<ImageFile>().Delete(restaurant.Logo);
+        _unitOfWork.Repository<ImageFile>().Delete(restaurant.Banner);
+        if (restaurant.OpeningsTimes != null)
+        {
+            _unitOfWork.Repository<OpeningsTime>().DeleteRange(restaurant.OpeningsTimes);
+        }
+
+        if (restaurant.Owner != null)
+        {
+            _unitOfWork.Repository<User>().Delete(restaurant.Owner);
         }
 
         _unitOfWork.Repository<Restaurant>().Delete(restaurant);
@@ -72,7 +106,13 @@ public class RestaurantService : IRestaurantService
 
     public async Task<ResponseRestaurantDto> UpdateRestaurantAsync(Guid restaurantId, UpdateRestaurantDto updateRestaurantDto)
     {
-        var restaurant = await _unitOfWork.Repository<Restaurant>().GetByIdAsync(restaurantId);
+        var restaurant = await _unitOfWork.Repository<Restaurant>().GetByIdAsync(
+            restaurantId,
+            r => r.Logo,
+            r => r.Address,
+            r => r.Banner,
+            r => r.Owner!,
+            r => r.OpeningsTimes!);
 
         if (restaurant == null)
         {
@@ -81,6 +121,9 @@ public class RestaurantService : IRestaurantService
 
         // update Restaurant here with updateRestaurantDto
            restaurant.Name = updateRestaurantDto.Name;
+           restaurant.PhoneNumber = updateRestaurantDto.PhoneNumber;
+           restaurant.AboutUs = updateRestaurantDto.AboutUs;
+           restaurant.Radius = updateRestaurantDto.Radius;
         // etc etc
 
         _unitOfWork.Repository<Restaurant>().Update(restaurant);

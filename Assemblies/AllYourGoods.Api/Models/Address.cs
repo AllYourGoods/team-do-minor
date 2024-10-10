@@ -10,7 +10,7 @@ public class Address: BaseEntity
     [StringLength(6)] 
     public string HouseNumber { get; set; } = null!;
 
-    [StringLength(5)]
+    [StringLength(6)]
     public string ZipCode { get; set; } = null!;
 
     [StringLength(255)]

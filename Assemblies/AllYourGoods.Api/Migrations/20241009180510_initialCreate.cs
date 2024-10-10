@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AllYourGoods.Api.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class initialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -19,7 +19,7 @@ namespace AllYourGoods.Api.Migrations
                     Longitude = table.Column<double>(type: "float", nullable: true),
                     Latitude = table.Column<double>(type: "float", nullable: true),
                     HouseNumber = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: false),
-                    ZipCode = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false),
+                    ZipCode = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: false),
                     City = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     StreetName = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false)
                 },

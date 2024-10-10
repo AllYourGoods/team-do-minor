@@ -43,6 +43,11 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class, IEnti
         _dbSet.Remove(entity);
     }
 
+    public void DeleteRange(IEnumerable<T> entities)
+    {
+        _dbSet.RemoveRange(entities);
+    }
+
     public async Task<List<T>> GetAllAsync(
         Expression<Func<T, bool>>? filter = null,
         Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,

@@ -1,5 +1,4 @@
 ﻿using AllYourGoods.Api.Interfaces.Services;
-using AllYourGoods.Api.Models;
 using AllYourGoods.Api.Models.Dtos.Creates;
 using AllYourGoods.Api.Models.Dtos.Responses;
 using AllYourGoods.Api.Models.Dtos.Updates;
@@ -21,7 +20,7 @@ namespace AllYourGoods.Api.Controllers
 
         [HttpPost]
         [Consumes("application/json")]
-        [ProducesResponseType(typeof(Restaurant), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ResponseRestaurantDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CreateRestaurant([FromBody] CreateRestaurantDto restaurantDto)
