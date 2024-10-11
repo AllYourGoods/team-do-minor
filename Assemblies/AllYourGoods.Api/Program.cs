@@ -65,7 +65,6 @@ public class Program
 
         builder.Logging.AddApplicationInsights();
 
-        // Add services to the container.
         builder.Services.AddAutoMapper(typeof(RestaurantMappingProfile));
         builder.Services.AddScoped<IRestaurantRepository, RestaurantRepository>();
         builder.Services.AddScoped<IRestaurantService, RestaurantService>();
@@ -77,7 +76,6 @@ public class Program
         builder.Services.AddHealthChecks()
             .AddDbContextCheck<ApplicationContext>();
 
-        // builder.Services.AddIdentity<User, IdentityRole>()
         builder.Services.AddIdentity<User, IdentityRole>(options => { options.SignIn.RequireConfirmedEmail = false; })
         .AddEntityFrameworkStores<ApplicationContext>()
         .AddDefaultTokenProviders();
