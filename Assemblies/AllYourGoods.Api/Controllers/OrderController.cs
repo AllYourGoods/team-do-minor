@@ -1,6 +1,10 @@
 ﻿using AllYourGoods.Api.Interfaces.Services;
 using AllYourGoods.Api.Models;
-using AutoMapper;
+using AllYourGoods.Api.Models.Dtos.Creates;
+using AllYourGoods.Api.Models.Dtos.Responses;
+using AllYourGoods.Api.Models.Dtos.Updates;
+using AllYourGoods.Api.Models.Dtos.Views;
+using AllYourGoods.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AllYourGoods.Api.Controllers;
@@ -12,42 +16,69 @@ namespace AllYourGoods.Api.Controllers;
 public class OrderController : ControllerBase
 {
     private readonly IOrderService _orderService;
-    private readonly IMapper _mapper;
+   
 
-    public OrderController(IOrderService orderService, IMapper mapper)
+    public OrderController(IOrderService orderService)
     {
         _orderService = orderService;
-        _mapper = mapper;
-    }
-
-    [HttpGet]
-    [ProducesResponseType(typeof(IEnumerable<ViewOrderDto>), 200)]
-    [ProducesResponseType(404)]
-    public async Task<ActionResult<IEnumerable<ViewOrderDto>>> GetOrders()
-    {
-        var orders = await _orderService.GetOrders();
-
-        if (orders == null || !orders.Any())
-            return NotFound("No orders found.");
-
-        var viewOrderDtos = _mapper.Map<IEnumerable<ViewOrderDto>>(orders);
-
-        return Ok(viewOrderDtos);
+        
     }
 
     [HttpPost]
-    [ProducesResponseType(201)] 
-    [ProducesResponseType(400)] 
-    public async Task<IActionResult> CreateOrder([FromBody] ViewOrderDto viewOrderDto)
+    [Consumes("application/json")]
+    [ProducesResponseType(typeof(ResponseOrderDto), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> CreateOrder([FromBody] CreateOrderDto orderDto)
     {
         if (!ModelState.IsValid)
         {
-            return BadRequest(ModelState); 
+            return BadRequest(ModelState);
         }
 
-        await _orderService.CreateOrderAsync(viewOrderDto);
+        var responseOrderDto = await _orderService.CreateOrderAsync(orderDto);
 
-        return CreatedAtAction(nameof(CreateOrder), new { id = viewOrderDto.RestaurantId }, viewOrderDto);
+        return CreatedAtAction(nameof(GetOrder), new { id = responseOrderDto.Id }, responseOrderDto);
     }
+
+
+    [HttpGet("{id}")]
+    [ProducesResponseType(typeof(ResponseOrderDto), 200)]
+    [ProducesResponseType(404)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<ResponseOrderDto>> GetOrder(Guid id)
+    {
+        try
+        {
+            var order = await _orderService.GetOrderByIdAsync(id);
+
+            return Ok(order);
+        }
+        catch (KeyNotFoundException)
+        {
+            return NotFound($"Order with ID = {id} not found.");
+        }
+    }
+
+
+    [HttpGet]
+    [ProducesResponseType(typeof(ResponseOrderDto), 200)]
+    [ProducesResponseType(404)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<ResponseOrderDto>> GetOrderAllAsync()
+    {
+        try { 
+        
+            var order = await _orderService.GetAllAsync();
+
+            return Ok(order);
+        }
+        catch (KeyNotFoundException)
+        {
+            return NotFound($"There is no Order available right now.");
+        }
+    }
+
+
 }
 

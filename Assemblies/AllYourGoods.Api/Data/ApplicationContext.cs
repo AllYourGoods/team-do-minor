@@ -16,7 +16,6 @@ public class ApplicationContext : DbContext
 
     public virtual DbSet<Restaurant> Restaurants { get; set; } = null!;
     public virtual DbSet<Order> Orders { get; set; } = null!;
-    public virtual DbSet<Tag> Tags { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

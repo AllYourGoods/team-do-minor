@@ -63,7 +63,6 @@ public class Program
         builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         builder.Services.AddScoped<IRestaurantService, RestaurantService>();
-        builder.Services.AddScoped<IOrderRepository, OrderRepository>();
         builder.Services.AddScoped<IOrderService, OrderService>();
 
         builder.Services.AddControllers();
