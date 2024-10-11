@@ -1,10 +1,6 @@
 ﻿using AllYourGoods.Api.Interfaces.Services;
 using AllYourGoods.Api.Models.Dtos;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.AspNetCore.Authorization;
 
 namespace AllYourGoods.Api.Controllers;
 

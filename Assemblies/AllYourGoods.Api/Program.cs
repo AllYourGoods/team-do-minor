@@ -102,9 +102,7 @@ public class Program
         });
 
         builder.Services.AddHealthChecks();
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
-        // builder.Services.AddSwaggerGen();
         builder.Services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "AllYourGoods.Api", Version = "v1" });
