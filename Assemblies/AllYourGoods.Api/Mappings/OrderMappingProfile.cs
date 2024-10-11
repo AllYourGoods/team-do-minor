@@ -11,8 +11,8 @@ namespace AllYourGoods.Api.Mappings
 
         public OrderMappingProfile()
         {
-            CreateMap<Order, ResponseOrderDto>()
-            .ForMember(dest => dest.Products, opt => opt.MapFrom(src => src.OrderHasProduct));
+            CreateMap<Order, ResponseOrderDto>();
+            
             CreateMap<Address, ResponseAddressDto>();
 
 

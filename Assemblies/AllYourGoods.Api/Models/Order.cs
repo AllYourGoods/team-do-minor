@@ -7,6 +7,7 @@ public class Order : BaseEntity
  
     public  int RestaurantId { get; set; }
     public int CustomerId { get; set; }
+    public string? CreatedOnUtc { get; set; }
     public int AddressId { get; set; }
     public int DeliveryPersonId { get; set; }
     public double TotalPrice { get; set; }
