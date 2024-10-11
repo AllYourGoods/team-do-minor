@@ -115,4 +115,38 @@ public class AuthController : ControllerBase
         return roleResult;
 
     }
+
+    [HttpPost("forgot-password")]
+    public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordModel model)
+    {
+        var user = await _userManager.FindByEmailAsync(model.Email);
+        if (user == null)
+        {
+            return BadRequest("Invalid email address.");
+        }
+
+        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+        // Just return the token for now, this should be sent through mail later on
+        return Ok(new { ResetToken = token });
+    }
+
+    [HttpPost("reset-password")]
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordModel model)
+    {
+        var user = await _userManager.FindByEmailAsync(model.Email);
+        if (user == null)
+        {
+            return BadRequest("Invalid email address.");
+        }
+
+        var result = await _userManager.ResetPasswordAsync(user, model.Token, model.NewPassword);
+
+        if (result.Succeeded)
+        {
+            return Ok("Password reset successfully.");
+        }
+
+        return BadRequest(result.Errors);
+    }
 }
