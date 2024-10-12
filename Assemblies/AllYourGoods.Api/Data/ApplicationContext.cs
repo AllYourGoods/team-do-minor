@@ -32,7 +32,6 @@ namespace AllYourGoods.Api.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Use singular table names
             modelBuilder.Entity<Restaurant>().ToTable("Restaurant");
             modelBuilder.Entity<Address>().ToTable("Address");
             modelBuilder.Entity<ImageFile>().ToTable("ImageFile");
@@ -49,45 +48,41 @@ namespace AllYourGoods.Api.Data
             modelBuilder.Entity<CategoryHasProduct>().ToTable("CategoryHasProduct");
             modelBuilder.Entity<OrderHasProduct>().ToTable("OrderHasProduct");
             modelBuilder.Entity<RestaurantHasTags>().ToTable("RestaurantHasTags");
-            modelBuilder.Entity<Roles>().ToTable("Role"); // Singular table name for roles
+            modelBuilder.Entity<Roles>().ToTable("Role");
 
-            // Configure the one-to-one relationship between Restaurant and User
             modelBuilder.Entity<Restaurant>()
                 .HasOne(r => r.Owner)
                 .WithOne(u => u.Restaurant)
                 .HasForeignKey<Restaurant>(r => r.OwnerId)
-                .OnDelete(DeleteBehavior.Cascade); // Use Cascade or Restrict based on your business logic
+                .OnDelete(DeleteBehavior.Cascade); 
 
-            // Configure composite key for CategoryHasProduct
             modelBuilder.Entity<CategoryHasProduct>()
                 .HasKey(cp => new { cp.CategoryId, cp.ProductId });
 
-            // Configuring one-to-many relationships with no cascade delete
             modelBuilder.Entity<Order>()
                 .HasOne(o => o.Address)
                 .WithMany()
                 .HasForeignKey(o => o.AddressId)
-                .OnDelete(DeleteBehavior.Restrict); // Use Restrict instead of Cascade
+                .OnDelete(DeleteBehavior.Restrict); 
 
             modelBuilder.Entity<Order>()
                 .HasOne(o => o.Restaurant)
                 .WithMany()
                 .HasForeignKey(o => o.RestaurantId)
-                .OnDelete(DeleteBehavior.Restrict); // Use Restrict instead of Cascade
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Order>()
                 .HasOne(o => o.Customer)
                 .WithMany()
                 .HasForeignKey(o => o.CustomerId)
-                .OnDelete(DeleteBehavior.Restrict); // Use Restrict instead of Cascade
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Order>()
                 .HasOne(o => o.DeliveryPerson)
                 .WithMany()
                 .HasForeignKey(o => o.DeliveryPersonId)
-                .OnDelete(DeleteBehavior.Restrict); // Use Restrict instead of Cascade
+                .OnDelete(DeleteBehavior.Restrict); 
 
-            // Example for other many-to-many relationships
             modelBuilder.Entity<ProductHasTag>()
                 .HasKey(pt => new { pt.ProductId, pt.TagId });
 
@@ -98,7 +93,7 @@ namespace AllYourGoods.Api.Data
                 .HasKey(rt => new { rt.RestaurantId, rt.TagId });
 
             modelBuilder.Entity<UserRoles>()
-                .HasKey(ur => new { ur.UserId, ur.RoleId }); // Composite key
+                .HasKey(ur => new { ur.UserId, ur.RoleId }); 
 
             modelBuilder.Entity<User>()
                 .HasMany(u => u.UserRoles)
