@@ -8,4 +8,8 @@ public class OpeningsTime : BaseEntity
     public TimeOnly? Closing { get; set; }
     public Day? Day { get; set; }
 
+    public Guid RestaurantId { get; set; }
+
+    public virtual Restaurant Restaurant { get; set; }
+
 }

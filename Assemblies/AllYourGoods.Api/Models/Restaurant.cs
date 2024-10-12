@@ -22,5 +22,12 @@ public class Restaurant : BaseEntity
     public virtual Address Address { get; set; } = null!;
     public virtual ImageFile Banner { get; set; } = null!;
     public virtual User? Owner { get; set; }
+
+
     public virtual ICollection<OpeningsTime>? OpeningsTimes { get; set; }
+
+    public virtual ICollection<Menu> Menus { get; set; }
+    public virtual ICollection<RestaurantHasTags> RestaurantTags { get; set; }
+    public virtual ICollection<FrequentlyAskedQuestion> FAQs { get; set; }
 }
+

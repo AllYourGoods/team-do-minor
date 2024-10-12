@@ -1,26 +1,116 @@
 ﻿using AllYourGoods.Api.Models;
+using AllYourGoods.Api.Models.Enums;
 using Microsoft.EntityFrameworkCore;
 
-namespace AllYourGoods.Api.Data;
-
-public class ApplicationContext : DbContext
+namespace AllYourGoods.Api.Data
 {
-
-    public ApplicationContext(DbContextOptions<ApplicationContext> options): base(options) 
+    public class ApplicationContext : DbContext
     {
-    }
+        public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
+        {
+        }
 
-    public ApplicationContext()
-    {
-    }
+        public virtual DbSet<Restaurant> Restaurants { get; set; } = null!;
+        public virtual DbSet<Address> Addresses { get; set; } = null!;
+        public virtual DbSet<ImageFile> ImageFiles { get; set; } = null!;
+        public virtual DbSet<Menu> Menus { get; set; } = null!;
+        public virtual DbSet<Category> Categories { get; set; } = null!;
+        public virtual DbSet<Product> Products { get; set; } = null!;
+        public virtual DbSet<Order> Orders { get; set; } = null!;
+        public virtual DbSet<User> Users { get; set; } = null!;
+        public virtual DbSet<DeliveryPerson> DeliveryPersons { get; set; } = null!;
+        public virtual DbSet<OpeningsTime> OpeningsTimes { get; set; } = null!;
+        public virtual DbSet<FrequentlyAskedQuestion> FAQs { get; set; } = null!;
+        public virtual DbSet<Tag> Tags { get; set; } = null!;
+        public virtual DbSet<ProductHasTag> ProductTags { get; set; } = null!;
+        public virtual DbSet<CategoryHasProduct> CategoryProducts { get; set; } = null!;
+        public virtual DbSet<OrderHasProduct> OrderProducts { get; set; } = null!;
+        public virtual DbSet<RestaurantHasTags> RestaurantTags { get; set; } = null!;
+        public virtual DbSet<Roles> Roles { get; set; } = null!;
 
-    public virtual DbSet<Restaurant> Restaurants { get; set; } = null!;
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-     
-        base.OnModelCreating(modelBuilder);
+            // Use singular table names
+            modelBuilder.Entity<Restaurant>().ToTable("Restaurant");
+            modelBuilder.Entity<Address>().ToTable("Address");
+            modelBuilder.Entity<ImageFile>().ToTable("ImageFile");
+            modelBuilder.Entity<Menu>().ToTable("Menu");
+            modelBuilder.Entity<Category>().ToTable("Category");
+            modelBuilder.Entity<Product>().ToTable("Product");
+            modelBuilder.Entity<Order>().ToTable("Order");
+            modelBuilder.Entity<User>().ToTable("User");
+            modelBuilder.Entity<DeliveryPerson>().ToTable("DeliveryPerson");
+            modelBuilder.Entity<OpeningsTime>().ToTable("OpeningsTime");
+            modelBuilder.Entity<FrequentlyAskedQuestion>().ToTable("FrequentlyAskedQuestion");
+            modelBuilder.Entity<Tag>().ToTable("Tag");
+            modelBuilder.Entity<ProductHasTag>().ToTable("ProductHasTag");
+            modelBuilder.Entity<CategoryHasProduct>().ToTable("CategoryHasProduct");
+            modelBuilder.Entity<OrderHasProduct>().ToTable("OrderHasProduct");
+            modelBuilder.Entity<RestaurantHasTags>().ToTable("RestaurantHasTags");
+            modelBuilder.Entity<Roles>().ToTable("Role"); // Singular table name for roles
+
+            // Configure the one-to-one relationship between Restaurant and User
+            modelBuilder.Entity<Restaurant>()
+                .HasOne(r => r.Owner)
+                .WithOne(u => u.Restaurant)
+                .HasForeignKey<Restaurant>(r => r.OwnerId)
+                .OnDelete(DeleteBehavior.Cascade); // Use Cascade or Restrict based on your business logic
+
+            // Configure composite key for CategoryHasProduct
+            modelBuilder.Entity<CategoryHasProduct>()
+                .HasKey(cp => new { cp.CategoryId, cp.ProductId });
+
+            // Configuring one-to-many relationships with no cascade delete
+            modelBuilder.Entity<Order>()
+                .HasOne(o => o.Address)
+                .WithMany()
+                .HasForeignKey(o => o.AddressId)
+                .OnDelete(DeleteBehavior.Restrict); // Use Restrict instead of Cascade
+
+            modelBuilder.Entity<Order>()
+                .HasOne(o => o.Restaurant)
+                .WithMany()
+                .HasForeignKey(o => o.RestaurantId)
+                .OnDelete(DeleteBehavior.Restrict); // Use Restrict instead of Cascade
+
+            modelBuilder.Entity<Order>()
+                .HasOne(o => o.Customer)
+                .WithMany()
+                .HasForeignKey(o => o.CustomerId)
+                .OnDelete(DeleteBehavior.Restrict); // Use Restrict instead of Cascade
+
+            modelBuilder.Entity<Order>()
+                .HasOne(o => o.DeliveryPerson)
+                .WithMany()
+                .HasForeignKey(o => o.DeliveryPersonId)
+                .OnDelete(DeleteBehavior.Restrict); // Use Restrict instead of Cascade
+
+            // Example for other many-to-many relationships
+            modelBuilder.Entity<ProductHasTag>()
+                .HasKey(pt => new { pt.ProductId, pt.TagId });
+
+            modelBuilder.Entity<OrderHasProduct>()
+                .HasKey(op => new { op.OrderId, op.ProductId });
+
+            modelBuilder.Entity<RestaurantHasTags>()
+                .HasKey(rt => new { rt.RestaurantId, rt.TagId });
+
+            modelBuilder.Entity<UserRoles>()
+                .HasKey(ur => new { ur.UserId, ur.RoleId }); // Composite key
+
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.UserRoles)
+                .WithOne(ur => ur.User)
+                .HasForeignKey(ur => ur.UserId);
+
+            modelBuilder.Entity<Roles>()
+                .HasMany(r => r.UserRoles)
+                .WithOne(ur => ur.Role)
+                .HasForeignKey(ur => ur.RoleId);
+
+        }
+
     }
 }
-
-
