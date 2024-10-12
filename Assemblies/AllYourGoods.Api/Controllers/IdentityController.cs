@@ -163,7 +163,7 @@ public class AuthController : ControllerBase
 
     }
 
-    [HttpPost("forgot-password")]
+    [HttpPost("password/forgot")]
     public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordModel model)
     {
         var user = await _userManager.FindByEmailAsync(model.Email);
@@ -178,7 +178,7 @@ public class AuthController : ControllerBase
         return Ok(new { ResetToken = token });
     }
 
-    [HttpPost("reset-password")]
+    [HttpPost("password/reset")]
     public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordModel model)
     {
         var user = await _userManager.FindByEmailAsync(model.Email);
