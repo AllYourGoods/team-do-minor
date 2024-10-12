@@ -4,6 +4,7 @@ using AllYourGoods.Api.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AllYourGoods.Api.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20241011152157_RefreshToken")]
+    partial class RefreshToken
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,11 +39,9 @@ namespace AllYourGoods.Api.Migrations
 
                     b.Property<string>("UserFK")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("UserFK");
 
                     b.ToTable("RefreshTokens");
                 });
@@ -288,17 +289,6 @@ namespace AllYourGoods.Api.Migrations
                     b.HasIndex("TagsId");
 
                     b.ToTable("RestaurantTag");
-                });
-
-            modelBuilder.Entity("AllYourGoods.Api.Models.RefreshToken", b =>
-                {
-                    b.HasOne("AllYourGoods.Api.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserFK")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

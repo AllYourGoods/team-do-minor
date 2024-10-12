@@ -16,7 +16,7 @@ public class ApplicationContext : IdentityDbContext<User>
     }
 
     public virtual DbSet<Restaurant> Restaurants { get; set; } = null!;
-    // public override DbSet<User> Users { get; set; } = null!;
+    public virtual DbSet<RefreshToken> RefreshTokens { get; set; } = null!;
     public virtual DbSet<Tag> Tags { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -31,6 +31,12 @@ public class ApplicationContext : IdentityDbContext<User>
         modelBuilder.Entity<User>().Ignore(u => u.TwoFactorEnabled);
         modelBuilder.Entity<User>().Ignore(u => u.LockoutEnd);
         modelBuilder.Entity<User>().Ignore(u => u.LockoutEnabled);
+
+        modelBuilder.Entity<RefreshToken>()
+            .HasOne(rt => rt.User)  
+            .WithMany()  
+            .HasForeignKey(rt => rt.UserFK) 
+            .OnDelete(DeleteBehavior.Cascade); 
     }
 }
 
