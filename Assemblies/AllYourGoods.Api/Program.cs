@@ -36,9 +36,11 @@ public class Program
         app.EnableBuffering();
         app.EnableRequestBodyLoggingMiddleware();
 
+   
         app.MapControllers();
         app.MapHealthChecks("/health");
         app.Run();
+        
     }
 
     private static WebApplicationBuilder CreateBuilder(string[] args)
@@ -60,6 +62,7 @@ public class Program
 
         // Add services to the container.
         builder.Services.AddAutoMapper(typeof(RestaurantMappingProfile));
+        builder.Services.AddAutoMapper(typeof(OrderMappingProfile));
         builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         builder.Services.AddScoped<IRestaurantService, RestaurantService>();
@@ -77,6 +80,7 @@ public class Program
 
         return builder;
     }
+   
 
     private static void InitializeDatabase(IHost app)
     {

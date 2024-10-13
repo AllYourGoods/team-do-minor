@@ -4,7 +4,8 @@
     { 
         public Guid OrderId { get; set; }
         public Guid ProductID { get; set; }
-        public long Amount { get; set; }
+        public int Amount { get; set; }
+        public double Price { get; set; }
 
        // Navigation properties
        public Product product { get; set; } = null!;

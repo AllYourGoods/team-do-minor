@@ -1,25 +1,24 @@
 ﻿using AllYourGoods.Api.Models.Enums;
 using AllYourGoods.Api.Models.Dtos.Responses;
+using AllYourGoods.Api.Models.Dtos.Views;
 
 namespace AllYourGoods.Api.Models.Dtos.Responses;
 
     public class ResponseOrderDto
-    { 
-        public Guid Id { get; set; }
-        public int RestaurantId { get; set; }
-        public int DeliveryPersonId { get; set; }
-        public string? CreatedOnUtc { get; set; }
-        public int CustomerId { get; set; }
-        public PaymentMethod? PaymentMethod { get; set; }
-        public ResponseAddressDto Address { get; set; } = null!;
-        public double? TotalPrice { get; set; }
-        public string? Email { get; set; }
-        public string? PhoneNumber { get; set; }
-        public string? Note { get; set; }
-        public List<ResponseOrderHasProductDto>? OrderHasProduct { get; set; }
+    {
+    public OrderStatus StatusCode { get; set; }
+    public string? StatusMessage { get; set; }
+    public Guid Id { get; set; }
+    public TimeOnly? CreatedOnUTC { get; set; }
+    public double TotalPrice { get; set; }
+    public string? StreetName { get; set; }
+    public string? HouseNumber { get; set; }
+    public ResponseRestaurantDto? RestaurantName { get; set; } = null!;
+    public List<ResponseLogoDto> Logo { get; set; } = null!;
+    public List<OrderHasProduct>? OrderHasProduct { get; set; } = null!;
 
 
-    
+
 
 }
 

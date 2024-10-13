@@ -179,9 +179,111 @@ public class DbInitializer
                     new () { Opening = new TimeOnly(10, 00), Closing = new TimeOnly(22, 00), Day = Day.Friday },
                 }
             }
-        };
 
+        };
         context.Restaurants.AddRange(restaurants);
         context.SaveChanges();
+
+        if (!context.Products.Any())
+        {
+            var products = new Product[]
+            {
+                    new() { Name = "Big Mac", Price = 5.99 },
+                    new() { Name = "Whopper", Price = 6.49 },
+                    new() { Name = "Zinger Burger", Price = 4.99 },
+                    new() { Name = "Fries", Price = 2.99 },
+                    new() { Name = "Coke", Price = 1.99 }
+            };
+
+            context.Products.AddRange(products);
+            context.SaveChanges();
+        }
+
+        // Seed orders and OrderHasProducts if they don't exist
+        if (!context.Orders.Any())
+        {
+            var orders = new Order[]
+            {
+                    // First order
+                    new()
+                    {
+                        RestaurantId = context.Restaurants.First().Id, // assuming the first restaurant
+                        CustomerId = Guid.NewGuid(), // Replace with actual customer ID
+                        TotalPrice = 12.49,
+                        Note = "Please deliver quickly!",
+                        CreatedOnUTC = new TimeOnly(12, 30),
+                        ExpiredOnUTC = new TimeOnly(13, 30),
+                        AddressId = context.Address.First().Id, // Assuming an address is available
+                        DeliveryPersonId = Guid.NewGuid(), // Replace with actual delivery person ID
+                        ETA = 30,
+                        PaymentMethod = PaymentMethod.Cash,
+                        Status = OrderStatus.Error
+                    },
+                    // Second order with multiple products (3 or 5)
+                    new()
+                    {
+                        RestaurantId = context.Restaurants.First().Id, // Replace with another restaurant if needed
+                        CustomerId = Guid.NewGuid(),
+                        TotalPrice = 30.95, // Total price with multiple products
+                        Note = "Please pack the drinks separately.",
+                        CreatedOnUTC = new TimeOnly(11, 15),
+                        ExpiredOnUTC = new TimeOnly(12, 00),
+                        AddressId = context.Address.First().Id, // Replace with actual address
+                        DeliveryPersonId = Guid.NewGuid(),
+                        ETA = 45,
+                        PaymentMethod = PaymentMethod.Cash,
+                        Status = OrderStatus.Success
+                    }
+            };
+
+            context.Orders.AddRange(orders);
+            context.SaveChanges();
+
+            // First order products
+            var orderHasProducts1 = new OrderHasProduct[]
+            {
+                    new()
+                    {
+                        OrderId = orders[0].Id, // First order
+                        ProductID = context.Products.First().Id, // First product
+                        Amount = 2,
+                        Price = 5.99 * 2
+                    }
+            };
+
+            // Second order products (3 or 5 products)
+            var orderHasProducts2 = new OrderHasProduct[]
+            {
+                    new()
+                    {
+                        OrderId = orders[1].Id, // Second order
+                        ProductID = context.Products.First(p => p.Name == "Whopper").Id,
+                        Amount = 1,
+                        Price = 6.49
+                    },
+                    new()
+                    {
+                        OrderId = orders[1].Id, // Second order
+                        ProductID = context.Products.First(p => p.Name == "Fries").Id,
+                        Amount = 2,
+                        Price = 2.99 * 2
+                    },
+                    new()
+                    {
+                        OrderId = orders[1].Id, // Second order
+                        ProductID = context.Products.First(p => p.Name == "Coke").Id,
+                        Amount = 3,
+                        Price = 1.99 * 3
+                    }
+                    // You can add more products here for a total of 5, if needed
+            };
+
+            // Save first and second order products
+            context.OrderHasProducts.AddRange(orderHasProducts1);
+            context.OrderHasProducts.AddRange(orderHasProducts2);
+            context.SaveChanges();
+        }
+
     }
+
 }

@@ -32,7 +32,7 @@ public class OrderService : IOrderService
         return _mapper.Map<ResponseOrderDto>(order);
     }
 
-    public async Task<ResponseOrderDto> GetAllAsync()
+    public async Task<List<ResponseOrderDto>> GetAllAsync()
     {
         var order = await _unitOfWork.Repository<Order>().GetAllAsync();
 
@@ -41,12 +41,19 @@ public class OrderService : IOrderService
             throw new KeyNotFoundException($"not Orders found");
         }
 
-        return _mapper.Map<ResponseOrderDto>(order);
+        return _mapper.Map<List<ResponseOrderDto>>(order);
     }
+
 
     public async Task<ResponseOrderDto> GetOrderByIdAsync(Guid orderId)
     {
-        var order = await _unitOfWork.Repository<Order>().GetByIdAsync(orderId);
+        var order = await _unitOfWork.Repository<Order>().GetByIdAsync(orderId,
+           o => o.Address,
+           o => o.RestaurantId,
+           o => o.DeliveryPersonId,
+           o => o.CustomerId,
+           o => o.OrderHasProduct!);
+           
 
         if (order == null)
         {

@@ -2,9 +2,7 @@
 using AllYourGoods.Api.Models;
 using AllYourGoods.Api.Models.Dtos.Creates;
 using AllYourGoods.Api.Models.Dtos.Responses;
-using AllYourGoods.Api.Models.Dtos.Updates;
 using AllYourGoods.Api.Models.Dtos.Views;
-using AllYourGoods.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AllYourGoods.Api.Controllers;
@@ -38,32 +36,14 @@ public class OrderController : ControllerBase
 
         var responseOrderDto = await _orderService.CreateOrderAsync(orderDto);
 
-        return CreatedAtAction(nameof(GetOrder), new { id = responseOrderDto.Id }, responseOrderDto);
+        return CreatedAtAction(" ", new { id = responseOrderDto.Id }, responseOrderDto);
     }
 
-
-    [HttpGet("{id}")]
-    [ProducesResponseType(typeof(ResponseOrderDto), 200)]
-    [ProducesResponseType(404)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<ResponseOrderDto>> GetOrder(Guid id)
-    {
-        try
-        {
-            var order = await _orderService.GetOrderByIdAsync(id);
-
-            return Ok(order);
-        }
-        catch (KeyNotFoundException)
-        {
-            return NotFound($"Order with ID = {id} not found.");
-        }
-    }
 
 
     [HttpGet]
-    [ProducesResponseType(typeof(ResponseOrderDto), 200)]
-    [ProducesResponseType(404)]
+    [ProducesResponseType(typeof(PaginatedList<ResponseOrderDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<ResponseOrderDto>> GetOrderAllAsync()
     {
