@@ -37,7 +37,7 @@ namespace AllYourGoods.Api.Controllers
         }
 
         [HttpGet("paginated")]
-        [Authorize]
+        // [Authorize]
         [ProducesResponseType(typeof(PaginatedList<ResponseRestaurantDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -72,7 +72,7 @@ namespace AllYourGoods.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "teamhr")]
+        // [Authorize(Roles = "teamhr")]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)] 
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
