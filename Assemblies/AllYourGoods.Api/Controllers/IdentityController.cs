@@ -1,5 +1,3 @@
-using AllYourGoods.Api.Interfaces.Services;
-using AllYourGoods.Api.Models.Dtos;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -7,7 +5,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using AllYourGoods.Api.Models;
-using Microsoft.AspNetCore.Http.HttpResults;
 using System.Security.Cryptography;
 using AllYourGoods.Api.Data;
 
@@ -48,16 +45,51 @@ public class AuthController : ControllerBase
         return Unauthorized();
     }
 
-
-    [HttpPost("register/group1")]
-    public async Task<IActionResult> Register([FromBody] RegisterModel model)
+    [HttpPost("register/pipelinepirates")]
+    public async Task<IActionResult> RegisterPirates([FromBody] RegisterModel model)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
 
-        var result = await addUser(model, Roles.group1);
+        var result = await addUser(model, Roles.pipelinepirates);
+
+        if (result.Succeeded)
+        {
+            return Ok(new { Message = "User created successfully!" });
+        }
+
+        return BadRequest(result.Errors);
+    }
+
+    [HttpPost("register/teamhr")]
+    public async Task<IActionResult> RegisterHR([FromBody] RegisterModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var result = await addUser(model, Roles.teamhr);
+
+        if (result.Succeeded)
+        {
+            return Ok(new { Message = "User created successfully!" });
+        }
+
+        return BadRequest(result.Errors);
+    }
+
+    [HttpPost("register/terminaltovenaars")]
+    public async Task<IActionResult> RegisterTovenaars([FromBody] RegisterModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var result = await addUser(model, Roles.terminaltovenaars);
 
         if (result.Succeeded)
         {

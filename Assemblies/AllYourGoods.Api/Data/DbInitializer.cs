@@ -33,7 +33,7 @@ public class DbInitializer
         };
 
         await userManager.CreateAsync(user, "LamePassword1!");
-        await userManager.AddToRoleAsync(user, Roles.group1.ToString());
+        await userManager.AddToRoleAsync(user, Roles.teamhr.ToString());
 
 
         var restaurants = new Restaurant[]
