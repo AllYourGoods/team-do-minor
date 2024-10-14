@@ -6,19 +6,21 @@ namespace AllYourGoods.Api.Models.Dtos.Creates
 {
     public class CreateOrderDto
     {
-
-        
-        [Required]
-        public double? TotalPrice { get; set; }
-        [Required]
-        [StringLength(255, ErrorMessage = "Note cannot exceed 255 characters.")]
+        public  CreateOrderDto(CreateAddress address)
+        {
+            Address = address;
+        }
+        public Guid RestaurantId { get; set; }
+        public Guid CustomerId { get; set; }
+        public double TotalPrice { get; set; }
         public string? Note { get; set; }
-        public CreateAddress AddressId { get; set; } = null!;
-        public CreateOrderHasProduct OrderHasProductId { get; set; } = null!;
+        public CreateAddress Address { get; set; }
+        public Guid OrderHasProductId { get; set; }
+        public Guid DeliveryPersonId { get; set; }
         public double ETA { get; set; }
-        public PaymentMethod? PaymentMethod { get; set; }
+        public PaymentMethod PaymentMethod { get; set; }
         public OrderStatus Status { get; set; }
-        
-    }
+    
+}
 
 }

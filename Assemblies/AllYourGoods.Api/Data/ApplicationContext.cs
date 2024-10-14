@@ -6,12 +6,13 @@ namespace AllYourGoods.Api.Data;
 public class ApplicationContext : DbContext
 {
 
-    public ApplicationContext(DbContextOptions<ApplicationContext> options): base(options) 
+    public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
     {
     }
 
-    public ApplicationContext()
-    {
+    public ApplicationContext() { }
+
+
     public virtual DbSet<Restaurant> Restaurants { get; set; } = null!;
     public virtual DbSet<Order> Orders { get; set; } = null!;
     public virtual DbSet<Product> Products { get; set; } = null!;

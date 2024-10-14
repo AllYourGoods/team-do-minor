@@ -61,8 +61,8 @@ public class Program
         builder.Logging.AddApplicationInsights();
 
         // Add services to the container.
-        builder.Services.AddAutoMapper(typeof(RestaurantMappingProfile));
         builder.Services.AddAutoMapper(typeof(OrderMappingProfile));
+        builder.Services.AddAutoMapper(typeof(RestaurantMappingProfile));
         builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         builder.Services.AddScoped<IRestaurantService, RestaurantService>();

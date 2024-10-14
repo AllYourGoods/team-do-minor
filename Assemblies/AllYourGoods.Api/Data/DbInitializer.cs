@@ -211,8 +211,6 @@ public class DbInitializer
                         CustomerId = Guid.NewGuid(), // Replace with actual customer ID
                         TotalPrice = 12.49,
                         Note = "Please deliver quickly!",
-                        CreatedOnUTC = new TimeOnly(12, 30),
-                        ExpiredOnUTC = new TimeOnly(13, 30),
                         AddressId = context.Address.First().Id, // Assuming an address is available
                         DeliveryPersonId = Guid.NewGuid(), // Replace with actual delivery person ID
                         ETA = 30,
@@ -226,8 +224,6 @@ public class DbInitializer
                         CustomerId = Guid.NewGuid(),
                         TotalPrice = 30.95, // Total price with multiple products
                         Note = "Please pack the drinks separately.",
-                        CreatedOnUTC = new TimeOnly(11, 15),
-                        ExpiredOnUTC = new TimeOnly(12, 00),
                         AddressId = context.Address.First().Id, // Replace with actual address
                         DeliveryPersonId = Guid.NewGuid(),
                         ETA = 45,

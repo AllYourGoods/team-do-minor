@@ -48,12 +48,7 @@ public class OrderService : IOrderService
     public async Task<ResponseOrderDto> GetOrderByIdAsync(Guid orderId)
     {
         var order = await _unitOfWork.Repository<Order>().GetByIdAsync(orderId,
-           o => o.Address,
-           o => o.RestaurantId,
-           o => o.DeliveryPersonId,
-           o => o.CustomerId,
-           o => o.OrderHasProduct!);
-           
+            o => o.Address);
 
         if (order == null)
         {
