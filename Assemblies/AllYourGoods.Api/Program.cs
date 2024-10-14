@@ -66,7 +66,8 @@ public class Program
         builder.Logging.AddApplicationInsights();
 
         builder.Services.AddAutoMapper(typeof(RestaurantMappingProfile));
-        builder.Services.AddScoped<IRestaurantRepository, RestaurantRepository>();
+        builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
         builder.Services.AddScoped<IRestaurantService, RestaurantService>();
 
         builder.Services.AddControllers();
@@ -144,7 +145,8 @@ public class Program
         {
             var context = services.GetRequiredService<ApplicationContext>();
             var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-            await DbInitializer.Initialize(context, roleManager);
+            var userManager = services.GetRequiredService<UserManager<User>>();
+            await DbInitializer.Initialize(context, roleManager, userManager);
         }
         catch (Exception ex)
         {

@@ -1,112 +1,94 @@
 ﻿using AllYourGoods.Api.Interfaces.Repositories;
-using AllYourGoods.Api.Mappings;
 using AllYourGoods.Api.Models;
+using AllYourGoods.Api.Models.Dtos.Views;
 using AllYourGoods.Api.Services;
 using AutoMapper;
 using Moq;
+using System.Linq.Expressions;
+using AllYourGoods.Api.Mappings;
 
-namespace AllYourGoods.Api.UnitTests.Services;
-
-public class RestaurantServiceTests
+namespace AllYourGoods.Api.UnitTests.Services
 {
-    private readonly Mock<IRestaurantRepository> _mockRepository;
-    private readonly RestaurantService _restaurantService;
-
-    public RestaurantServiceTests()
+    [TestFixture]
+    public class RestaurantServiceTests
     {
-        var config = new MapperConfiguration(cfg =>
+        private Mock<IUnitOfWork> _mockUnitOfWork;
+        private Mock<IMapper> _mockMapper;
+        private RestaurantService _restaurantService;
+        protected readonly MapperConfiguration MapperConfiguration = new(cfg =>
         {
             cfg.AddProfile<RestaurantMappingProfile>();
         });
 
-        var mapper= config.CreateMapper();
-        _mockRepository = new Mock<IRestaurantRepository>();
-        _restaurantService = new RestaurantService(_mockRepository.Object, mapper);
-    }
-
-    [Test]
-    public async Task GetRestaurants_ShouldReturnRestaurants_WithAllPropertiesMappedCorrectly()
-    {
-        // Arrange
-        var restaurantId1 = Guid.NewGuid();
-        var restaurantId2 = Guid.NewGuid();
-
-        // Creating mock data for Restaurant entities
-        var restaurants = new List<Restaurant>
-    {
-        new ()
+        [SetUp]
+        public void Setup()
         {
-            Id = restaurantId1,
-            Name = "Restaurant 1",
-            OpeningTime = new TimeOnly(10, 0),
-            ClosingTime = new TimeOnly(22, 0),
-            StreetName = "Main St",
-            HouseNumber = "123",
-            Description = "A nice place",
-            Radius = 5.0,
-            ImageLink = "http://example.com/image1.jpg",
-            Tags = new List<Tag>
-            {
-                new () { Id = Guid.NewGuid(), Name = "Italian" },
-                new () { Id = Guid.NewGuid(), Name = "Pizza" }
-            }
-        },
-        new ()
-        {
-            Id = restaurantId2,
-            Name = "Restaurant 2",
-            OpeningTime = new TimeOnly(11, 0),
-            ClosingTime = new TimeOnly(23, 0),
-            StreetName = "Second St",
-            HouseNumber = "456",
-            Description = "Another great place",
-            Radius = 3.5,
-            ImageLink = "http://example.com/image2.jpg",
-            Tags = new List<Tag>
-            {
-                new () { Id = Guid.NewGuid(), Name = "Mexican" }
-            }
+            _mockUnitOfWork = new Mock<IUnitOfWork>();
+            _mockMapper = new Mock<IMapper>();
+            _restaurantService = new RestaurantService(_mockUnitOfWork.Object, _mockMapper.Object);
         }
-    };
+        
 
-        // Setting up mock repository to return the list of restaurants
-        _mockRepository.Setup(x => x.GetRestaurants()).ReturnsAsync(restaurants);
+        [Test]
+        public void AssertMapperConfiguration()
+        {
+            MapperConfiguration.AssertConfigurationIsValid();
+        }
 
-        // Act
-        var result = (await _restaurantService.GetRestaurants()).ToList();
+        [Test]
+        public async Task CreateRestaurantAsync_ValidData_ReturnsResponseRestaurantDto()
+        {
+            //TODO to be implemented
+        }
 
-        // Assert that the total number of restaurants returned is correct
-        Assert.That(result.Count, Is.EqualTo(2));
+        [Test]
+        public async Task GetRestaurantByIdAsync_ExistingRestaurantId_ReturnsResponseRestaurantDto()
+        {
+            // Arrange
+            var restaurantId = Guid.NewGuid();
+            var restaurant = new Restaurant { Id = restaurantId, Name = "Test Restaurant" };
+            var responseDto = new ResponseRestaurantDto { Id = restaurantId, Name = "Test Restaurant" };
 
-        // Asserting the first restaurant's properties
-        var restaurant1Dto = result.FirstOrDefault(r => r.Name == "Restaurant 1");
-        Assert.That(restaurant1Dto, Is.Not.Null);
-        Assert.That(restaurant1Dto.Id, Is.EqualTo(restaurantId1));
-        Assert.That(restaurant1Dto.Name, Is.EqualTo("Restaurant 1"));
-        Assert.That(restaurant1Dto.OpeningTime, Is.EqualTo(new TimeOnly(10, 0)));
-        Assert.That(restaurant1Dto.ClosingTime, Is.EqualTo(new TimeOnly(22, 0)));
-        Assert.That(restaurant1Dto.StreetName, Is.EqualTo("Main St"));
-        Assert.That(restaurant1Dto.HouseNumber, Is.EqualTo("123"));
-        Assert.That(restaurant1Dto.Description, Is.EqualTo("A nice place"));
-        Assert.That(restaurant1Dto.Radius, Is.EqualTo(5.0));
-        Assert.That(restaurant1Dto.ImageLink, Is.EqualTo("http://example.com/image1.jpg"));
-        Assert.That(restaurant1Dto.Tags, Is.Not.Null);
-        Assert.That(restaurant1Dto.Tags, Is.EqualTo(new List<string> { "Italian", "Pizza" }));
+            _mockUnitOfWork.Setup(u => u.Repository<Restaurant>().GetByIdAsync(
+                restaurantId,
+                It.IsAny<Expression<Func<Restaurant, object>>[]>())).ReturnsAsync(restaurant);
 
-        // Asserting the second restaurant's properties
-        var restaurant2Dto = result.FirstOrDefault(r => r.Name == "Restaurant 2");
-        Assert.That(restaurant2Dto, Is.Not.Null);
-        Assert.That(restaurant2Dto.Id, Is.EqualTo(restaurantId2));
-        Assert.That(restaurant2Dto.Name, Is.EqualTo("Restaurant 2"));
-        Assert.That(restaurant2Dto.OpeningTime, Is.EqualTo(new TimeOnly(11, 0)));
-        Assert.That(restaurant2Dto.ClosingTime, Is.EqualTo(new TimeOnly(23, 0)));
-        Assert.That(restaurant2Dto.StreetName, Is.EqualTo("Second St"));
-        Assert.That(restaurant2Dto.HouseNumber, Is.EqualTo("456"));
-        Assert.That(restaurant2Dto.Description, Is.EqualTo("Another great place"));
-        Assert.That(restaurant2Dto.Radius, Is.EqualTo(3.5));
-        Assert.That(restaurant2Dto.ImageLink, Is.EqualTo("http://example.com/image2.jpg"));
-        Assert.That(restaurant2Dto.Tags, Is.Not.Null);
-        Assert.That(restaurant2Dto.Tags, Is.EqualTo(new List<string> { "Mexican" }));
+            _mockMapper.Setup(m => m.Map<ResponseRestaurantDto>(restaurant)).Returns(responseDto);
+
+            // Act
+            var result = await _restaurantService.GetRestaurantByIdAsync(restaurantId);
+
+            // Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Id, Is.EqualTo(restaurantId));
+            Assert.That(result.Name, Is.EqualTo("Test Restaurant"));
+            _mockUnitOfWork.Verify(u => u.Repository<Restaurant>().GetByIdAsync(restaurantId, It.IsAny<Expression<Func<Restaurant, object>>[]>()), Times.Once);
+        }
+
+        [Test]
+        public void GetRestaurantByIdAsync_NonExistentRestaurantId_ThrowsKeyNotFoundException()
+        {
+            // Arrange
+            var restaurantId = Guid.NewGuid();
+
+            _mockUnitOfWork.Setup(u => u.Repository<Restaurant>().GetByIdAsync(
+                restaurantId,
+                It.IsAny<Expression<Func<Restaurant, object>>[]>())).ReturnsAsync((Restaurant)null);
+
+            // Act & Assert
+            Assert.ThrowsAsync<KeyNotFoundException>(() => _restaurantService.GetRestaurantByIdAsync(restaurantId));
+        }
+
+        [Test]
+        public async Task DeleteRestaurantAsync_ValidRestaurantId_DeletesRestaurantAndRelatedEntities()
+        {
+          //TODO to be implemented
+        }
+
+        [Test]
+        public async Task UpdateRestaurantAsync_ExistingRestaurantId_ReturnsUpdatedResponseRestaurantDto()
+        {
+          //TODO to be implemented
+        }
     }
-
 }

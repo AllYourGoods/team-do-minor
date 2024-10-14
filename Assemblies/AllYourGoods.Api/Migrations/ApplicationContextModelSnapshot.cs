@@ -22,6 +22,93 @@ namespace AllYourGoods.Api.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("AllYourGoods.Api.Models.Address", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("HouseNumber")
+                        .IsRequired()
+                        .HasMaxLength(6)
+                        .HasColumnType("nvarchar(6)");
+
+                    b.Property<double?>("Latitude")
+                        .HasColumnType("float");
+
+                    b.Property<double?>("Longitude")
+                        .HasColumnType("float");
+
+                    b.Property<string>("StreetName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("ZipCode")
+                        .IsRequired()
+                        .HasMaxLength(6)
+                        .HasColumnType("nvarchar(6)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Address");
+                });
+
+            modelBuilder.Entity("AllYourGoods.Api.Models.ImageFile", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AltText")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("FileSize")
+                        .HasColumnType("float");
+
+                    b.Property<string>("MimeType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ImageFile");
+                });
+
+            modelBuilder.Entity("AllYourGoods.Api.Models.OpeningsTime", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<TimeOnly?>("Closing")
+                        .HasColumnType("time");
+
+                    b.Property<int?>("Day")
+                        .HasColumnType("int");
+
+                    b.Property<TimeOnly?>("Opening")
+                        .HasColumnType("time");
+
+                    b.Property<Guid?>("RestaurantId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RestaurantId");
+
+                    b.ToTable("OpeningsTime");
+                });
+
             modelBuilder.Entity("AllYourGoods.Api.Models.RefreshToken", b =>
                 {
                     b.Property<string>("Id")
@@ -51,48 +138,45 @@ namespace AllYourGoods.Api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<TimeOnly?>("ClosingTime")
-                        .HasColumnType("time");
-
-                    b.Property<string>("Description")
+                    b.Property<string>("AboutUs")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("HouseNumber")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid?>("AddressId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("ImageLink")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid?>("BannerId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<TimeOnly?>("OpeningTime")
-                        .HasColumnType("time");
-
-                    b.Property<double?>("Radius")
-                        .HasColumnType("float");
-
-                    b.Property<string>("StreetName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Restaurants");
-                });
-
-            modelBuilder.Entity("AllYourGoods.Api.Models.Tag", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<Guid?>("LogoId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("OwnerId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.Property<double?>("Radius")
+                        .HasColumnType("float");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tags");
+                    b.HasIndex("AddressId");
+
+                    b.HasIndex("BannerId");
+
+                    b.HasIndex("LogoId");
+
+                    b.HasIndex("OwnerId");
+
+                    b.ToTable("Restaurants");
                 });
 
             modelBuilder.Entity("AllYourGoods.Api.Models.User", b =>
@@ -275,19 +359,11 @@ namespace AllYourGoods.Api.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("RestaurantTag", b =>
+            modelBuilder.Entity("AllYourGoods.Api.Models.OpeningsTime", b =>
                 {
-                    b.Property<Guid>("RestaurantsId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("TagsId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("RestaurantsId", "TagsId");
-
-                    b.HasIndex("TagsId");
-
-                    b.ToTable("RestaurantTag");
+                    b.HasOne("AllYourGoods.Api.Models.Restaurant", null)
+                        .WithMany("OpeningsTimes")
+                        .HasForeignKey("RestaurantId");
                 });
 
             modelBuilder.Entity("AllYourGoods.Api.Models.RefreshToken", b =>
@@ -299,6 +375,33 @@ namespace AllYourGoods.Api.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("AllYourGoods.Api.Models.Restaurant", b =>
+                {
+                    b.HasOne("AllYourGoods.Api.Models.Address", "Address")
+                        .WithMany()
+                        .HasForeignKey("AddressId");
+
+                    b.HasOne("AllYourGoods.Api.Models.ImageFile", "Banner")
+                        .WithMany()
+                        .HasForeignKey("BannerId");
+
+                    b.HasOne("AllYourGoods.Api.Models.ImageFile", "Logo")
+                        .WithMany()
+                        .HasForeignKey("LogoId");
+
+                    b.HasOne("AllYourGoods.Api.Models.User", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId");
+
+                    b.Navigation("Address");
+
+                    b.Navigation("Banner");
+
+                    b.Navigation("Logo");
+
+                    b.Navigation("Owner");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -352,19 +455,9 @@ namespace AllYourGoods.Api.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("RestaurantTag", b =>
+            modelBuilder.Entity("AllYourGoods.Api.Models.Restaurant", b =>
                 {
-                    b.HasOne("AllYourGoods.Api.Models.Restaurant", null)
-                        .WithMany()
-                        .HasForeignKey("RestaurantsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AllYourGoods.Api.Models.Tag", null)
-                        .WithMany()
-                        .HasForeignKey("TagsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("OpeningsTimes");
                 });
 #pragma warning restore 612, 618
         }

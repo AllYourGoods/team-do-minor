@@ -1,17 +1,26 @@
-﻿namespace AllYourGoods.Api.Models;
+﻿using System.ComponentModel.DataAnnotations;
 
-public class Restaurant
+namespace AllYourGoods.Api.Models;
+
+public class Restaurant : BaseEntity
 {
-    public Guid Id { get; set; }
-    public TimeOnly? OpeningTime { get; set; }
-    public TimeOnly? ClosingTime { get; set; }
-    public string? StreetName { get; set; }
-    public string? HouseNumber { get; set; }
-    public string? Name { get; set; }
-    public string? Description { get; set; }
-    public double? Radius { get; set; }
-    public string? ImageLink { get; set; }
+    [StringLength(255)] 
+    public string Name { get; set; } = null!;
 
-    // Navigation property to establish many-to-many relationship with Tag
-    public ICollection<Tag> Tags { get; set; } = new List<Tag>();
+    [StringLength(15)] 
+    public string PhoneNumber { get; set; } = null!;
+    public string? AboutUs { get; set; }
+    public double? Radius { get; set; }
+
+    public Guid? LogoId { get; set; }
+    public Guid? AddressId { get; set; }
+    public Guid? BannerId { get; set; }
+    public string? OwnerId { get; set; }
+
+    // Navigation properties
+    public virtual ImageFile Logo { get; set; } = null!;
+    public virtual Address Address { get; set; } = null!;
+    public virtual ImageFile Banner { get; set; } = null!;
+    public virtual User? Owner { get; set; }
+    public virtual ICollection<OpeningsTime>? OpeningsTimes { get; set; }
 }

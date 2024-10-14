@@ -17,7 +17,6 @@ public class ApplicationContext : IdentityDbContext<User>
 
     public virtual DbSet<Restaurant> Restaurants { get; set; } = null!;
     public virtual DbSet<RefreshToken> RefreshTokens { get; set; } = null!;
-    public virtual DbSet<Tag> Tags { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
