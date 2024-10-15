@@ -8,7 +8,10 @@ public class DbInitializer
 {
     public static void Initialize(ApplicationContext context)
     {
-        context.Database.Migrate();
+        if (context.Database.IsRelational())
+        {
+            context.Database.Migrate(); 
+        }
 
         if (context.Restaurants.Any())
         {
@@ -87,7 +90,6 @@ public class DbInitializer
                         Day = Day.Friday
                     },
                 }
-
             },
             new()
             {
