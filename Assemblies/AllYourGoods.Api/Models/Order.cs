@@ -7,12 +7,12 @@
         public Guid CustomerId { get; set; }
         public double TotalPrice { get; set; }
         public string Status { get; set; }
-        public string Note { get; set; }
+        public string? Note { get; set; }
         public DateTime CreatedOnUTC { get; set; }
         public DateTime? ExpiredOnUTC { get; set; }
         public Guid AddressId { get; set; }
         public string PaymentMethod { get; set; }
-        public double ETA { get; set; }
+        public DateTime? ETA { get; set; }
         public Guid DeliveryPersonId { get; set; }
 
         public virtual Restaurant Restaurant { get; set; }
