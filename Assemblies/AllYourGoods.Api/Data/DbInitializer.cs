@@ -83,7 +83,7 @@ static void Initialize(ApplicationContext context)
             },
             Owner = new User
             {
-                Id = Guid.NewGuid(),
+                Id = Guid.NewGuid(), 
                 Name = "Jane Smith",
                 Email = "OwnerBK@email.com",
                 PasswordHash = "Hashed Password placeholder",
@@ -135,113 +135,97 @@ static void Initialize(ApplicationContext context)
 
     var openingsTimes = new List<OpeningsTime>
     {
-        new OpeningsTime
+        new OpeningsTime(restaurants[0].Id)
         {
             Opening = new TimeOnly(8, 30),
             Closing = new TimeOnly(22, 30),
             Day = Day.Monday,
-            RestaurantId = restaurants[0].Id 
         },
-        new OpeningsTime
+        new OpeningsTime(restaurants[0].Id)
         {
             Opening = new TimeOnly(8, 30),
             Closing = new TimeOnly(22, 30),
             Day = Day.Tuesday,
-            RestaurantId = restaurants[0].Id
         },
-        new OpeningsTime
+        new OpeningsTime(restaurants[0].Id)
         {
             Opening = new TimeOnly(8, 30),
             Closing = new TimeOnly(22, 30),
             Day = Day.Wednesday,
-            RestaurantId = restaurants[0].Id 
         },
-        new OpeningsTime
+        new OpeningsTime(restaurants[0].Id)
         {
             Opening = new TimeOnly(8, 30),
             Closing = new TimeOnly(22, 30),
             Day = Day.Thursday,
-            RestaurantId = restaurants[0].Id 
         },
-        new OpeningsTime
+        new OpeningsTime(restaurants[0].Id)
         {
             Opening = new TimeOnly(8, 30),
             Closing = new TimeOnly(21, 30),
             Day = Day.Friday,
-            RestaurantId = restaurants[0].Id 
         },
 
-        // Burger King Openings
-        new OpeningsTime
+        new OpeningsTime(restaurants[1].Id)
         {
             Opening = new TimeOnly(9, 00),
             Closing = new TimeOnly(23, 00),
             Day = Day.Monday,
-            RestaurantId = restaurants[1].Id 
         },
-        new OpeningsTime
+        new OpeningsTime(restaurants[1].Id)
         {
             Opening = new TimeOnly(9, 00),
             Closing = new TimeOnly(23, 00),
             Day = Day.Tuesday,
-            RestaurantId = restaurants[1].Id 
         },
-        new OpeningsTime
+        new OpeningsTime(restaurants[1].Id)
         {
             Opening = new TimeOnly(9, 00),
             Closing = new TimeOnly(23, 00),
             Day = Day.Wednesday,
-            RestaurantId = restaurants[1].Id 
         },
-        new OpeningsTime
+        new OpeningsTime(restaurants[1].Id)
         {
             Opening = new TimeOnly(9, 00),
             Closing = new TimeOnly(23, 00),
             Day = Day.Thursday,
-            RestaurantId = restaurants[1].Id
         },
-        new OpeningsTime
+        new OpeningsTime(restaurants[1].Id)
         {
             Opening = new TimeOnly(9, 00),
             Closing = new TimeOnly(23, 00),
             Day = Day.Friday,
-            RestaurantId = restaurants[1].Id 
         },
 
-        new OpeningsTime
+        new OpeningsTime(restaurants[2].Id)
         {
             Opening = new TimeOnly(10, 00),
             Closing = new TimeOnly(22, 00),
             Day = Day.Monday,
-            RestaurantId = restaurants[2].Id
         },
-        new OpeningsTime
+        new OpeningsTime(restaurants[2].Id)
         {
             Opening = new TimeOnly(10, 00),
             Closing = new TimeOnly(22, 00),
             Day = Day.Tuesday,
-            RestaurantId = restaurants[2].Id
         },
-        new OpeningsTime
+        new OpeningsTime(restaurants[2].Id)
         {
             Opening = new TimeOnly(10, 00),
             Closing = new TimeOnly(22, 00),
             Day = Day.Wednesday,
-            RestaurantId = restaurants[2].Id
         },
-        new OpeningsTime
+        new OpeningsTime(restaurants[2].Id)
         {
             Opening = new TimeOnly(10, 00),
             Closing = new TimeOnly(22, 00),
             Day = Day.Thursday,
-            RestaurantId = restaurants[2].Id 
         },
-        new OpeningsTime
+        new OpeningsTime(restaurants[2].Id)
         {
             Opening = new TimeOnly(10, 00),
             Closing = new TimeOnly(22, 00),
             Day = Day.Friday,
-            RestaurantId = restaurants[2].Id 
         }
     };
 
