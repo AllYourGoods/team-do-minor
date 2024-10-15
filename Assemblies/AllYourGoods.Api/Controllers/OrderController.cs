@@ -52,6 +52,10 @@ public class OrderController : ControllerBase
         
             var order = await _orderService.GetAllAsync();
 
+            if (order == null || !order.Any())
+            {
+                return NotFound("There is no Order available right now.");
+            }
             return Ok(order);
         }
         catch (KeyNotFoundException)

@@ -2,11 +2,10 @@
 {
     public class CreateOrderHasProduct
     {
-        public  CreateOrderHasProduct(int amount)
+        public  CreateOrderHasProduct( )
         {
-
-            Amount = amount;
           
+      
         }
 
         public Guid Orderid { get; set; }
