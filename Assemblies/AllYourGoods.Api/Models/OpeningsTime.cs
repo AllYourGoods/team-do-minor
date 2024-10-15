@@ -8,17 +8,38 @@ namespace AllYourGoods.Api.Models
     public class OpeningsTime : BaseEntity
     {
         [JsonConverter(typeof(TimeOnlyJsonConverter))]
-        public TimeOnly? Opening { get; set; }
+        public TimeOnly? Opening { get; set; } 
 
         [JsonConverter(typeof(TimeOnlyJsonConverter))]
-        public TimeOnly? Closing { get; set; }
+        public TimeOnly? Closing { get; set; } 
 
-        [JsonConverter(typeof(JsonStringEnumConverter))] 
-        public Day? Day { get; set; }
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public Day? Day { get; set; } 
 
         public Guid RestaurantId { get; set; }
 
-        public virtual Restaurant Restaurant { get; set; }
+        public virtual Restaurant? Restaurant { get; set; }
+
+        public OpeningsTime(Guid restaurantId)
+        {
+            RestaurantId = restaurantId;
+        }
+
+        public void SetOpeningTime(string? timeString)
+        {
+            if (!string.IsNullOrEmpty(timeString))
+            {
+                Opening = TimeOnly.Parse(timeString);
+            }
+        }
+
+        public void SetClosingTime(string? timeString)
+        {
+            if (!string.IsNullOrEmpty(timeString))
+            {
+                Closing = TimeOnly.Parse(timeString);
+            }
+        }
     }
 
     public class TimeOnlyJsonConverter : JsonConverter<TimeOnly>

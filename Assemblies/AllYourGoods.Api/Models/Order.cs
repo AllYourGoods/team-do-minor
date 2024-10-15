@@ -10,16 +10,27 @@
         public DateTime CreatedOnUTC { get; set; }
         public DateTime? ExpiredOnUTC { get; set; }
         public Guid AddressId { get; set; }
-        public string PaymentMethod { get; set; }
+        public required string PaymentMethod { get; set; } 
         public DateTime? ETA { get; set; }
         public Guid DeliveryPersonId { get; set; }
 
-        public virtual Restaurant Restaurant { get; set; }
-        public virtual User Customer { get; set; }
-        public virtual Address Address { get; set; }
-        public virtual User DeliveryPerson { get; set; }
+        public required virtual Restaurant Restaurant { get; set; }
+        public required virtual User Customer { get; set; }
+        public required virtual Address Address { get; set; }
+        public required virtual User DeliveryPerson { get; set; }
 
-        public virtual ICollection<OrderHasProduct> OrderProducts { get; set; }
+        public virtual ICollection<OrderHasProduct> OrderProducts { get; set; } = new List<OrderHasProduct>();
+
+        public Order(Guid restaurantId, Guid customerId, string paymentMethod, Guid addressId, Guid deliveryPersonId)
+        {
+            RestaurantId = restaurantId;
+            CustomerId = customerId;
+            PaymentMethod = paymentMethod;
+            AddressId = addressId;
+            DeliveryPersonId = deliveryPersonId;
+
+            CreatedOnUTC = DateTime.UtcNow;
+            OrderProducts = new List<OrderHasProduct>();
+        }
     }
-
 }

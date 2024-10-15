@@ -2,7 +2,7 @@
 {
     public class Menu : BaseEntity
     {
-        public string Name { get; set; }
+        public required string Name { get; set; }
         public bool Active { get; set; }
         public Guid RestaurantId { get; set; }
 
