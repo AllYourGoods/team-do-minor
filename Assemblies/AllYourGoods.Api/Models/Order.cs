@@ -5,7 +5,7 @@
         public Guid RestaurantId { get; set; }
         public Guid CustomerId { get; set; }
         public double TotalPrice { get; set; }
-        public string Status { get; set; }
+        public string? Status { get; set; }
         public string? Note { get; set; }
         public DateTime CreatedOnUTC { get; set; }
         public DateTime? ExpiredOnUTC { get; set; }
