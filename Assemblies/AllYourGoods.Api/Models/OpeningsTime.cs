@@ -31,6 +31,10 @@ namespace AllYourGoods.Api.Models
             {
                 Opening = TimeOnly.Parse(timeString);
             }
+            else
+            {
+                Opening = null; 
+            }
         }
 
         public void SetClosingTime(string? timeString)
@@ -39,7 +43,12 @@ namespace AllYourGoods.Api.Models
             {
                 Closing = TimeOnly.Parse(timeString);
             }
+            else
+            {
+                Closing = null;
+            }
         }
+
     }
 
     public class TimeOnlyJsonConverter : JsonConverter<TimeOnly>
