@@ -7,14 +7,14 @@ namespace AllYourGoods.Api.Models
 {
     public class OpeningsTime : BaseEntity
     {
-        [JsonConverter(typeof(TimeOnlyJsonConverter))]
-        public TimeOnly? Opening { get; set; } 
+        [JsonConverter(typeof(TimeOnlyNullableJsonConverter))]
+        public TimeOnly? Opening { get; set; }
 
-        [JsonConverter(typeof(TimeOnlyJsonConverter))]
-        public TimeOnly? Closing { get; set; } 
+        [JsonConverter(typeof(TimeOnlyNullableJsonConverter))]
+        public TimeOnly? Closing { get; set; }
 
         [JsonConverter(typeof(JsonStringEnumConverter))]
-        public Day? Day { get; set; } 
+        public Day? Day { get; set; }
 
         public Guid RestaurantId { get; set; }
 
@@ -25,42 +25,26 @@ namespace AllYourGoods.Api.Models
             RestaurantId = restaurantId;
         }
 
-        public void SetOpeningTime(string? timeString)
+        public void SetTime(ref TimeOnly? timeField, string? timeString)
         {
-            if (!string.IsNullOrEmpty(timeString))
-            {
-                Opening = TimeOnly.Parse(timeString);
-            }
-            else
-            {
-                Opening = null; 
-            }
+            timeField = string.IsNullOrEmpty(timeString) ? null : TimeOnly.Parse(timeString);
         }
-
-        public void SetClosingTime(string? timeString)
-        {
-            if (!string.IsNullOrEmpty(timeString))
-            {
-                Closing = TimeOnly.Parse(timeString);
-            }
-            else
-            {
-                Closing = null;
-            }
-        }
-
     }
 
-    public class TimeOnlyJsonConverter : JsonConverter<TimeOnly>
+    public class TimeOnlyNullableJsonConverter : JsonConverter<TimeOnly?>
     {
-        public override TimeOnly Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override TimeOnly? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            return TimeOnly.Parse(reader.GetString());
+            var timeString = reader.GetString();
+            return string.IsNullOrEmpty(timeString) ? (TimeOnly?)null : TimeOnly.Parse(timeString);
         }
 
-        public override void Write(Utf8JsonWriter writer, TimeOnly value, JsonSerializerOptions options)
+        public override void Write(Utf8JsonWriter writer, TimeOnly? value, JsonSerializerOptions options)
         {
-            writer.WriteStringValue(value.ToString());
+            if (value.HasValue)
+                writer.WriteStringValue(value.Value.ToString("HH:mm"));
+            else
+                writer.WriteNullValue();
         }
     }
 }
