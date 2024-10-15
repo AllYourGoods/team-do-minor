@@ -241,9 +241,8 @@ public class DbInitializer
                     new()
                     {
                         OrderId = orders[0].Id, // First order
-                        ProductID = context.Products.First().Id, // First product
+                        ProductId = context.Products.First().Id, // First product
                         Amount = 2,
-                        Price = 5.99 * 2
                     }
             };
 
@@ -253,23 +252,20 @@ public class DbInitializer
                     new()
                     {
                         OrderId = orders[1].Id, // Second order
-                        ProductID = context.Products.First(p => p.Name == "Whopper").Id,
-                        Amount = 1,
-                        Price = 6.49
+                        ProductId = context.Products.First(p => p.Name == "Whopper").Id,
+                        Amount = 1
                     },
                     new()
                     {
                         OrderId = orders[1].Id, // Second order
-                        ProductID = context.Products.First(p => p.Name == "Fries").Id,
-                        Amount = 2,
-                        Price = 2.99 * 2
+                        ProductId = context.Products.First(p => p.Name == "Fries").Id,
+                        Amount = 2
                     },
                     new()
                     {
                         OrderId = orders[1].Id, // Second order
-                        ProductID = context.Products.First(p => p.Name == "Coke").Id,
-                        Amount = 3,
-                        Price = 1.99 * 3
+                        ProductId = context.Products.First(p => p.Name == "Coke").Id,
+                        Amount = 3
                     }
                     // You can add more products here for a total of 5, if needed
             };

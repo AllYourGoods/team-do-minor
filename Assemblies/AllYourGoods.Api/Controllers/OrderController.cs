@@ -59,6 +59,9 @@ public class OrderController : ControllerBase
             return NotFound($"There is no Order available right now.");
         }
     }
+
+
+    // de return body moet nog aangepast worder maar ik heb het gemaakt zo dat HTTPpost werk (CreatedAtAction(nameof(GetOrder))
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(ResponseOrderDto), 200)]
     [ProducesResponseType(404)]

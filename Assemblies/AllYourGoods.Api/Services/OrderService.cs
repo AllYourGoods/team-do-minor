@@ -5,6 +5,7 @@ using AllYourGoods.Api.Models.Dtos.Creates;
 using AllYourGoods.Api.Models.Dtos.Responses;
 using AllYourGoods.Api.Models.Dtos.Views;
 using AutoMapper;
+using System.Linq.Expressions;
 
 namespace AllYourGoods.Api.Services;
 
@@ -34,18 +35,25 @@ public class OrderService : IOrderService
 
     public async Task<List<ResponseOrderDto>> GetAllAsync()
     {
-        var order = await _unitOfWork.Repository<Order>().GetAllAsync();
+        var orders = await _unitOfWork.Repository<Order>().GetAllAsync(
+            includes : new Expression<Func<Order, object>>[]
+            {
+            o => o.Restaurant,    
+            o => o.Address,
+            o => o.Restaurant.Logo
+            }
+        );
 
-        if (order == null)
+        if (orders == null || !orders.Any())
         {
-            throw new KeyNotFoundException($"not Orders found");
+            throw new KeyNotFoundException("No Orders found");
         }
 
-        return _mapper.Map<List<ResponseOrderDto>>(order);
+        return _mapper.Map<List<ResponseOrderDto>>(orders);
     }
 
 
-    public async Task<ResponseOrderDto> GetOrderByIdAsync(Guid orderId)
+    public async Task<Order> GetOrderByIdAsync(Guid orderId)
     {
         var order = await _unitOfWork.Repository<Order>().GetByIdAsync(orderId,
             o => o.Address);
@@ -55,7 +63,7 @@ public class OrderService : IOrderService
             throw new KeyNotFoundException($"Order with Id: {orderId} not found");
         }
 
-        return _mapper.Map<ResponseOrderDto>(order);
+        return _mapper.Map<Order>(order);
     }
 }
 

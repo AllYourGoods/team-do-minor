@@ -10,6 +10,6 @@ namespace AllYourGoods.Api.Interfaces.Services;
     {
     Task<List<ResponseOrderDto>> GetAllAsync();
     Task<ResponseOrderDto> CreateOrderAsync(CreateOrderDto orderDto);
-    Task<ResponseOrderDto> GetOrderByIdAsync(Guid OrderId);
+    Task<Order> GetOrderByIdAsync(Guid OrderId);
 }
 
