@@ -1,6 +1,6 @@
 ﻿namespace AllYourGoods.Api.Models
 {
-    public class ProductHasTag
+    public class ProductHasTag : BaseEntity
     {
         public Guid ProductId { get; set; }
         public virtual Product Product { get; set; }

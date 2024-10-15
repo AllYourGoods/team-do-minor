@@ -32,23 +32,6 @@ namespace AllYourGoods.Api.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Restaurant>().ToTable("Restaurant");
-            modelBuilder.Entity<Address>().ToTable("Address");
-            modelBuilder.Entity<ImageFile>().ToTable("ImageFile");
-            modelBuilder.Entity<Menu>().ToTable("Menu");
-            modelBuilder.Entity<Category>().ToTable("Category");
-            modelBuilder.Entity<Product>().ToTable("Product");
-            modelBuilder.Entity<Order>().ToTable("Order");
-            modelBuilder.Entity<User>().ToTable("User");
-            modelBuilder.Entity<DeliveryPerson>().ToTable("DeliveryPerson");
-            modelBuilder.Entity<OpeningsTime>().ToTable("OpeningsTime");
-            modelBuilder.Entity<FrequentlyAskedQuestion>().ToTable("FrequentlyAskedQuestion");
-            modelBuilder.Entity<Tag>().ToTable("Tag");
-            modelBuilder.Entity<ProductHasTag>().ToTable("ProductHasTag");
-            modelBuilder.Entity<CategoryHasProduct>().ToTable("CategoryHasProduct");
-            modelBuilder.Entity<OrderHasProduct>().ToTable("OrderHasProduct");
-            modelBuilder.Entity<RestaurantHasTags>().ToTable("RestaurantHasTags");
-            modelBuilder.Entity<Roles>().ToTable("Role");
 
             modelBuilder.Entity<Restaurant>()
                 .HasOne(r => r.Owner)

@@ -1,8 +1,7 @@
 ﻿namespace AllYourGoods.Api.Models
 {
-    public class Category
+    public class Category : BaseEntity
     {
-        public Guid Id { get; set; }
         public double Weight { get; set; }
         public string Name { get; set; }
         public Guid MenuId { get; set; }

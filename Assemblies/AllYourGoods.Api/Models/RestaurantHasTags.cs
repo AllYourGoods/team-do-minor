@@ -1,6 +1,6 @@
 ﻿namespace AllYourGoods.Api.Models
 {
-    public class RestaurantHasTags
+    public class RestaurantHasTags : BaseEntity
     {
         public Guid RestaurantId { get; set; }
 

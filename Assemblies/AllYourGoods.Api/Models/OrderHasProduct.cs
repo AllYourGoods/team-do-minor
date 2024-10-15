@@ -1,6 +1,6 @@
 ﻿namespace AllYourGoods.Api.Models
 {
-    public class OrderHasProduct
+    public class OrderHasProduct : BaseEntity
     {
         public Guid OrderId { get; set; }
         public virtual Order Order { get; set; }

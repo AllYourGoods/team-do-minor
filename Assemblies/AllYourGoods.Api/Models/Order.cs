@@ -1,8 +1,7 @@
 ﻿namespace AllYourGoods.Api.Models
 {
-    public class Order
+    public class Order : BaseEntity
     {
-        public Guid Id { get; set; }
         public Guid RestaurantId { get; set; }
         public Guid CustomerId { get; set; }
         public double TotalPrice { get; set; }
