@@ -1,7 +1,8 @@
-﻿using AllYourGoods.Api.Data;
+﻿using AllYourGoods.Api.Models;
 using AllYourGoods.Api.Models.Enums;
-using AllYourGoods.Api.Models;
 using Microsoft.EntityFrameworkCore;
+
+namespace AllYourGoods.Api.Data;
 
 public class DbInitializer
 {
@@ -14,9 +15,9 @@ public class DbInitializer
             return;
         }
 
-        var restaurants = new List<Restaurant>
+        var restaurants = new Restaurant[]
         {
-            new Restaurant
+            new()
             {
                 Name = "McDonald's",
                 PhoneNumber = "123456789",
@@ -40,22 +41,55 @@ public class DbInitializer
                 },
                 Banner = new ImageFile
                 {
-                    Url =
-                        "https://banner2.cleanpng.com/20180714/buk/kisspng-india-medplus-business-retail-pharmacy-logo-mcdonald-5b4a5d7662d712.2249596115316002464049.jpg",
+                    Url = "https://banner2.cleanpng.com/20180714/buk/kisspng-india-medplus-business-retail-pharmacy-logo-mcdonald-5b4a5d7662d712.2249596115316002464049.jpg",
                     AltText = "McDonald's banner",
                     MimeType = "image/jpeg",
                     FileSize = 0.1
                 },
                 Owner = new User
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66afa6"),
                     Name = "John Doe",
                     Email = "OwnerEmail@email.com",
                     PasswordHash = "Hashed Password placeholder",
                     PasswordSalt = "Salt placeholder",
+                },
+                OpeningsTimes = new List<OpeningsTime>()
+                {
+                    new ()
+                    {
+                        Opening = new TimeOnly(8, 30),
+                        Closing = new TimeOnly(22, 30),
+                        Day = Day.Monday
+                    },
+                    new ()
+                    {
+                        Opening = new TimeOnly(8, 30),
+                        Closing = new TimeOnly(22, 30),
+                        Day = Day.Tuesday
+                    },
+                    new ()
+                    {
+                        Opening = new TimeOnly(8, 30),
+                        Closing = new TimeOnly(22, 30),
+                        Day = Day.Wednesday
+                    },
+                    new ()
+                    {
+                        Opening = new TimeOnly(8, 30),
+                        Closing = new TimeOnly(22, 30),
+                        Day = Day.Thursday
+                    },
+                    new ()
+                    {
+                        Opening = new TimeOnly(8, 30),
+                        Closing = new TimeOnly(21, 30),
+                        Day = Day.Friday
+                    },
                 }
+
             },
-            new Restaurant
+            new()
             {
                 Name = "Burger King",
                 PhoneNumber = "987654321",
@@ -86,14 +120,21 @@ public class DbInitializer
                 },
                 Owner = new User
                 {
-                    Id = Guid.NewGuid(),
                     Name = "Jane Smith",
                     Email = "OwnerBK@email.com",
                     PasswordHash = "Hashed Password placeholder",
                     PasswordSalt = "Salt placeholder",
+                },
+                OpeningsTimes = new List<OpeningsTime>()
+                {
+                    new () { Opening = new TimeOnly(9, 00), Closing = new TimeOnly(23, 00), Day = Day.Monday },
+                    new () { Opening = new TimeOnly(9, 00), Closing = new TimeOnly(23, 00), Day = Day.Tuesday },
+                    new () { Opening = new TimeOnly(9, 00), Closing = new TimeOnly(23, 00), Day = Day.Wednesday },
+                    new () { Opening = new TimeOnly(9, 00), Closing = new TimeOnly(23, 00), Day = Day.Thursday },
+                    new () { Opening = new TimeOnly(9, 00), Closing = new TimeOnly(23, 00), Day = Day.Friday },
                 }
             },
-            new Restaurant
+            new()
             {
                 Name = "KFC",
                 PhoneNumber = "456789123",
@@ -124,115 +165,23 @@ public class DbInitializer
                 },
                 Owner = new User
                 {
-                    Id = Guid.NewGuid(),
                     Name = "Bob Brown",
                     Email = "OwnerKFC@email.com",
                     PasswordHash = "Hashed Password placeholder",
                     PasswordSalt = "Salt placeholder",
+                },
+                OpeningsTimes = new List<OpeningsTime>()
+                {
+                    new () { Opening = new TimeOnly(10, 00), Closing = new TimeOnly(22, 00), Day = Day.Monday },
+                    new () { Opening = new TimeOnly(10, 00), Closing = new TimeOnly(22, 00), Day = Day.Tuesday },
+                    new () { Opening = new TimeOnly(10, 00), Closing = new TimeOnly(22, 00), Day = Day.Wednesday },
+                    new () { Opening = new TimeOnly(10, 00), Closing = new TimeOnly(22, 00), Day = Day.Thursday },
+                    new () { Opening = new TimeOnly(10, 00), Closing = new TimeOnly(22, 00), Day = Day.Friday },
                 }
             }
         };
 
         context.Restaurants.AddRange(restaurants);
-        context.SaveChanges();
-
-        var openingsTimes = new List<OpeningsTime>
-        {
-            new OpeningsTime(restaurants[0].Id)
-            {
-                Opening = new TimeOnly(8, 30),
-                Closing = new TimeOnly(22, 30),
-                Day = Day.Monday,
-            },
-            new OpeningsTime(restaurants[0].Id)
-            {
-                Opening = new TimeOnly(8, 30),
-                Closing = new TimeOnly(22, 30),
-                Day = Day.Tuesday,
-            },
-            new OpeningsTime(restaurants[0].Id)
-            {
-                Opening = new TimeOnly(8, 30),
-                Closing = new TimeOnly(22, 30),
-                Day = Day.Wednesday,
-            },
-            new OpeningsTime(restaurants[0].Id)
-            {
-                Opening = new TimeOnly(8, 30),
-                Closing = new TimeOnly(22, 30),
-                Day = Day.Thursday,
-            },
-            new OpeningsTime(restaurants[0].Id)
-            {
-                Opening = new TimeOnly(8, 30),
-                Closing = new TimeOnly(21, 30),
-                Day = Day.Friday,
-            },
-
-            new OpeningsTime(restaurants[1].Id)
-            {
-                Opening = new TimeOnly(9, 00),
-                Closing = new TimeOnly(23, 00),
-                Day = Day.Monday,
-            },
-            new OpeningsTime(restaurants[1].Id)
-            {
-                Opening = new TimeOnly(9, 00),
-                Closing = new TimeOnly(23, 00),
-                Day = Day.Tuesday,
-            },
-            new OpeningsTime(restaurants[1].Id)
-            {
-                Opening = new TimeOnly(9, 00),
-                Closing = new TimeOnly(23, 00),
-                Day = Day.Wednesday,
-            },
-            new OpeningsTime(restaurants[1].Id)
-            {
-                Opening = new TimeOnly(9, 00),
-                Closing = new TimeOnly(23, 00),
-                Day = Day.Thursday,
-            },
-            new OpeningsTime(restaurants[1].Id)
-            {
-                Opening = new TimeOnly(9, 00),
-                Closing = new TimeOnly(23, 00),
-                Day = Day.Friday,
-            },
-
-            new OpeningsTime(restaurants[2].Id)
-            {
-                Opening = new TimeOnly(10, 00),
-                Closing = new TimeOnly(22, 00),
-                Day = Day.Monday,
-            },
-            new OpeningsTime(restaurants[2].Id)
-            {
-                Opening = new TimeOnly(10, 00),
-                Closing = new TimeOnly(22, 00),
-                Day = Day.Tuesday,
-            },
-            new OpeningsTime(restaurants[2].Id)
-            {
-                Opening = new TimeOnly(10, 00),
-                Closing = new TimeOnly(22, 00),
-                Day = Day.Wednesday,
-            },
-            new OpeningsTime(restaurants[2].Id)
-            {
-                Opening = new TimeOnly(10, 00),
-                Closing = new TimeOnly(22, 00),
-                Day = Day.Thursday,
-            },
-            new OpeningsTime(restaurants[2].Id)
-            {
-                Opening = new TimeOnly(10, 00),
-                Closing = new TimeOnly(22, 00),
-                Day = Day.Friday,
-            }
-        };
-
-        context.OpeningsTimes.AddRange(openingsTimes);
         context.SaveChanges();
     }
 }
