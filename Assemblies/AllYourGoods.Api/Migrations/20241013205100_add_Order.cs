@@ -20,7 +20,7 @@ namespace AllYourGoods.Api.Migrations
                     CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TotalPrice = table.Column<double>(type: "float", nullable: false),
                     Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreateOnUTC = table.Column<DateTime>(type: "Time", nullable: true),
+                    CreatedOnUTC = table.Column<DateTime>(type: "Time", nullable: true),
                     ExpiredOnUTC = table.Column<DateTime>(type: "Time", nullable: true),
                     AddressId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     OrderHasProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
