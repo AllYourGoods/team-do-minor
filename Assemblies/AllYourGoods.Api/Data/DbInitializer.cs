@@ -1,12 +1,13 @@
 ﻿using AllYourGoods.Api.Models;
 using AllYourGoods.Api.Models.Enums;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace AllYourGoods.Api.Data;
 
 public class DbInitializer
 {
-    public static void Initialize(ApplicationContext context)
+    public static async Task Initialize(ApplicationContext context, RoleManager<IdentityRole> roleManager, UserManager<User> userManager)
     {
         context.Database.Migrate();
 
@@ -14,6 +15,26 @@ public class DbInitializer
         {
             return;
         }
+
+        foreach (Roles role in Enum.GetValues(typeof(Roles))) 
+        {
+            var exists = await roleManager.RoleExistsAsync(role.ToString());
+            
+            if (!exists)
+            {
+                await roleManager.CreateAsync(new IdentityRole(role.ToString()));
+            }
+        }
+
+        var user = new User
+        {
+            UserName = "JamesLame",
+            Email = "LameyJamey@email.com"
+        };
+
+        await userManager.CreateAsync(user, "LamePassword1!");
+        await userManager.AddToRoleAsync(user, Roles.teamhr.ToString());
+
 
         var restaurants = new Restaurant[]
         {
@@ -46,14 +67,7 @@ public class DbInitializer
                     MimeType = "image/jpeg",
                     FileSize = 0.1
                 },
-                Owner = new User
-                {
-                    Id = Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66afa6"),
-                    Name = "John Doe",
-                    Email = "OwnerEmail@email.com",
-                    PasswordHash = "Hashed Password placeholder",
-                    PasswordSalt = "Salt placeholder",
-                },
+                Owner = context.Users.FirstOrDefault<User>(u => u.UserName == user.UserName),
                 OpeningsTimes = new List<OpeningsTime>()
                 {
                     new ()
@@ -118,13 +132,7 @@ public class DbInitializer
                     MimeType = "image/jpeg",
                     FileSize = 0.2
                 },
-                Owner = new User
-                {
-                    Name = "Jane Smith",
-                    Email = "OwnerBK@email.com",
-                    PasswordHash = "Hashed Password placeholder",
-                    PasswordSalt = "Salt placeholder",
-                },
+                Owner = context.Users.FirstOrDefault<User>(u => u.UserName == user.UserName),
                 OpeningsTimes = new List<OpeningsTime>()
                 {
                     new () { Opening = new TimeOnly(9, 00), Closing = new TimeOnly(23, 00), Day = Day.Monday },
@@ -163,13 +171,7 @@ public class DbInitializer
                     MimeType = "image/jpeg",
                     FileSize = 0.3
                 },
-                Owner = new User
-                {
-                    Name = "Bob Brown",
-                    Email = "OwnerKFC@email.com",
-                    PasswordHash = "Hashed Password placeholder",
-                    PasswordSalt = "Salt placeholder",
-                },
+                Owner = user,
                 OpeningsTimes = new List<OpeningsTime>()
                 {
                     new () { Opening = new TimeOnly(10, 00), Closing = new TimeOnly(22, 00), Day = Day.Monday },

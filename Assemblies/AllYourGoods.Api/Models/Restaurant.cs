@@ -15,7 +15,7 @@ public class Restaurant : BaseEntity
     public Guid? LogoId { get; set; }
     public Guid? AddressId { get; set; }
     public Guid? BannerId { get; set; }
-    public Guid? OwnerId { get; set; }
+    public string? OwnerId { get; set; }
 
     // Navigation properties
     public virtual ImageFile Logo { get; set; } = null!;
