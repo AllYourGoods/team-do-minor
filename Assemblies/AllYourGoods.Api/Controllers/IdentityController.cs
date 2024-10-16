@@ -45,25 +45,7 @@ public class AuthController : ControllerBase
         return Unauthorized();
     }
 
-    [HttpPost("register/pipelinepirates")]
-    public async Task<IActionResult> RegisterPirates([FromBody] RegisterModel model)
-    {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-
-        var result = await addUser(model, Roles.pipelinepirates);
-
-        if (result.Succeeded)
-        {
-            return Ok(new { Message = "User created successfully!" });
-        }
-
-        return BadRequest(result.Errors);
-    }
-
-    [HttpPost("register/teamhr")]
+    [HttpPost("register")]
     public async Task<IActionResult> RegisterHR([FromBody] RegisterModel model)
     {
         if (!ModelState.IsValid)
@@ -71,25 +53,7 @@ public class AuthController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        var result = await addUser(model, Roles.teamhr);
-
-        if (result.Succeeded)
-        {
-            return Ok(new { Message = "User created successfully!" });
-        }
-
-        return BadRequest(result.Errors);
-    }
-
-    [HttpPost("register/terminaltovenaars")]
-    public async Task<IActionResult> RegisterTovenaars([FromBody] RegisterModel model)
-    {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-
-        var result = await addUser(model, Roles.terminaltovenaars);
+        var result = await addUser(model);
 
         if (result.Succeeded)
         {
@@ -174,7 +138,7 @@ public class AuthController : ControllerBase
 
     
 
-    private async Task<IdentityResult> addUser(RegisterModel model, Roles role) {
+    private async Task<IdentityResult> addUser(RegisterModel model) {
 
         var user = new User
         {
@@ -189,7 +153,7 @@ public class AuthController : ControllerBase
             return userResult;
         }
 
-        var roleResult = await _userManager.AddToRoleAsync(user, role.ToString());
+        var roleResult = await _userManager.AddToRoleAsync(user, model.Role);
 
         return roleResult;
 
