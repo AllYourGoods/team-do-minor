@@ -1,4 +1,4 @@
-﻿using AllYourGoods.Api.Models;
+using AllYourGoods.Api.Models;
 using AllYourGoods.Api.Models.Enums;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,4 +1,4 @@
-﻿namespace AllYourGoods.Api.Models
+namespace AllYourGoods.Api.Models
 {
     public class Product : BaseEntity
     {
