@@ -1,13 +1,18 @@
-﻿namespace AllYourGoods.Api.Models
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+
+namespace AllYourGoods.Api.Models
 {
     public class Roles : BaseEntity
     {
-        public string Id { get; set; } 
-        public string Name { get; set; } 
-        public string NormalizedName { get; set; }
-        public string ConcurrencyStamp { get; set; } 
+        [StringLength(255)]
+        public string Name { get; set; } = null!;
 
-        public virtual ICollection<UserRoles> UserRoles { get; set; }
+        [StringLength(255)]
+        public string NormalizedName { get; set; } = null!;
+
+        public string ConcurrencyStamp { get; set; } = null!;
+
+        public virtual ICollection<UserRoles> UserRoles { get; set; } = new List<UserRoles>();
     }
-
 }

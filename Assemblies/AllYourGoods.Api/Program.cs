@@ -36,11 +36,11 @@ public class Program
         app.EnableBuffering();
         app.EnableRequestBodyLoggingMiddleware();
 
-   
+
         app.MapControllers();
         app.MapHealthChecks("/health");
         app.Run();
-        
+
     }
 
     private static WebApplicationBuilder CreateBuilder(string[] args)
@@ -87,7 +87,7 @@ public class Program
 
         return builder;
     }
-   
+
 
     private static void InitializeDatabase(IHost app)
     {
