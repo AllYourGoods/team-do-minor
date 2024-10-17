@@ -2,7 +2,7 @@
 
 namespace AllYourGoods.Api.Models
 {
-    public class UserRoles
+    public class UserRoles : BaseEntity
     {
         public Guid UserId { get; set; }
         public virtual User User { get; set; }

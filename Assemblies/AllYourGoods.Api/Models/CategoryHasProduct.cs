@@ -1,6 +1,6 @@
 ﻿namespace AllYourGoods.Api.Models
 {
-    public class CategoryHasProduct
+    public class CategoryHasProduct : BaseEntity
     {
         public Guid CategoryId { get; set; }
         public virtual Category Category { get; set; }

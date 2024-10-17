@@ -1,8 +1,7 @@
 ﻿namespace AllYourGoods.Api.Models
 {
-    public class Menu
-    {
-        public Guid Id { get; set; }
+    public class Menu : BaseEntity
+    { 
         public string Name { get; set; }
         public bool Active { get; set; }
         public Guid RestaurantId { get; set; }
