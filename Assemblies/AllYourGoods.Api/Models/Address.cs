@@ -10,7 +10,7 @@ namespace AllYourGoods.Api.Models
         [StringLength(6)]
         public string HouseNumber { get; set; } = null!;
 
-        [StringLength(10)] 
+        [StringLength(10)]
         public string ZipCode { get; set; } = null!;
 
         [StringLength(255)]
@@ -18,5 +18,15 @@ namespace AllYourGoods.Api.Models
 
         [StringLength(255)]
         public string StreetName { get; set; } = null!;
+
+        public Address(string houseNumber, string zipCode, string city, string streetName)
+        {
+            HouseNumber = houseNumber;
+            ZipCode = zipCode;
+            City = city;
+            StreetName = streetName;
+        }
+
+        public Address() { }
     }
 }
