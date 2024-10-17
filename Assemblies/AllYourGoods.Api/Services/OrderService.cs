@@ -7,63 +7,62 @@ using AllYourGoods.Api.Models.Dtos.Views;
 using AutoMapper;
 using System.Linq.Expressions;
 
-namespace AllYourGoods.Api.Services;
-
-
-public class OrderService : IOrderService
+namespace AllYourGoods.Api.Services
 {
-    
-    private readonly IMapper _mapper;
-    private readonly IUnitOfWork _unitOfWork;
-    
-
-    public OrderService(IUnitOfWork unitOfWork, IMapper mapper)
+    public class OrderService : IOrderService
     {
-        
-        _mapper = mapper;
-        _unitOfWork = unitOfWork;
-    }
+        private readonly IMapper _mapper;
+        private readonly IUnitOfWork _unitOfWork;
 
-    public async Task<ResponseOrderDto> CreateOrderAsync(CreateOrderDto orderDto)
-    {
-        var order = _mapper.Map<Order>(orderDto);
+        public OrderService(IUnitOfWork unitOfWork, IMapper mapper)
+        {
+            _mapper = mapper;
+            _unitOfWork = unitOfWork;
+        }
 
-        _unitOfWork.Repository<Order>().Add(order);
-        await _unitOfWork.SaveAsync();
-        return _mapper.Map<ResponseOrderDto>(order);
-    }
-
-    public async Task<List<ResponseOrderDto>> GetAllAsync()
-    {
-        var orders = await _unitOfWork.Repository<Order>().GetAllAsync(
-            includes : new Expression<Func<Order, object>>[]
+        public async Task<ResponseOrderDto> CreateOrderAsync(CreateOrderDto orderDto)
+        {
+            var order = _mapper.Map<Order>(orderDto);
+            if (order == null)
             {
-            o => o.Restaurant,    
-            o => o.Address,
-            o => o.Restaurant.Logo
+                throw new InvalidOperationException("Mapping to Order failed, returned null.");
             }
-        );
 
-        if (orders == null || !orders.Any())
-        {
-            throw new KeyNotFoundException("No Orders found");
+            _unitOfWork.Repository<Order>().Add(order);
+            await _unitOfWork.SaveAsync();
+            var responseOrder = _mapper.Map<ResponseOrderDto>(order);
+
+            return responseOrder ?? throw new InvalidOperationException("Mapping to ResponseOrderDto failed, returned null.");
         }
 
-        return _mapper.Map<List<ResponseOrderDto>>(orders);
-    }
-
-
-    public async Task<Order> GetOrderByIdAsync(Guid orderId)
-    {
-        var order = await _unitOfWork.Repository<Order>().GetByIdAsync(orderId,
-            o => o.Address);
-
-        if (order == null)
+        public async Task<List<ResponseOrderDto>> GetAllAsync()
         {
-            throw new KeyNotFoundException($"Order with Id: {orderId} not found");
+            var orders = await _unitOfWork.Repository<Order>().GetAllAsync(
+                includes: new Expression<Func<Order, object>>[]
+                {
+                    o => o.Restaurant,
+                    o => o.Address
+                }
+            );
+
+            if (orders == null || !orders.Any())
+            {
+                throw new KeyNotFoundException("No Orders found");
+            }
+
+            var responseOrders = _mapper.Map<List<ResponseOrderDto>>(orders);
+            return responseOrders ?? new List<ResponseOrderDto>();
         }
 
-        return _mapper.Map<Order>(order);
+        public async Task<Order> GetOrderByIdAsync(Guid orderId)
+        {
+            var order = await _unitOfWork.Repository<Order>().GetByIdAsync(orderId, o => o.Address);
+            if (order == null)
+            {
+                throw new KeyNotFoundException($"Order with Id: {orderId} not found");
+            }
+
+            return order; 
+        }
     }
 }
-

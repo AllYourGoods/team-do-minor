@@ -2,16 +2,12 @@
 {
     public class CreateOrderHasProduct
     {
-        public  CreateOrderHasProduct( )
+        public CreateOrderHasProduct()
         {
-          
-      
         }
 
-        public Guid Orderid { get; set; }
+        public Guid OrderId { get; set; }
         public Guid ProductId { get; set; }
         public int Amount { get; set; }
-        
-
     }
 }

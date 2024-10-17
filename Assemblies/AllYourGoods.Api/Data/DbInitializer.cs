@@ -1,281 +1,157 @@
 ﻿using AllYourGoods.Api.Models;
 using AllYourGoods.Api.Models.Enums;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace AllYourGoods.Api.Data;
-
-public class DbInitializer
+namespace AllYourGoods.Api.Data
 {
-    public static void Initialize(ApplicationContext context)
+    public class DbInitializer
     {
-        context.Database.Migrate();
-
-        if (context.Restaurants.Any())
+        public static void Initialize(ApplicationContext context)
         {
-            return;
-        }
+            // Ensure the database is created and migrations are applied
+            context.Database.Migrate();
 
-        var restaurants = new Restaurant[]
-        {
-            new()
+            // Check if there are any existing roles
+            if (context.Roles.Any())
             {
-                Name = "McDonald's",
-                PhoneNumber = "123456789",
-                AboutUs = "The best fast food in the world",
-                Radius = 5,
-                Logo = new ImageFile
-                {
-                    Url = "https://www.mcdonalds.com/content/dam/sites/usa/nfl/icons/arches-logo_108x108.jpg",
-                    AltText = "McDonald's logo",
-                    MimeType = "image/jpeg",
-                    FileSize = 0.1
-                },
-                Address = new Address
-                {
-                    City = "Rotterdam",
-                    HouseNumber = "12",
-                    StreetName = "Coolsingel",
-                    ZipCode = "3011AD",
-                    Latitude = 51.9225,
-                    Longitude = 4.47917
-                },
-                Banner = new ImageFile
-                {
-                    Url = "https://banner2.cleanpng.com/20180714/buk/kisspng-india-medplus-business-retail-pharmacy-logo-mcdonald-5b4a5d7662d712.2249596115316002464049.jpg",
-                    AltText = "McDonald's banner",
-                    MimeType = "image/jpeg",
-                    FileSize = 0.1
-                },
-                Owner = new User
-                {
-                    Id = Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66afa6"),
-                    Name = "John Doe",
-                    Email = "OwnerEmail@email.com",
-                    PasswordHash = "Hashed Password placeholder",
-                    PasswordSalt = "Salt placeholder",
-                },
-                OpeningsTimes = new List<OpeningsTime>()
-                {
-                    new ()
-                    {
-                        Opening = new TimeOnly(8, 30),
-                        Closing = new TimeOnly(22, 30),
-                        Day = Day.Monday
-                    },
-                    new ()
-                    {
-                        Opening = new TimeOnly(8, 30),
-                        Closing = new TimeOnly(22, 30),
-                        Day = Day.Tuesday
-                    },
-                    new ()
-                    {
-                        Opening = new TimeOnly(8, 30),
-                        Closing = new TimeOnly(22, 30),
-                        Day = Day.Wednesday
-                    },
-                    new ()
-                    {
-                        Opening = new TimeOnly(8, 30),
-                        Closing = new TimeOnly(22, 30),
-                        Day = Day.Thursday
-                    },
-                    new ()
-                    {
-                        Opening = new TimeOnly(8, 30),
-                        Closing = new TimeOnly(21, 30),
-                        Day = Day.Friday
-                    },
-                }
-
-            },
-            new()
-            {
-                Name = "Burger King",
-                PhoneNumber = "987654321",
-                AboutUs = "Home of the Whopper",
-                Radius = 5,
-                Logo = new ImageFile
-                {
-                    Url = "https://upload.wikimedia.org/wikipedia/commons/c/cc/Burger_King_2020.svg",
-                    AltText = "Burger King logo",
-                    MimeType = "image/png",
-                    FileSize = 0.15
-                },
-                Address = new Address
-                {
-                    City = "Amsterdam",
-                    HouseNumber = "45",
-                    StreetName = "Damrak",
-                    ZipCode = "1012LP",
-                    Latitude = 52.3738,
-                    Longitude = 4.8910
-                },
-                Banner = new ImageFile
-                {
-                    Url = "https://upload.wikimedia.org/wikipedia/commons/c/cc/Burger_King_2020.svg",
-                    AltText = "Burger King banner",
-                    MimeType = "image/jpeg",
-                    FileSize = 0.2
-                },
-                Owner = new User
-                {
-                    Name = "Jane Smith",
-                    Email = "OwnerBK@email.com",
-                    PasswordHash = "Hashed Password placeholder",
-                    PasswordSalt = "Salt placeholder",
-                },
-                OpeningsTimes = new List<OpeningsTime>()
-                {
-                    new () { Opening = new TimeOnly(9, 00), Closing = new TimeOnly(23, 00), Day = Day.Monday },
-                    new () { Opening = new TimeOnly(9, 00), Closing = new TimeOnly(23, 00), Day = Day.Tuesday },
-                    new () { Opening = new TimeOnly(9, 00), Closing = new TimeOnly(23, 00), Day = Day.Wednesday },
-                    new () { Opening = new TimeOnly(9, 00), Closing = new TimeOnly(23, 00), Day = Day.Thursday },
-                    new () { Opening = new TimeOnly(9, 00), Closing = new TimeOnly(23, 00), Day = Day.Friday },
-                }
-            },
-            new()
-            {
-                Name = "KFC",
-                PhoneNumber = "456789123",
-                AboutUs = "Finger Lickin' Good",
-                Radius = 5,
-                Logo = new ImageFile
-                {
-                    Url = "https://commons.wikimedia.org/wiki/File:Kentucky_Fried_Chicken_201x_logo.svg",
-                    AltText = "KFC logo",
-                    MimeType = "image/svg+xml",
-                    FileSize = 0.05
-                },
-                Address = new Address
-                {
-                    City = "The Hague",
-                    HouseNumber = "88",
-                    StreetName = "Grote Markt",
-                    ZipCode = "2511BJ",
-                    Latitude = 52.0800,
-                    Longitude = 4.3100
-                },
-                Banner = new ImageFile
-                {
-                    Url = "https://commons.wikimedia.org/wiki/File:Kentucky_Fried_Chicken_201x_logo.svg",
-                    AltText = "KFC banner",
-                    MimeType = "image/jpeg",
-                    FileSize = 0.3
-                },
-                Owner = new User
-                {
-                    Name = "Bob Brown",
-                    Email = "OwnerKFC@email.com",
-                    PasswordHash = "Hashed Password placeholder",
-                    PasswordSalt = "Salt placeholder",
-                },
-                OpeningsTimes = new List<OpeningsTime>()
-                {
-                    new () { Opening = new TimeOnly(10, 00), Closing = new TimeOnly(22, 00), Day = Day.Monday },
-                    new () { Opening = new TimeOnly(10, 00), Closing = new TimeOnly(22, 00), Day = Day.Tuesday },
-                    new () { Opening = new TimeOnly(10, 00), Closing = new TimeOnly(22, 00), Day = Day.Wednesday },
-                    new () { Opening = new TimeOnly(10, 00), Closing = new TimeOnly(22, 00), Day = Day.Thursday },
-                    new () { Opening = new TimeOnly(10, 00), Closing = new TimeOnly(22, 00), Day = Day.Friday },
-                }
+                return; // DB has been seeded
             }
 
-        };
-        context.Restaurants.AddRange(restaurants);
-        context.SaveChanges();
-
-        if (!context.Products.Any())
-        {
-            var products = new Product[]
+            // Seed data for roles
+            var seedRoles = new Roles[]
             {
-                    new() { Name = "Big Mac", Price = 5.99 },
-                    new() { Name = "Whopper", Price = 6.49 },
-                    new() { Name = "Zinger Burger", Price = 4.99 },
-                    new() { Name = "Fries", Price = 2.99 },
-                    new() { Name = "Coke", Price = 1.99 }
+                new() { Name = "Admin", NormalizedName = "ADMIN", ConcurrencyStamp = Guid.NewGuid().ToString() },
+                new() { Name = "User", NormalizedName = "USER", ConcurrencyStamp = Guid.NewGuid().ToString() }
             };
 
-            context.Products.AddRange(products);
+            context.Roles.AddRange(seedRoles);
             context.SaveChanges();
+
+            // Seed data for users
+            var seedUsers = new User[]
+            {
+                new()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "John Doe",
+                    Email = "john.doe@example.com",
+                    PasswordHash = "HashedPassword1",
+                    PasswordSalt = "Salt1",
+                },
+                new()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Jane Smith",
+                    Email = "jane.smith@example.com",
+                    PasswordHash = "HashedPassword2",
+                    PasswordSalt = "Salt2",
+                },
+            };
+
+            context.Users.AddRange(seedUsers);
+            context.SaveChanges();
+
+            // Seed data for UserRoles
+            var userRoles = new UserRoles[]
+            {
+                new() { UserId = seedUsers[0].Id, RoleId = seedRoles[0].Id },
+                new() { UserId = seedUsers[1].Id, RoleId = seedRoles[1].Id },
+            };
+
+            context.UserRoles.AddRange(userRoles);
+            context.SaveChanges();
+
+            // Seed data for restaurants
+            if (!context.Restaurants.Any())
+            {
+                var seedRestaurants = new Restaurant[]
+                {
+                    new()
+                    {
+                        Name = "McDonald's",
+                        PhoneNumber = "123456789",
+                        AboutUs = "The best fast food in the world",
+                        Radius = 5,
+                        Logo = new ImageFile
+                        {
+                            Url = "https://www.mcdonalds.com/content/dam/sites/usa/nfl/icons/arches-logo_108x108.jpg",
+                            AltText = "McDonald's logo",
+                            MimeType = "image/jpeg",
+                            FileSize = 0.1
+                        },
+                        Address = new Address
+                        {
+                            City = "Rotterdam",
+                            HouseNumber = "12",
+                            StreetName = "Coolsingel",
+                            ZipCode = "3011AD",
+                            Latitude = 51.9225,
+                            Longitude = 4.47917
+                        },
+                        Banner = new ImageFile
+                        {
+                            Url = "https://banner2.cleanpng.com/20180714/buk/kisspng-india-medplus-business-retail-pharmacy-logo-mcdonald-5b4a5d7662d712.2249596115316002464049.jpg",
+                            AltText = "McDonald's banner",
+                            MimeType = "image/jpeg",
+                            FileSize = 0.1
+                        },
+                        Owner = seedUsers[0],
+                        OpeningsTimes = new List<OpeningsTime>
+                        {
+                            new () { Opening = new TimeOnly(8, 30), Closing = new TimeOnly(22, 30), Day = Day.Monday },
+                            new () { Opening = new TimeOnly(8, 30), Closing = new TimeOnly(22, 30), Day = Day.Tuesday },
+                            new () { Opening = new TimeOnly(8, 30), Closing = new TimeOnly(22, 30), Day = Day.Wednesday },
+                            new () { Opening = new TimeOnly(8, 30), Closing = new TimeOnly(22, 30), Day = Day.Thursday },
+                            new () { Opening = new TimeOnly(8, 30), Closing = new TimeOnly(21, 30), Day = Day.Friday },
+                        }
+                    },
+                    new()
+                    {
+                        Name = "Burger King",
+                        PhoneNumber = "987654321",
+                        AboutUs = "Home of the Whopper",
+                        Radius = 5,
+                        Logo = new ImageFile
+                        {
+                            Url = "https://upload.wikimedia.org/wikipedia/commons/c/cc/Burger_King_2020.svg",
+                            AltText = "Burger King logo",
+                            MimeType = "image/png",
+                            FileSize = 0.15
+                        },
+                        Address = new Address
+                        {
+                            City = "Amsterdam",
+                            HouseNumber = "45",
+                            StreetName = "Damrak",
+                            ZipCode = "1012LP",
+                            Latitude = 52.3738,
+                            Longitude = 4.8910
+                        },
+                        Banner = new ImageFile
+                        {
+                            Url = "https://upload.wikimedia.org/wikipedia/commons/c/cc/Burger_King_2020.svg",
+                            AltText = "Burger King banner",
+                            MimeType = "image/jpeg",
+                            FileSize = 0.2
+                        },
+                        Owner = seedUsers[1],
+                        OpeningsTimes = new List<OpeningsTime>
+                        {
+                            new () { Opening = new TimeOnly(9, 00), Closing = new TimeOnly(23, 00), Day = Day.Monday },
+                            new () { Opening = new TimeOnly(9, 00), Closing = new TimeOnly(23, 00), Day = Day.Tuesday },
+                            new () { Opening = new TimeOnly(9, 00), Closing = new TimeOnly(23, 00), Day = Day.Wednesday },
+                            new () { Opening = new TimeOnly(9, 00), Closing = new TimeOnly(23, 00), Day = Day.Thursday },
+                            new () { Opening = new TimeOnly(9, 00), Closing = new TimeOnly(22, 30), Day = Day.Friday },
+                        }
+                    },
+                };
+
+                context.Restaurants.AddRange(seedRestaurants);
+                context.SaveChanges();
+            }
         }
-
-        // Seed orders and OrderHasProducts if they don't exist
-        if (!context.Orders.Any())
-        {
-            var orders = new Order[]
-            {
-                    // First order
-                    new()
-                    {
-                        RestaurantId = context.Restaurants.First().Id, // assuming the first restaurant
-                        CustomerId = Guid.NewGuid(), // Replace with actual customer ID
-                        TotalPrice = 12.49,
-                        Note = "Please deliver quickly!",
-                        AddressId = context.Address.First().Id, // Assuming an address is available
-                        DeliveryPersonId = Guid.NewGuid(), // Replace with actual delivery person ID
-                        ETA = 30,
-                        PaymentMethod = PaymentMethod.Cash,
-                        Status = OrderStatus.Error
-                    },
-                    // Second order with multiple products (3 or 5)
-                    new()
-                    {
-                        RestaurantId = context.Restaurants.First().Id, // Replace with another restaurant if needed
-                        CustomerId = Guid.NewGuid(),
-                        TotalPrice = 30.95, // Total price with multiple products
-                        Note = "Please pack the drinks separately.",
-                        AddressId = context.Address.First().Id, // Replace with actual address
-                        DeliveryPersonId = Guid.NewGuid(),
-                        ETA = 45,
-                        PaymentMethod = PaymentMethod.Cash,
-                        Status = OrderStatus.Success
-                    }
-            };
-
-            context.Orders.AddRange(orders);
-            context.SaveChanges();
-
-            // First order products
-            var orderHasProducts1 = new OrderHasProduct[]
-            {
-                    new()
-                    {
-                        OrderId = orders[0].Id, // First order
-                        ProductId = context.Products.First().Id, // First product
-                        Amount = 2,
-                    }
-            };
-
-            // Second order products (3 or 5 products)
-            var orderHasProducts2 = new OrderHasProduct[]
-            {
-                    new()
-                    {
-                        OrderId = orders[1].Id, // Second order
-                        ProductId = context.Products.First(p => p.Name == "Whopper").Id,
-                        Amount = 1
-                    },
-                    new()
-                    {
-                        OrderId = orders[1].Id, // Second order
-                        ProductId = context.Products.First(p => p.Name == "Fries").Id,
-                        Amount = 2
-                    },
-                    new()
-                    {
-                        OrderId = orders[1].Id, // Second order
-                        ProductId = context.Products.First(p => p.Name == "Coke").Id,
-                        Amount = 3
-                    }
-                    // You can add more products here for a total of 5, if needed
-            };
-
-            // Save first and second order products
-            context.OrderHasProducts.AddRange(orderHasProducts1);
-            context.OrderHasProducts.AddRange(orderHasProducts2);
-            context.SaveChanges();
-        }
-
     }
-
 }

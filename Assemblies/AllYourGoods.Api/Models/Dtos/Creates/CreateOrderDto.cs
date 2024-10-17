@@ -17,7 +17,7 @@ namespace AllYourGoods.Api.Models.Dtos.Creates
         [Required]
         public Guid? CustomerId { get; set; }
         [Range(0.01, double.MaxValue, ErrorMessage = "TotalPrice must be greater than 0.")]
-        public double TotalPrice { get; set; }
+        public decimal TotalPrice { get; set; }
         public string? Note { get; set; }
         [Required]
         public CreateAddress Address { get; set; }
@@ -26,7 +26,7 @@ namespace AllYourGoods.Api.Models.Dtos.Creates
         
         public Guid DeliveryPersonId { get; set; }
        
-        public double ETA { get; set; }
+        public decimal ETA { get; set; }
         [Required]
         public PaymentMethod PaymentMethod { get; set; }
 
