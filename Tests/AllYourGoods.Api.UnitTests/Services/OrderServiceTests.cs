@@ -32,7 +32,7 @@ namespace AllYourGoods.Api.UnitTests.Services
             // Arrange
             var Address = new CreateAddress("12", "2312RF", "Rotterdam", "TestStreet");
             var orderHasProductList = new List<CreateOrderHasProduct> {
-                new CreateOrderHasProduct { ProductId = Guid.NewGuid(), Quantity = 3 }  // Use Quantity as per the model
+                new CreateOrderHasProduct { ProductId = Guid.NewGuid(), Amount = 3 } 
             };
 
             var orderDto = new CreateOrderDto(Address, orderHasProductList)
@@ -55,27 +55,25 @@ namespace AllYourGoods.Api.UnitTests.Services
                     City = orderDto.Address.City,
                     StreetName = orderDto.Address.StreetName
                 },
-                OrderProducts = orderDto.OrderHasProduct.Select(productDto => new OrderHasProduct
+                OrderHasProductList = orderDto.OrderHasProduct.Select(productDto => new OrderHasProduct
                 {
-                    Quantity = productDto.Quantity,  // Use Quantity to match model
+                    Amount = productDto.Amount,  
                     ProductId = Guid.NewGuid()
                 }).ToList(),
                 DeliveryPersonId = orderDto.DeliveryPersonId,
                 Status = orderDto.Status,
-                TotalPrice = 0m // Use decimal literal for TotalPrice
+                TotalPrice = 0m 
             };
 
             var responseDto = new ResponseOrderDto
             {
                 Id = order.Id,
-                CreatedAt = order.CreatedAt,  // Ensure this property exists in the DTO mock
                 TotalPrice = order.TotalPrice,
                 StreetName = order.Address.StreetName,
                 HouseNumber = order.Address.HouseNumber,
                 RestaurantName = "Test Restaurant"
             };
 
-            // Mocking the mappings and repository behavior
             _mockMapper.Setup(m => m.Map<Order>(orderDto)).Returns(order);
             _mockUnitOfWork.Setup(u => u.Repository<Order>().Add(order));
             _mockUnitOfWork.Setup(u => u.SaveAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);
@@ -114,14 +112,14 @@ namespace AllYourGoods.Api.UnitTests.Services
             // Arrange
             var orders = new List<Order>
             {
-                new Order { Id = Guid.NewGuid(), TotalPrice = 100.00M },  // Append M for decimal
+                new Order { Id = Guid.NewGuid(), TotalPrice = 100.00M },  
                 new Order { Id = Guid.NewGuid(), TotalPrice = 200.00M }
             };
 
             var responseDtos = new List<ResponseOrderDto>
             {
-                new ResponseOrderDto { Id = orders[0].Id, TotalPrice = (double)orders[0].TotalPrice },  // Cast to double if necessary
-                new ResponseOrderDto { Id = orders[1].Id, TotalPrice = (double)orders[1].TotalPrice }
+                new ResponseOrderDto { Id = orders[0].Id, TotalPrice = orders[0].TotalPrice }, 
+                new ResponseOrderDto { Id = orders[1].Id, TotalPrice = orders[1].TotalPrice }
             };
 
             _mockUnitOfWork.Setup(u => u.Repository<Order>().GetAllAsync(It.IsAny<Expression<Func<Order, bool>>?>(), null, null, null, It.IsAny<Expression<Func<Order, object>>[]>())).ReturnsAsync(orders);
