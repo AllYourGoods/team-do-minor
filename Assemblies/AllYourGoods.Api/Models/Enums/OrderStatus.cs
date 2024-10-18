@@ -1,9 +1,8 @@
-﻿namespace AllYourGoods.Api.Models.Enums
+﻿public enum OrderStatus
 {
-    public enum OrderStatus
-    {
-        Success ,
-        Error ,
-        Confirmed 
-    }
+    Pending,   
+    Confirmed,
+    Success,
+    Error,
+    Delivered
 }

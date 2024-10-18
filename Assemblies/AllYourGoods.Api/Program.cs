@@ -36,11 +36,11 @@ public class Program
         app.EnableBuffering();
         app.EnableRequestBodyLoggingMiddleware();
 
-   
+
         app.MapControllers();
         app.MapHealthChecks("/health");
         app.Run();
-        
+
     }
 
     private static WebApplicationBuilder CreateBuilder(string[] args)
@@ -68,7 +68,14 @@ public class Program
         builder.Services.AddScoped<IRestaurantService, RestaurantService>();
         builder.Services.AddScoped<IOrderService, OrderService>();
 
-        builder.Services.AddControllers();
+        builder.Services.AddControllers()
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+
+                options.JsonSerializerOptions.MaxDepth = 64;
+            });
+
         builder.Services.AddDbContext<ApplicationContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("SqlConnectionString")));
 
@@ -80,7 +87,7 @@ public class Program
 
         return builder;
     }
-   
+
 
     private static void InitializeDatabase(IHost app)
     {
