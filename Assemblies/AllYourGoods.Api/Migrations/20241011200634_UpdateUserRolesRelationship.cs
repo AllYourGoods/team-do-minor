@@ -36,8 +36,8 @@ namespace AllYourGoods.Api.Migrations
                 table: "Menus");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_OpeningsTimes_Restaurants_RestaurantId",
-                table: "OpeningsTimes");
+                name: "FK_OpeningTimes_Restaurants_RestaurantId",
+                table: "OpeningTimes");
 
             migrationBuilder.DropForeignKey(
                 name: "FK_OrderProducts_Orders_OrderId",
@@ -136,8 +136,8 @@ namespace AllYourGoods.Api.Migrations
                 table: "OrderProducts");
 
             migrationBuilder.DropPrimaryKey(
-                name: "PK_OpeningsTimes",
-                table: "OpeningsTimes");
+                name: "PK_OpeningTimes",
+                table: "OpeningTimes");
 
             migrationBuilder.DropPrimaryKey(
                 name: "PK_Menus",
@@ -204,7 +204,7 @@ namespace AllYourGoods.Api.Migrations
                 newName: "OrderHasProduct");
 
             migrationBuilder.RenameTable(
-                name: "OpeningsTimes",
+                name: "OpeningTimes",
                 newName: "OpeningsTime");
 
             migrationBuilder.RenameTable(
@@ -296,7 +296,7 @@ namespace AllYourGoods.Api.Migrations
                 newName: "IX_OrderHasProduct_ProductId");
 
             migrationBuilder.RenameIndex(
-                name: "IX_OpeningsTimes_RestaurantId",
+                name: "IX_OpeningTimes_RestaurantId",
                 table: "OpeningsTime",
                 newName: "IX_OpeningsTime_RestaurantId");
 
@@ -813,7 +813,7 @@ namespace AllYourGoods.Api.Migrations
 
             migrationBuilder.RenameTable(
                 name: "OpeningsTime",
-                newName: "OpeningsTimes");
+                newName: "OpeningTimes");
 
             migrationBuilder.RenameTable(
                 name: "Menu",
@@ -905,8 +905,8 @@ namespace AllYourGoods.Api.Migrations
 
             migrationBuilder.RenameIndex(
                 name: "IX_OpeningsTime_RestaurantId",
-                table: "OpeningsTimes",
-                newName: "IX_OpeningsTimes_RestaurantId");
+                table: "OpeningTimes",
+                newName: "IX_OpeningTimes_RestaurantId");
 
             migrationBuilder.RenameIndex(
                 name: "IX_Menu_RestaurantId",
@@ -979,8 +979,8 @@ namespace AllYourGoods.Api.Migrations
                 column: "Id");
 
             migrationBuilder.AddPrimaryKey(
-                name: "PK_OpeningsTimes",
-                table: "OpeningsTimes",
+                name: "PK_OpeningTimes",
+                table: "OpeningTimes",
                 column: "Id");
 
             migrationBuilder.AddPrimaryKey(
@@ -1067,8 +1067,8 @@ namespace AllYourGoods.Api.Migrations
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_OpeningsTimes_Restaurants_RestaurantId",
-                table: "OpeningsTimes",
+                name: "FK_OpeningTimes_Restaurants_RestaurantId",
+                table: "OpeningTimes",
                 column: "RestaurantId",
                 principalTable: "Restaurants",
                 principalColumn: "Id",

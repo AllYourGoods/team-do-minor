@@ -99,7 +99,7 @@ namespace AllYourGoods.Api.Data
                             FileSize = 0.1
                         },
                         Owner = seedUsers[0],
-                        OpeningsTimes = new List<OpeningsTime>
+                        OpeningTimes = new List<OpeningsTime>
                         {
                             new () { Opening = new TimeOnly(8, 30), Closing = new TimeOnly(22, 30), Day = Day.Monday },
                             new () { Opening = new TimeOnly(8, 30), Closing = new TimeOnly(22, 30), Day = Day.Tuesday },
@@ -138,7 +138,7 @@ namespace AllYourGoods.Api.Data
                             FileSize = 0.2
                         },
                         Owner = seedUsers[1],
-                        OpeningsTimes = new List<OpeningsTime>
+                        OpeningTimes = new List<OpeningsTime>
                         {
                             new () { Opening = new TimeOnly(9, 00), Closing = new TimeOnly(23, 00), Day = Day.Monday },
                             new () { Opening = new TimeOnly(9, 00), Closing = new TimeOnly(23, 00), Day = Day.Tuesday },

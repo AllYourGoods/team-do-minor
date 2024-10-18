@@ -237,7 +237,7 @@ namespace AllYourGoods.Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "OpeningsTimes",
+                name: "OpeningTimes",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -248,9 +248,9 @@ namespace AllYourGoods.Api.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OpeningsTimes", x => x.Id);
+                    table.PrimaryKey("PK_OpeningTimes", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_OpeningsTimes_Restaurants_RestaurantId",
+                        name: "FK_OpeningTimes_Restaurants_RestaurantId",
                         column: x => x.RestaurantId,
                         principalTable: "Restaurants",
                         principalColumn: "Id",
@@ -423,8 +423,8 @@ namespace AllYourGoods.Api.Migrations
                 column: "RestaurantId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OpeningsTimes_RestaurantId",
-                table: "OpeningsTimes",
+                name: "IX_OpeningTimes_RestaurantId",
+                table: "OpeningTimes",
                 column: "RestaurantId");
 
             migrationBuilder.CreateIndex(
@@ -503,7 +503,7 @@ namespace AllYourGoods.Api.Migrations
                 name: "FAQs");
 
             migrationBuilder.DropTable(
-                name: "OpeningsTimes");
+                name: "OpeningTimes");
 
             migrationBuilder.DropTable(
                 name: "OrderProducts");

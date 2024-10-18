@@ -567,7 +567,7 @@ namespace AllYourGoods.Api.Migrations
             modelBuilder.Entity("AllYourGoods.Api.Models.OpeningsTime", b =>
                 {
                     b.HasOne("AllYourGoods.Api.Models.Restaurant", "Restaurant")
-                        .WithMany("OpeningsTimes")
+                        .WithMany("OpeningTimes")
                         .HasForeignKey("RestaurantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -753,7 +753,7 @@ namespace AllYourGoods.Api.Migrations
 
                     b.Navigation("Menus");
 
-                    b.Navigation("OpeningsTimes");
+                    b.Navigation("OpeningTimes");
 
                     b.Navigation("RestaurantTags");
                 });

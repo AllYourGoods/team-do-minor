@@ -22,7 +22,7 @@ namespace AllYourGoods.Api.Models
         public virtual ImageFile Banner { get; set; } = null!;
         public virtual User? Owner { get; set; }
 
-        public virtual ICollection<OpeningsTime> OpeningsTimes { get; set; } = new List<OpeningsTime>();
+        public virtual ICollection<OpeningsTime> OpeningTimes { get; set; } = new List<OpeningsTime>();
 
         public virtual ICollection<Menu> Menus { get; set; } = new List<Menu>();
         public virtual ICollection<RestaurantHasTags> RestaurantTags { get; set; } = new List<RestaurantHasTags>();

@@ -288,7 +288,7 @@ namespace AllYourGoods.Api.Migrations
             modelBuilder.Entity("AllYourGoods.Api.Models.OpeningsTime", b =>
                 {
                     b.HasOne("AllYourGoods.Api.Models.Restaurant", null)
-                        .WithMany("OpeningsTimes")
+                        .WithMany("OpeningTimes")
                         .HasForeignKey("RestaurantId");
                 });
 
@@ -361,7 +361,7 @@ namespace AllYourGoods.Api.Migrations
 
             modelBuilder.Entity("AllYourGoods.Api.Models.Restaurant", b =>
                 {
-                    b.Navigation("OpeningsTimes");
+                    b.Navigation("OpeningTimes");
                 });
 #pragma warning restore 612, 618
         }

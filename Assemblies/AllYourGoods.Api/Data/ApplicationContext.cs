@@ -17,7 +17,7 @@ namespace AllYourGoods.Api.Data
         public virtual DbSet<Order> Orders { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
         public virtual DbSet<DeliveryPerson> DeliveryPersons { get; set; } = null!;
-        public virtual DbSet<OpeningsTime> OpeningsTimes { get; set; } = null!;
+        public virtual DbSet<OpeningsTime> OpeningTimes { get; set; } = null!;
         public virtual DbSet<FrequentlyAskedQuestion> FrequentlyAskedQuestions { get; set; } = null!;
         public virtual DbSet<Tag> Tags { get; set; } = null!;
         public virtual DbSet<ProductHasTag> ProductTags { get; set; } = null!;

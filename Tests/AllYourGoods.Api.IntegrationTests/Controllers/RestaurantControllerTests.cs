@@ -170,8 +170,8 @@ public class RestaurantControllerTests
     public async Task GetRestaurants_InvalidRequest_ReturnsBadRequest()
     {
         // Arrange: Set invalid page number and page size values
-        var invalidPageNumber = -1; 
-        var invalidPageSize = 0;  
+        var invalidPageNumber = -1;
+        var invalidPageSize = 0;
 
         // Act: Make a GET request with invalid query parameters
         var response = await _client.GetAsync($"/api/restaurant/paginated?pageNumber={invalidPageNumber}&pageSize={invalidPageSize}");
@@ -366,7 +366,7 @@ public class RestaurantControllerTests
                     PasswordHash = "Hashed Password placeholder",
                     PasswordSalt = "Salt placeholder",
                 },
-                OpeningsTimes = new List<OpeningsTime>()
+                OpeningTimes = new List<OpeningsTime>()
                 {
                     new ()
                     {
@@ -446,7 +446,7 @@ public class RestaurantControllerTests
                     PasswordHash = "Hashed Password placeholder",
                     PasswordSalt = "Salt placeholder",
                 },
-                OpeningsTimes = new List<OpeningsTime>()
+                OpeningTimes = new List<OpeningsTime>()
                 {
                     new () { Id = Guid.NewGuid(), Opening = new TimeOnly(9, 00), Closing = new TimeOnly(23, 00), Day = Day.Monday },
                     new () { Id = Guid.NewGuid(),Opening = new TimeOnly(9, 00), Closing = new TimeOnly(23, 00), Day = Day.Tuesday },
@@ -496,7 +496,7 @@ public class RestaurantControllerTests
                     PasswordHash = "Hashed Password placeholder",
                     PasswordSalt = "Salt placeholder",
                 },
-                OpeningsTimes = new List<OpeningsTime>()
+                OpeningTimes = new List<OpeningsTime>()
                 {
                     new () { Id = Guid.NewGuid(), Opening = new TimeOnly(10, 00), Closing = new TimeOnly(22, 00), Day = Day.Monday },
                     new () { Id = Guid.NewGuid(), Opening = new TimeOnly(10, 00), Closing = new TimeOnly(22, 00), Day = Day.Tuesday },

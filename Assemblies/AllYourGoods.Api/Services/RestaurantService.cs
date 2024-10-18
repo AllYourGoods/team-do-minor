@@ -12,7 +12,7 @@ namespace AllYourGoods.Api.Services;
 
 public class RestaurantService : IRestaurantService
 {
-    private readonly IUnitOfWork _unitOfWork; 
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
     public RestaurantService(IUnitOfWork unitOfWork, IMapper mapper)
@@ -38,7 +38,7 @@ public class RestaurantService : IRestaurantService
             r => r.Address,
             r => r.Banner,
             r => r.Owner!,
-            r => r.OpeningsTimes!);
+            r => r.OpeningTimes!);
 
         if (restaurant == null)
         {
@@ -63,7 +63,7 @@ public class RestaurantService : IRestaurantService
                 r => r.Address,
                 r => r.Banner,
                 r => r.Owner!,
-                r => r.OpeningsTimes!
+                r => r.OpeningTimes!
             }
         );
 
@@ -79,7 +79,7 @@ public class RestaurantService : IRestaurantService
             r => r.Address,
             r => r.Banner,
             r => r.Owner!,
-            r => r.OpeningsTimes!);
+            r => r.OpeningTimes!);
 
         if (restaurant == null)
         {
@@ -90,9 +90,9 @@ public class RestaurantService : IRestaurantService
         _unitOfWork.Repository<Address>().Delete(restaurant.Address);
         _unitOfWork.Repository<ImageFile>().Delete(restaurant.Logo);
         _unitOfWork.Repository<ImageFile>().Delete(restaurant.Banner);
-        if (restaurant.OpeningsTimes != null)
+        if (restaurant.OpeningTimes != null)
         {
-            _unitOfWork.Repository<OpeningsTime>().DeleteRange(restaurant.OpeningsTimes);
+            _unitOfWork.Repository<OpeningsTime>().DeleteRange(restaurant.OpeningTimes);
         }
 
         if (restaurant.Owner != null)
@@ -112,7 +112,7 @@ public class RestaurantService : IRestaurantService
             r => r.Address,
             r => r.Banner,
             r => r.Owner!,
-            r => r.OpeningsTimes!);
+            r => r.OpeningTimes!);
 
         if (restaurant == null)
         {
@@ -120,10 +120,10 @@ public class RestaurantService : IRestaurantService
         }
 
         // update Restaurant here with updateRestaurantDto
-           restaurant.Name = updateRestaurantDto.Name;
-           restaurant.PhoneNumber = updateRestaurantDto.PhoneNumber;
-           restaurant.AboutUs = updateRestaurantDto.AboutUs;
-           restaurant.Radius = updateRestaurantDto.Radius;
+        restaurant.Name = updateRestaurantDto.Name;
+        restaurant.PhoneNumber = updateRestaurantDto.PhoneNumber;
+        restaurant.AboutUs = updateRestaurantDto.AboutUs;
+        restaurant.Radius = updateRestaurantDto.Radius;
         // etc etc
 
         _unitOfWork.Repository<Restaurant>().Update(restaurant);
