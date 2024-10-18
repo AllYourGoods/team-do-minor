@@ -25,9 +25,9 @@ namespace AllYourGoods.Api.Mappings
             CreateMap<Tag, ResponseTagDto>(MemberList.Destination);
 
             // If you have create DTOs for categories or tags
-            CreateMap<CreateCategoryD, Category>(MemberList.Source)
+            CreateMap<CreateCategoryDto, Category>(MemberList.Source)
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()));
-            CreateMap<CreateTag, Tag>(MemberList.Source)
+            CreateMap<CreateTagDto, Tag>(MemberList.Source)
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()));
         }
     }

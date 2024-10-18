@@ -16,6 +16,8 @@ public class ResponseProductDto
     public double Price { get; set; }
     public bool NotAvailable { get; set; }
     public Guid ImageFileId { get; set; }
+    public int? StatusCode { get; set; }
+    public string? StatusMessage { get; set; }
 
     // Relationships can be displayed by fetching them in the controller and mapping them into DTOs
     public ICollection<string> CategoryNames { get; set; } = new List<string>();

@@ -116,5 +116,10 @@ namespace AllYourGoods.Api.Services
 
             return _mapper.Map<ResponseProductDto>(product);
         }
+
+        public Task<PaginatedList<ResponseProductDto>> GetPaginatedProductsAsync(int pageNumber, int pageSize)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
