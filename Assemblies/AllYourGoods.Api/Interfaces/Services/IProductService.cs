@@ -7,9 +7,9 @@ using System.Linq.Expressions;
 
 public interface IProductService
 {
-    Task<ProductResponseDto> CreateProductAsync(CreateProductDto model);
-    Task<PaginatedList<ProductResponseDto>> GetPaginatedProductsAsync(int pageNumber, int pageSize);
-    Task<RepsonseProductDto> GetProductByIdAsync(Guid id);
+    Task<ResponseProductDto> CreateProductAsync(CreateProductDto model);
+    Task<PaginatedList<ResponseProductDto>> GetPaginatedProductsAsync(int pageNumber, int pageSize);
+    Task<ResponseProductDto> GetProductByIdAsync(Guid id);
     Task DeleteProductAsync(Guid id);
-    Task<ProductResponseDto> UpdateProductAsync(Guid id, UpdateProductDto model);
+    Task<ResponseProductDto> UpdateProductAsync(Guid id, UpdateProductDto model);
 }

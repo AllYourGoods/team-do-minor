@@ -1,7 +1,7 @@
 namespace AllYourGoods.Api.Models.Dtos.Responses;
-public class RepsonseProductDto
+public class ResponseProductDto
 {
-    public RepsonseProductDto(Guid id, string name, string description, double price, bool notAvailable, Guid imageFileId)
+    public ResponseProductDto(Guid id, string name, string description, double price, bool notAvailable, Guid imageFileId)
     {
         Id = id;
         Name = name;
