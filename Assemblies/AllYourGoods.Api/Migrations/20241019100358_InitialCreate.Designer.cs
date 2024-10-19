@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AllYourGoods.Api.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20241011200634_UpdateUserRolesRelationship")]
-    partial class UpdateUserRolesRelationship
+    [Migration("20241019100358_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,8 +54,8 @@ namespace AllYourGoods.Api.Migrations
 
                     b.Property<string>("ZipCode")
                         .IsRequired()
-                        .HasMaxLength(6)
-                        .HasColumnType("nvarchar(6)");
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.HasKey("Id");
 
@@ -73,7 +73,8 @@ namespace AllYourGoods.Api.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<double>("Weight")
                         .HasColumnType("float");
@@ -91,6 +92,9 @@ namespace AllYourGoods.Api.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("CategoryId", "ProductId");
@@ -117,7 +121,8 @@ namespace AllYourGoods.Api.Migrations
 
                     b.Property<string>("Region")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<TimeSpan>("StartTime")
                         .HasColumnType("time");
@@ -127,7 +132,8 @@ namespace AllYourGoods.Api.Migrations
 
                     b.Property<string>("WayOfTransport")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
@@ -197,7 +203,8 @@ namespace AllYourGoods.Api.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<Guid>("RestaurantId")
                         .HasColumnType("uniqueidentifier");
@@ -243,38 +250,33 @@ namespace AllYourGoods.Api.Migrations
                     b.Property<Guid>("AddressId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedOnUTC")
-                        .HasColumnType("datetime2");
-
                     b.Property<Guid>("CustomerId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("DeliveryPersonId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<double>("ETA")
-                        .HasColumnType("float");
-
-                    b.Property<DateTime?>("ExpiredOnUTC")
-                        .HasColumnType("datetime2");
+                    b.Property<decimal>("ETA")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Note")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PaymentMethod")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("PaymentMethod")
+                        .HasColumnType("int");
 
                     b.Property<Guid>("RestaurantId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid?>("ShiftId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<double>("TotalPrice")
-                        .HasColumnType("float");
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("TotalPrice")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
@@ -285,6 +287,8 @@ namespace AllYourGoods.Api.Migrations
                     b.HasIndex("DeliveryPersonId");
 
                     b.HasIndex("RestaurantId");
+
+                    b.HasIndex("ShiftId");
 
                     b.ToTable("Order", (string)null);
                 });
@@ -297,8 +301,11 @@ namespace AllYourGoods.Api.Migrations
                     b.Property<Guid>("ProductId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Quantity")
+                    b.Property<int>("Amount")
                         .HasColumnType("int");
+
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("OrderId", "ProductId");
 
@@ -327,8 +334,8 @@ namespace AllYourGoods.Api.Migrations
                     b.Property<bool>("NotAvailable")
                         .HasColumnType("bit");
 
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
@@ -343,6 +350,9 @@ namespace AllYourGoods.Api.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("TagId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("ProductId", "TagId");
@@ -409,6 +419,9 @@ namespace AllYourGoods.Api.Migrations
                     b.Property<Guid>("TagId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("RestaurantId", "TagId");
 
                     b.HasIndex("TagId");
@@ -418,8 +431,9 @@ namespace AllYourGoods.Api.Migrations
 
             modelBuilder.Entity("AllYourGoods.Api.Models.Roles", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsRequired()
@@ -427,15 +441,46 @@ namespace AllYourGoods.Api.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("NormalizedName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Role", (string)null);
+                });
+
+            modelBuilder.Entity("AllYourGoods.Api.Models.Shift", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<TimeSpan>("EndTime")
+                        .HasColumnType("time");
+
+                    b.Property<double>("MaxDistance")
+                        .HasColumnType("float");
+
+                    b.Property<TimeSpan>("StartTime")
+                        .HasColumnType("time");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("WayOfTransport")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Role", (string)null);
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Shift", (string)null);
                 });
 
             modelBuilder.Entity("AllYourGoods.Api.Models.Tag", b =>
@@ -446,7 +491,8 @@ namespace AllYourGoods.Api.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.HasKey("Id");
 
@@ -494,14 +540,17 @@ namespace AllYourGoods.Api.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("RoleId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("UserId", "RoleId");
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("UserRoles");
+                    b.ToTable("UserRoles", (string)null);
                 });
 
             modelBuilder.Entity("AllYourGoods.Api.Models.Category", b =>
@@ -592,7 +641,7 @@ namespace AllYourGoods.Api.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("AllYourGoods.Api.Models.User", "DeliveryPerson")
+                    b.HasOne("AllYourGoods.Api.Models.DeliveryPerson", "DeliveryPerson")
                         .WithMany()
                         .HasForeignKey("DeliveryPersonId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -604,6 +653,11 @@ namespace AllYourGoods.Api.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("AllYourGoods.Api.Models.Shift", "Shift")
+                        .WithMany("Orders")
+                        .HasForeignKey("ShiftId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("Address");
 
                     b.Navigation("Customer");
@@ -611,12 +665,14 @@ namespace AllYourGoods.Api.Migrations
                     b.Navigation("DeliveryPerson");
 
                     b.Navigation("Restaurant");
+
+                    b.Navigation("Shift");
                 });
 
             modelBuilder.Entity("AllYourGoods.Api.Models.OrderHasProduct", b =>
                 {
                     b.HasOne("AllYourGoods.Api.Models.Order", "Order")
-                        .WithMany("OrderProducts")
+                        .WithMany("OrderHasProductList")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -709,6 +765,17 @@ namespace AllYourGoods.Api.Migrations
                     b.Navigation("Tag");
                 });
 
+            modelBuilder.Entity("AllYourGoods.Api.Models.Shift", b =>
+                {
+                    b.HasOne("AllYourGoods.Api.Models.User", "User")
+                        .WithMany("Shifts")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("AllYourGoods.Api.Models.UserRoles", b =>
                 {
                     b.HasOne("AllYourGoods.Api.Models.Roles", "Role")
@@ -740,7 +807,7 @@ namespace AllYourGoods.Api.Migrations
 
             modelBuilder.Entity("AllYourGoods.Api.Models.Order", b =>
                 {
-                    b.Navigation("OrderProducts");
+                    b.Navigation("OrderHasProductList");
                 });
 
             modelBuilder.Entity("AllYourGoods.Api.Models.Product", b =>
@@ -766,6 +833,11 @@ namespace AllYourGoods.Api.Migrations
                     b.Navigation("UserRoles");
                 });
 
+            modelBuilder.Entity("AllYourGoods.Api.Models.Shift", b =>
+                {
+                    b.Navigation("Orders");
+                });
+
             modelBuilder.Entity("AllYourGoods.Api.Models.Tag", b =>
                 {
                     b.Navigation("ProductTags");
@@ -775,11 +847,11 @@ namespace AllYourGoods.Api.Migrations
 
             modelBuilder.Entity("AllYourGoods.Api.Models.User", b =>
                 {
-                    b.Navigation("DeliveryPerson")
-                        .IsRequired();
+                    b.Navigation("DeliveryPerson");
 
-                    b.Navigation("Restaurant")
-                        .IsRequired();
+                    b.Navigation("Restaurant");
+
+                    b.Navigation("Shifts");
 
                     b.Navigation("UserRoles");
                 });

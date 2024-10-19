@@ -27,10 +27,33 @@ namespace AllYourGoods.Api.Data
 
         public virtual DbSet<UserRoles> UserRoles { get; set; } = null!;
         public virtual DbSet<Roles> Roles { get; set; } = null!;
+        public virtual DbSet<Shift> Shifts { get; set; } = null!;
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            // Specify singular table names
+            modelBuilder.Entity<Restaurant>().ToTable("Restaurant");
+            modelBuilder.Entity<Address>().ToTable("Address");
+            modelBuilder.Entity<ImageFile>().ToTable("ImageFile");
+            modelBuilder.Entity<Menu>().ToTable("Menu");
+            modelBuilder.Entity<Category>().ToTable("Category");
+            modelBuilder.Entity<Product>().ToTable("Product");
+            modelBuilder.Entity<Order>().ToTable("Order");
+            modelBuilder.Entity<User>().ToTable("User");
+            modelBuilder.Entity<DeliveryPerson>().ToTable("DeliveryPerson");
+            modelBuilder.Entity<OpeningsTime>().ToTable("OpeningsTime");
+            modelBuilder.Entity<FrequentlyAskedQuestion>().ToTable("FrequentlyAskedQuestion");
+            modelBuilder.Entity<Tag>().ToTable("Tag");
+            modelBuilder.Entity<ProductHasTag>().ToTable("ProductHasTag");
+            modelBuilder.Entity<CategoryHasProduct>().ToTable("CategoryHasProduct");
+            modelBuilder.Entity<OrderHasProduct>().ToTable("OrderHasProduct");
+            modelBuilder.Entity<RestaurantHasTags>().ToTable("RestaurantHasTags");
+            modelBuilder.Entity<UserRoles>().ToTable("UserRoles");
+            modelBuilder.Entity<Roles>().ToTable("Role");
+            modelBuilder.Entity<Shift>().ToTable("Shift");
 
             modelBuilder.Entity<Restaurant>()
                 .HasOne(r => r.Owner)
@@ -86,6 +109,20 @@ namespace AllYourGoods.Api.Data
                 .HasMany(r => r.UserRoles)
                 .WithOne(ur => ur.Role)
                 .HasForeignKey(ur => ur.RoleId);
+
+            // One-to-Many: User and Shifts
+            modelBuilder.Entity<Shift>()
+                .HasOne(s => s.User)
+                .WithMany(u => u.Shifts)
+                .HasForeignKey(s => s.UserId)
+                .OnDelete(DeleteBehavior.Cascade);  // Choose delete behavior
+
+            // One-to-Many: Shift and Orders
+            modelBuilder.Entity<Order>()
+                .HasOne(o => o.Shift)
+                .WithMany(s => s.Orders)
+                .HasForeignKey(o => o.ShiftId)
+                .OnDelete(DeleteBehavior.Restrict);  // Choose delete behavior to avoid cascading issues
         }
     }
 }

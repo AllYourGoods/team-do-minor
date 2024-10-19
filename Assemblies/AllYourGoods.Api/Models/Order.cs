@@ -15,6 +15,7 @@ namespace AllYourGoods.Api.Models
         public decimal TotalPrice { get; set; }
         public string Note { get; set; } = null!;
         public decimal ETA { get; set; }
+        public Guid? ShiftId { get; set; }  // Foreign key to Shift table
 
         public PaymentMethod PaymentMethod { get; set; }
         public OrderStatus Status { get; set; }
@@ -23,6 +24,8 @@ namespace AllYourGoods.Api.Models
         public Restaurant Restaurant { get; set; } = null!;
         public User Customer { get; set; } = null!;
         public DeliveryPerson DeliveryPerson { get; set; } = null!;
+        public virtual Shift Shift { get; set; } = null!;// Navigation to Shift
+
 
         public List<OrderHasProduct> OrderHasProductList { get; set; } = null!;
     }
