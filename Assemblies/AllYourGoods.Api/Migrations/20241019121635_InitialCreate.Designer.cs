@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AllYourGoods.Api.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20241019100358_InitialCreate")]
+    [Migration("20241019121635_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -110,30 +110,16 @@ namespace AllYourGoods.Api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<TimeSpan>("EndTime")
-                        .HasColumnType("time");
-
                     b.Property<TimeSpan>("EstimatedTime")
                         .HasColumnType("time");
-
-                    b.Property<double>("MaxDistance")
-                        .HasColumnType("float");
 
                     b.Property<string>("Region")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<TimeSpan>("StartTime")
-                        .HasColumnType("time");
-
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("WayOfTransport")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 

@@ -115,10 +115,6 @@ namespace AllYourGoods.Api.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Region = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    MaxDistance = table.Column<double>(type: "float", nullable: false),
-                    WayOfTransport = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    StartTime = table.Column<TimeSpan>(type: "time", nullable: false),
-                    EndTime = table.Column<TimeSpan>(type: "time", nullable: false),
                     EstimatedTime = table.Column<TimeSpan>(type: "time", nullable: false)
                 },
                 constraints: table =>
