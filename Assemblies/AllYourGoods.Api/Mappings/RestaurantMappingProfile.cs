@@ -21,10 +21,13 @@ public class RestaurantMappingProfile : Profile
 
         CreateMap<CreateRestaurantDto, Restaurant>(MemberList.Source)
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()));
+
         CreateMap<CreateAddress, Address>(MemberList.Source)
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()));
+
         CreateMap<CreateBanner, ImageFile>(MemberList.Source)
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()));
+
         CreateMap<CreateLogo, ImageFile>(MemberList.Source)
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()));
     }
