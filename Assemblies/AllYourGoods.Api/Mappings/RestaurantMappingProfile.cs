@@ -13,7 +13,8 @@ public class RestaurantMappingProfile : Profile
         //TODO currently not doing anything with status messages we need to fix that and remove these ignores
         CreateMap<Restaurant, ResponseRestaurantDto>(MemberList.Destination)
             .ForMember(dest => dest.StatusCode, opt => opt.Ignore())
-            .ForMember(dest => dest.StatusMessage, opt => opt.Ignore());
+            .ForMember(dest => dest.StatusMessage, opt => opt.Ignore())
+            .ForMember(dest => dest.OpeningTimes, opt => opt.MapFrom(src => src.OpeningsTimes));
         CreateMap<Address, ResponseAddressDto>(MemberList.Destination);
         CreateMap<ImageFile, ResponseBannerDto>(MemberList.Destination);
         CreateMap<ImageFile, ResponseLogoDto>(MemberList.Destination);
@@ -26,6 +27,5 @@ public class RestaurantMappingProfile : Profile
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()));
         CreateMap<CreateLogo, ImageFile>(MemberList.Source)
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()));
-
     }
 }

@@ -11,7 +11,7 @@ public class ResponseRestaurantDto
     public ResponseLogoDto Logo { get; set; } = null!;
     public string? AboutUs { get; set; }
     public string PhoneNumber { get; set; } = null!;
-    public List<OpeningsTime>? OpeningsTimes { get; set; }
+    public List<OpeningsTime>? OpeningTimes { get; set; }
     public double Radius { get; set; }
     public int? StatusCode { get; set; }
     public string? StatusMessage { get; set; }
