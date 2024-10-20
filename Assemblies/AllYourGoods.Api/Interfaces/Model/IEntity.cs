@@ -1,6 +1,7 @@
-﻿namespace AllYourGoods.Api.Interfaces.Model;
-
-public interface IEntity
+﻿namespace AllYourGoods.Api.Interfaces.Model
 {
-    Guid Id { get; set; }
+    public interface IEntity
+    {
+        Guid Id { get; set; }
+    }
 }
