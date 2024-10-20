@@ -13,7 +13,7 @@ namespace AllYourGoods.Api.Models.Dtos.Updates
 
         [Required]
         [Range(0, double.MaxValue, ErrorMessage = "Price must be a positive number.")]
-        public double Price { get; set; }
+        public decimal Price { get; set; }
 
         public bool NotAvailable { get; set; }
 

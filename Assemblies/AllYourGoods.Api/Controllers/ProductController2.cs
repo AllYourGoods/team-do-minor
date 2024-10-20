@@ -35,7 +35,7 @@ namespace AllYourGoods.Api.Controllers
             return CreatedAtAction(nameof(GetProduct), new { id = responseProductDto.Id }, responseProductDto);
         }
 
-        [HttpGet("paginated")]
+        [HttpGet]
         [ProducesResponseType(typeof(PaginatedList<ResponseProductDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
