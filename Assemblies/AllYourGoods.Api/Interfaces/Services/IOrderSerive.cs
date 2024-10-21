@@ -7,6 +7,7 @@ namespace AllYourGoods.Api.Interfaces.Services;
 public interface IOrderService
 {
     Task<List<ResponseOrderDto>> GetAllAsync();
+    Task<List<ResponseOrderDto>> GetUserAllAsync(Guid DPersonId);
     Task<ResponseOrderDto> CreateOrderAsync(CreateOrderDto OrderDto);
     Task<ResponseOrderDto> GetOrderByIdAsync(Guid orderId);
 }

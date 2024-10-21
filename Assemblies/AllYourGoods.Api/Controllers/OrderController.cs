@@ -64,6 +64,28 @@ public class OrderController : ControllerBase
         }
     }
 
+    [HttpGet("DeliveryPerson/{id}")]
+    [ProducesResponseType(typeof(PaginatedList<ResponseOrderDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<ResponseOrderDto>> GetOrderUserAllAsync(Guid id)
+    {
+        try { 
+        
+            var order = await _orderService.GetUserAllAsync(id);
+
+            if (order == null || !order.Any())
+            {
+                return NotFound("There is no Order available right now.");
+            }
+            return Ok(order);
+        }
+        catch (KeyNotFoundException)
+        {
+            return NotFound($"There is no Order available right now.");
+        }
+    }
+
 
     // de return body moet nog aangepast worder maar ik heb het gemaakt zo dat HTTPpost werk (CreatedAtAction(nameof(GetOrder))
     [HttpGet("{id}")]

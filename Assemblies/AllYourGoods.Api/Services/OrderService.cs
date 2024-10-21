@@ -33,6 +33,19 @@ namespace AllYourGoods.Api.Services
             return responseOrders ?? new List<ResponseOrderDto>();
         }
 
+        public async Task<List<ResponseOrderDto>> GetUserAllAsync(Guid DPersonId)
+        {
+            var orders = await _unitOfWork.Repository<Order>().GetAllAsync(o => o.DeliveryPersonId == DPersonId);
+
+            if (orders == null || !orders.Any())
+            {
+                throw new KeyNotFoundException("No Orders found");
+            }
+
+            var responseOrders = _mapper.Map<List<ResponseOrderDto>>(orders);
+            return responseOrders ?? new List<ResponseOrderDto>();
+        }
+
         public async Task<ResponseOrderDto> CreateOrderAsync(CreateOrderDto orderDto)
         {
             var order = _mapper.Map<Order>(orderDto);
