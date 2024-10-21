@@ -20,6 +20,19 @@ namespace AllYourGoods.Api.Services
             _unitOfWork = unitOfWork;
         }
 
+        public async Task<List<ResponseOrderDto>> GetAllAsync()
+        {
+            var orders = await _unitOfWork.Repository<Order>().GetAllAsync();
+
+            if (orders == null || !orders.Any())
+            {
+                throw new KeyNotFoundException("No Orders found");
+            }
+
+            var responseOrders = _mapper.Map<List<ResponseOrderDto>>(orders);
+            return responseOrders ?? new List<ResponseOrderDto>();
+        }
+
         public async Task<ResponseOrderDto> CreateOrderAsync(CreateOrderDto orderDto)
         {
             var order = _mapper.Map<Order>(orderDto);
@@ -35,26 +48,7 @@ namespace AllYourGoods.Api.Services
             return responseOrder ?? throw new InvalidOperationException("Mapping to ResponseOrderDto failed, returned null.");
         }
 
-        public async Task<List<ResponseOrderDto>> GetAllAsync()
-        {
-            var orders = await _unitOfWork.Repository<Order>().GetAllAsync(
-                includes: new Expression<Func<Order, object>>[]
-                {
-                    o => o.Restaurant,
-                    o => o.Address
-                }
-            );
-
-            if (orders == null || !orders.Any())
-            {
-                throw new KeyNotFoundException("No Orders found");
-            }
-
-            var responseOrders = _mapper.Map<List<ResponseOrderDto>>(orders);
-            return responseOrders ?? new List<ResponseOrderDto>();
-        }
-
-        public async Task<Order> GetOrderByIdAsync(Guid orderId)
+        public async Task<ResponseOrderDto> GetOrderByIdAsync(Guid orderId)
         {
             var order = await _unitOfWork.Repository<Order>().GetByIdAsync(orderId, o => o.Address);
             if (order == null)
@@ -62,7 +56,9 @@ namespace AllYourGoods.Api.Services
                 throw new KeyNotFoundException($"Order with Id: {orderId} not found");
             }
 
-            return order; 
+            var responseOrder = _mapper.Map<ResponseOrderDto>(order);
+            
+            return responseOrder; 
         }
     }
 }

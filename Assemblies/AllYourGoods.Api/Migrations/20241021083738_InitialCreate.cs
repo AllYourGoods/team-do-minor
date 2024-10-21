@@ -340,7 +340,9 @@ namespace AllYourGoods.Api.Migrations
                     ETA = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     ShiftId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     PaymentMethod = table.Column<int>(type: "int", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false)
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    CreatedOnUTC = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ExpiredOnUTC = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {

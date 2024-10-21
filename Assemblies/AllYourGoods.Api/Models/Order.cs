@@ -20,6 +20,9 @@ namespace AllYourGoods.Api.Models
         public PaymentMethod PaymentMethod { get; set; }
         public OrderStatus Status { get; set; }
 
+        public DateTime? CreatedOnUTC { get; set; }
+        public DateTime? ExpiredOnUTC { get; set; }
+
         public Address Address { get; set; } = null!;
         public Restaurant Restaurant { get; set; } = null!;
         public User Customer { get; set; } = null!;

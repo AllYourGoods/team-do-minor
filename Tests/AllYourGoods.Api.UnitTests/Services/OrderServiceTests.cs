@@ -68,10 +68,7 @@ namespace AllYourGoods.Api.UnitTests.Services
             var responseDto = new ResponseOrderDto
             {
                 Id = order.Id,
-                TotalPrice = order.TotalPrice,
-                StreetName = order.Address.StreetName,
-                HouseNumber = order.Address.HouseNumber,
-                RestaurantName = "Test Restaurant"
+                TotalPrice = order.TotalPrice
             };
 
             _mockMapper.Setup(m => m.Map<Order>(orderDto)).Returns(order);
@@ -85,7 +82,6 @@ namespace AllYourGoods.Api.UnitTests.Services
             // Assert
             Assert.That(result, Is.Not.Null);
             Assert.That(result.TotalPrice, Is.EqualTo(order.TotalPrice));
-            Assert.That(result.StreetName, Is.EqualTo(order.Address.StreetName));
 
             _mockUnitOfWork.Verify(u => u.Repository<Order>().Add(order), Times.Once);
             _mockUnitOfWork.Verify(u => u.SaveAsync(It.IsAny<CancellationToken>()), Times.Once);

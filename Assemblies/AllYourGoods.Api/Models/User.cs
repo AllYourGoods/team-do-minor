@@ -22,7 +22,8 @@ namespace AllYourGoods.Api.Models
         public string PasswordSalt { get; set; } = null!;
 
         public virtual Restaurant? Restaurant { get; set; }
-        public virtual ICollection<Shift> Shifts { get; set; }  // Ensure this property exists
+        
+        public virtual ICollection<Shift>? Shifts { get; set; }  // Ensure this property exists
 
         public virtual DeliveryPerson? DeliveryPerson { get; set; }
 

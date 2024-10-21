@@ -124,7 +124,7 @@ public class OrderControllerTests
         Assert.That(returnedDto, Is.Not.Null, "Response body should not be null.");
 
         // Validate response properties
-        Assert.That(returnedDto.StreetName, Is.EqualTo(createDto.Address.StreetName), "StreetName does not match.");
+        Assert.That(returnedDto.Id, Is.EqualTo(createDto.RestaurantId), "StreetName does not match.");
 
         // Validate that the order is stored in the database
         using var scope = _factory.Services.CreateScope();

@@ -1,16 +1,20 @@
-﻿namespace AllYourGoods.Api.Models.Dtos.Responses
+﻿using AllYourGoods.Api.Models.Enums;
+
+namespace AllYourGoods.Api.Models.Dtos.Responses
 {
     public class ResponseOrderDto
     {
-        public OrderStatus StatusCode { get; set; }
-        public string? StatusMessage { get; set; }
         public Guid Id { get; set; }
-        //public TimeOnly? CreatedOnUTC { get; set; } 
+        public Guid RestaurantId { get; set; }
+        public Guid CustomerId { get; set; }
+        public Guid AddressId { get; set; }
         public decimal TotalPrice { get; set; }
-        public string? StreetName { get; set; }
-        public string? HouseNumber { get; set; }
-        public string RestaurantName { get; set; } = null!;
-        public ResponseLogoDto Logo { get; set; } = null!;
+        public OrderStatus StatusCode { get; set; }
         public string? Note { get; set; }
+        public DateTime CreatedOnUTC { get; set; }
+        public DateTime ExpiredOnUTC { get; set; }
+        public PaymentMethod PaymentMethod { get; set; }
+        public decimal ETA { get; set; }
+        public Guid? ShiftId { get; set; }  // Foreign key to Shift table
     }
 }

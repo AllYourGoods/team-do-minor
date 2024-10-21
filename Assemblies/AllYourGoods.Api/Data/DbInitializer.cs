@@ -54,6 +54,15 @@ namespace AllYourGoods.Api.Data
             context.Users.AddRange(seedUsers);
             context.SaveChanges();
 
+            var delperson = new DeliveryPerson{
+                Region = "north-pole",
+                EstimatedTime = TimeSpan.FromHours(2),
+                UserId = seedUsers[0].Id
+            };
+
+            context.DeliveryPersons.AddRange(delperson);
+            context.SaveChanges();
+
             // Seed data for UserRoles
             var userRoles = new UserRoles[]
             {

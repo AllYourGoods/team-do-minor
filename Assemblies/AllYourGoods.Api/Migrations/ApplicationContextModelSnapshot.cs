@@ -233,6 +233,9 @@ namespace AllYourGoods.Api.Migrations
                     b.Property<Guid>("AddressId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime?>("CreatedOnUTC")
+                        .HasColumnType("datetime2");
+
                     b.Property<Guid>("CustomerId")
                         .HasColumnType("uniqueidentifier");
 
@@ -241,6 +244,9 @@ namespace AllYourGoods.Api.Migrations
 
                     b.Property<decimal>("ETA")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime?>("ExpiredOnUTC")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Note")
                         .IsRequired()

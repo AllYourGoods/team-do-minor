@@ -9,12 +9,7 @@ namespace AllYourGoods.Api.Mappings
     {
         public OrderMappingProfile()
         {
-            CreateMap<Order, ResponseOrderDto>(MemberList.Destination)
-                .ForMember(dest => dest.StatusCode, opt => opt.Ignore())
-                .ForMember(dest => dest.StatusMessage, opt => opt.Ignore())
-                .ForMember(dest => dest.StreetName, opt => opt.MapFrom(src => src.Address != null ? src.Address.StreetName : string.Empty))
-                .ForMember(dest => dest.HouseNumber, opt => opt.MapFrom(src => src.Address != null ? src.Address.HouseNumber : string.Empty)) 
-                .ForMember(dest => dest.Logo, opt => opt.MapFrom(src => src.Restaurant != null ? src.Restaurant.Logo : null));
+            CreateMap<Order, ResponseOrderDto>(MemberList.Destination);
 
             CreateMap<OrderHasProduct, ResponseOrderDto>(MemberList.Destination);
             CreateMap<ImageFile, ResponseLogoDto>(MemberList.Destination)
@@ -23,9 +18,7 @@ namespace AllYourGoods.Api.Mappings
                 .ForMember(dest => dest.AltText, opt => opt.MapFrom(src => src.AltText));
             CreateMap<Address, ResponseOrderDto>();
 
-            CreateMap<Restaurant, ResponseOrderDto>()
-                .ForMember(dest => dest.RestaurantName, opt => opt.MapFrom(src => src.Name))
-                .ForMember(dest => dest.Logo, opt => opt.MapFrom(src => src.Logo));
+            CreateMap<Restaurant, ResponseOrderDto>();
 
             CreateMap<CreateOrderDto, Order>(MemberList.Source);
             CreateMap<CreateAddress, Address>(MemberList.Source);
