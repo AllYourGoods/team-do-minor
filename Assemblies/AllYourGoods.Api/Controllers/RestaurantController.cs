@@ -68,6 +68,24 @@ namespace AllYourGoods.Api.Controllers
                 return NotFound($"Restaurant with ID = {id} not found.");
             }
         }
+        
+        [HttpGet("{id}/menu")]
+        [ProducesResponseType(typeof(ResponseRestaurantDto), 200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<ResponseRestaurantDto>> GetRestaurantMenu(Guid id)
+        {
+            try
+            {
+                var restaurant = await _restaurantService.GetRestaurantByIdAsync(id);
+
+                return Ok(restaurant);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound($"Menu with RestaurantID = {id} not found.");
+            }
+        }
 
         [HttpDelete("{id}")]
         [ProducesResponseType(204)]
