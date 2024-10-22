@@ -58,7 +58,9 @@ public class RestaurantControllerTests
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Created), "Expected response code is 201 Created.");
 
         // 2. Check that the response contains a valid ResponseRestaurantDto
-        var returnedDto = await response.Content.ReadFromJsonAsync<ResponseRestaurantDto>();
+        var responseContent = await response.Content.ReadAsStringAsync();
+        var returnedDto = JsonConvert.DeserializeObject<ResponseRestaurantDto>(responseContent);
+
         Assert.That(returnedDto, Is.Not.Null, "Response body should not be null.");
 
         // 3. Assert returned DTO values match the input values
