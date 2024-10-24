@@ -12,7 +12,8 @@
     "http": {
       "commandName": "Project",
       "dotnetRunMessages": true,
-      "launchBrowser": true,
+      "launchBrowser": false,
+      "hotReloadEnabled": true,
       "launchUrl": "",
       "applicationUrl": "http://localhost:5112",
       "environmentVariables": {
