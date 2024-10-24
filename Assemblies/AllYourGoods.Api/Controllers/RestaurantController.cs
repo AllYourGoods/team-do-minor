@@ -5,128 +5,100 @@ using AllYourGoods.Api.Models.Dtos.Updates;
 using AllYourGoods.Api.Models.Dtos.Views;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AllYourGoods.Api.Controllers
+namespace AllYourGoods.Api.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class RestaurantController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class RestaurantController : ControllerBase
+    private readonly IRestaurantService _restaurantService;
+
+    public RestaurantController(IRestaurantService restaurantService)
     {
-        private readonly IRestaurantService _restaurantService;
+        _restaurantService = restaurantService;
+    }
 
-        public RestaurantController(IRestaurantService restaurantService)
+    [HttpPost]
+    [Consumes("application/json")]
+    [ProducesResponseType(typeof(ResponseRestaurantDto), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> CreateRestaurant([FromBody] CreateRestaurantDto restaurantDto)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        var responseRestaurantDto = await _restaurantService.CreateRestaurantAsync(restaurantDto);
+
+        return CreatedAtAction(nameof(GetRestaurant), new { id = responseRestaurantDto.Id }, responseRestaurantDto);
+    }
+
+    [HttpGet("paginated")]
+    [ProducesResponseType(typeof(PaginatedList<ResponseRestaurantDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult> GetRestaurants([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 100)
+    {
+        if (pageNumber <= 0 || pageSize <= 0) return BadRequest("Page number and page size must be greater than zero.");
+
+        var paginatedRestaurants = await _restaurantService.GetPaginatedRestaurantsAsync(pageNumber, pageSize);
+
+        return Ok(paginatedRestaurants);
+    }
+
+    [HttpGet("{id}")]
+    [ProducesResponseType(typeof(ResponseRestaurantDto), 200)]
+    [ProducesResponseType(404)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<ResponseRestaurantDto>> GetRestaurant(Guid id)
+    {
+        try
         {
-            _restaurantService = restaurantService;
+            var restaurant = await _restaurantService.GetRestaurantByIdAsync(id);
+
+            return Ok(restaurant);
         }
-
-        [HttpPost]
-        [Consumes("application/json")]
-        [ProducesResponseType(typeof(ResponseRestaurantDto), StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> CreateRestaurant([FromBody] CreateRestaurantDto restaurantDto)
+        catch (KeyNotFoundException)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var responseRestaurantDto = await _restaurantService.CreateRestaurantAsync(restaurantDto);
-
-            return CreatedAtAction(nameof(GetRestaurant), new { id = responseRestaurantDto.Id }, responseRestaurantDto);
+            return NotFound($"Restaurant with ID = {id} not found.");
         }
+    }
 
-        [HttpGet("paginated")]
-        [ProducesResponseType(typeof(PaginatedList<ResponseRestaurantDto>), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> GetRestaurants([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 100)
+
+    [HttpDelete("{id}")]
+    [ProducesResponseType(204)]
+    [ProducesResponseType(404)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> DeleteRestaurant(Guid id)
+    {
+        try
         {
-            if (pageNumber <= 0 || pageSize <= 0)
-            {
-                return BadRequest("Page number and page size must be greater than zero.");
-            }
-
-            var paginatedRestaurants = await _restaurantService.GetPaginatedRestaurantsAsync(pageNumber, pageSize);
-
-            return Ok(paginatedRestaurants);
+            await _restaurantService.DeleteRestaurantAsync(id);
+            return NoContent();
         }
-
-        [HttpGet("{id}")]
-        [ProducesResponseType(typeof(ResponseRestaurantDto), 200)]
-        [ProducesResponseType(404)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<ResponseRestaurantDto>> GetRestaurant(Guid id)
+        catch (KeyNotFoundException)
         {
-            try
-            {
-                var restaurant = await _restaurantService.GetRestaurantByIdAsync(id);
-
-                return Ok(restaurant);
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound($"Restaurant with ID = {id} not found.");
-            }
+            return NotFound($"Restaurant with ID = {id} not found.");
         }
-        
-        [HttpGet("{id}/menu")]
-        [ProducesResponseType(typeof(ResponseRestaurantDto), 200)]
-        [ProducesResponseType(404)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<ResponseRestaurantDto>> GetRestaurantMenu(Guid id)
-        {
-            try
-            {
-                var restaurant = await _restaurantService.GetRestaurantByIdAsync(id);
+    }
 
-                return Ok(restaurant);
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound($"Menu with RestaurantID = {id} not found.");
-            }
+    [HttpPut("{id:guid}")]
+    [ProducesResponseType(typeof(ResponseRestaurantDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> UpdateRestaurant(Guid id, [FromBody] UpdateRestaurantDto updateRestaurantDto)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        try
+        {
+            var updatedRestaurant = await _restaurantService.UpdateRestaurantAsync(id, updateRestaurantDto);
+
+            return Ok(updatedRestaurant);
         }
-
-        [HttpDelete("{id}")]
-        [ProducesResponseType(204)]
-        [ProducesResponseType(404)] 
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> DeleteRestaurant(Guid id)
+        catch (KeyNotFoundException)
         {
-            try
-            {
-                await _restaurantService.DeleteRestaurantAsync(id);
-                return NoContent();
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound($"Restaurant with ID = {id} not found.");
-            }
-        }
-
-        [HttpPut("{id:guid}")]
-        [ProducesResponseType(typeof(ResponseRestaurantDto), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-
-        public async Task<IActionResult> UpdateRestaurant(Guid id, [FromBody] UpdateRestaurantDto updateRestaurantDto)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            try
-            {
-                var updatedRestaurant = await _restaurantService.UpdateRestaurantAsync(id, updateRestaurantDto);
-
-                return Ok(updatedRestaurant);
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound($"Restaurant with ID = {id} not found.");
-            }
+            return NotFound($"Restaurant with ID = {id} not found.");
         }
     }
 }

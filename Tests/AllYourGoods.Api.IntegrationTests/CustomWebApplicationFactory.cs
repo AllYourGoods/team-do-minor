@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AllYourGoods.Api.IntegrationTests;
+
 public class CustomWebApplicationFactory<TStartup> : WebApplicationFactory<TStartup> where TStartup : class
 {
     protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -29,5 +30,10 @@ public class CustomWebApplicationFactory<TStartup> : WebApplicationFactory<TStar
             var db = scopedServices.GetRequiredService<ApplicationContext>();
             db.Database.EnsureCreated();
         });
+    }
+
+    public IAsyncDisposable CreateContext()
+    {
+        throw new NotImplementedException();
     }
 }
