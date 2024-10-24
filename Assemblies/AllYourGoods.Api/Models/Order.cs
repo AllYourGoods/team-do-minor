@@ -8,7 +8,7 @@ namespace AllYourGoods.Api.Models
     public class Order : BaseEntity
     {
         public Guid RestaurantId { get; set; }
-        public Guid CustomerId { get; set; }
+        public string CustomerId { get; set; }
         public Guid AddressId { get; set; }
         public Guid DeliveryPersonId { get; set; }
 

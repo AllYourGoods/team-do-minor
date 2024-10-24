@@ -15,7 +15,7 @@ namespace AllYourGoods.Api.Models
         public Guid? LogoId { get; set; }
         public Guid? AddressId { get; set; }
         public Guid? BannerId { get; set; }
-        public Guid? OwnerId { get; set; }
+        public string? OwnerId { get; set; }
 
         public virtual ImageFile Logo { get; set; } = null!;
         public virtual Address Address { get; set; } = null!;

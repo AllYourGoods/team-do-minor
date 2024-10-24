@@ -95,10 +95,11 @@ public class RestaurantService : IRestaurantService
             _unitOfWork.Repository<OpeningsTime>().DeleteRange(restaurant.OpeningsTimes);
         }
 
-        if (restaurant.Owner != null)
-        {
-            _unitOfWork.Repository<User>().Delete(restaurant.Owner);
-        }
+        // Deletes the user linked to owner???
+        // if (restaurant.Owner != null)
+        // {
+        //     _unitOfWork.Repository<User>().Delete(restaurant.Owner);
+        // }
 
         _unitOfWork.Repository<Restaurant>().Delete(restaurant);
         await _unitOfWork.SaveAsync();

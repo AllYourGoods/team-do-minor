@@ -360,11 +360,8 @@ public class RestaurantControllerTests
                 },
                 Owner = new User
                 {
-                    Id = Guid.NewGuid(),
-                    Name = "John Doe",
+                    UserName = "John Doe",
                     Email = "OwnerEmail@email.com",
-                    PasswordHash = "Hashed Password placeholder",
-                    PasswordSalt = "Salt placeholder",
                 },
                 OpeningsTimes = new List<OpeningsTime>()
                 {
@@ -440,11 +437,8 @@ public class RestaurantControllerTests
                 },
                 Owner = new User
                 {
-                    Id = Guid.NewGuid(),
-                    Name = "Jane Smith",
+                    UserName = "Jane Smith",
                     Email = "OwnerBK@email.com",
-                    PasswordHash = "Hashed Password placeholder",
-                    PasswordSalt = "Salt placeholder",
                 },
                 OpeningsTimes = new List<OpeningsTime>()
                 {
@@ -490,11 +484,8 @@ public class RestaurantControllerTests
                 },
                 Owner = new User
                 {
-                    Id = Guid.NewGuid(),
-                    Name = "Bob Brown",
+                    UserName = "Bob Brown",
                     Email = "OwnerKFC@email.com",
-                    PasswordHash = "Hashed Password placeholder",
-                    PasswordSalt = "Salt placeholder",
                 },
                 OpeningsTimes = new List<OpeningsTime>()
                 {

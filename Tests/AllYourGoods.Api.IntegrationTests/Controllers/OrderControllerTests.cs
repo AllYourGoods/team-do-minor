@@ -216,7 +216,7 @@ public class OrderControllerTests
         {
             Id = orderId, 
             RestaurantId = Guid.NewGuid(),
-            CustomerId = Guid.NewGuid(),
+            CustomerId = Guid.NewGuid().ToString(),
             TotalPrice = 100M,
             Note = "Test Order",
             Address = address,

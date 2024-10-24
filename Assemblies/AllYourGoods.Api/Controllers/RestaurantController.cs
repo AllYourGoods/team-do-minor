@@ -3,6 +3,7 @@ using AllYourGoods.Api.Models.Dtos.Creates;
 using AllYourGoods.Api.Models.Dtos.Responses;
 using AllYourGoods.Api.Models.Dtos.Updates;
 using AllYourGoods.Api.Models.Dtos.Views;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AllYourGoods.Api.Controllers
@@ -70,6 +71,7 @@ namespace AllYourGoods.Api.Controllers
         }
 
         [HttpDelete("{id}")]
+        // [Authorize(Roles = "teamhr")]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)] 
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]

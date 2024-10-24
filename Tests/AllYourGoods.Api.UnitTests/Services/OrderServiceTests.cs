@@ -47,7 +47,7 @@ namespace AllYourGoods.Api.UnitTests.Services
             {
                 Id = Guid.NewGuid(),
                 RestaurantId = (Guid)orderDto.RestaurantId,
-                CustomerId = (Guid)orderDto.CustomerId,
+                CustomerId = orderDto.CustomerId.ToString(),
                 Address = new Address
                 {
                     HouseNumber = orderDto.Address.HouseNumber,

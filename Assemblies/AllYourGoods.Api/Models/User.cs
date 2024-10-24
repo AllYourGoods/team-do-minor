@@ -1,31 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using AllYourGoods.Api.Models.Enums;
+using Microsoft.AspNetCore.Identity;
 
-namespace AllYourGoods.Api.Models
-{
-    public class User : BaseEntity
-    {
-        public Guid? RestaurantId { get; set; }
+namespace AllYourGoods.Api.Models;
 
-        [StringLength(255)]
-        public string? Name { get; set; }
+public class User : IdentityUser {
+    public Guid? RestaurantId { get; set; }
+    public virtual Restaurant? Restaurant { get; set; }
+    public virtual ICollection<Shift>? Shifts { get; set; }  // Ensure this property exists
 
-        public Role? Role { get; set; }
+    public virtual DeliveryPerson? DeliveryPerson { get; set; }
 
-        [StringLength(255)]
-        public string Email { get; set; } = null!;
-
-        [StringLength(255)]
-        public string PasswordHash { get; set; } = null!;
-
-        [StringLength(255)]
-        public string PasswordSalt { get; set; } = null!;
-
-        public virtual Restaurant? Restaurant { get; set; }
-        public virtual ICollection<Shift> Shifts { get; set; }  // Ensure this property exists
-
-        public virtual DeliveryPerson? DeliveryPerson { get; set; }
-
-        public virtual ICollection<UserRoles> UserRoles { get; set; } = new List<UserRoles>();
-    }
 }

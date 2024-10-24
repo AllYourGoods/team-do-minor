@@ -1,69 +1,49 @@
 ﻿using AllYourGoods.Api.Models;
 using AllYourGoods.Api.Models.Enums;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NuGet.Packaging.Signing;
 
 namespace AllYourGoods.Api.Data
 {
     public class DbInitializer
     {
-        public static void Initialize(ApplicationContext context)
+        public static async Task Initialize(ApplicationContext context, RoleManager<IdentityRole> roleManager, UserManager<User> userManager)
         {
             // Ensure the database is created and migrations are applied
             context.Database.Migrate();
 
-            // Check if there are any existing roles
-            if (context.Roles.Any())
+            foreach (Roles role in Enum.GetValues(typeof(Roles))) 
             {
-                return; // DB has been seeded
+                var exists = await roleManager.RoleExistsAsync(role.ToString());
+                
+                if (!exists)
+                {
+                    await roleManager.CreateAsync(new IdentityRole(role.ToString()));
+                }
             }
 
-            // Seed data for roles
-            var seedRoles = new Roles[]
+            var user = new User
             {
-                new() { Name = "Admin", NormalizedName = "ADMIN", ConcurrencyStamp = Guid.NewGuid().ToString() },
-                new() { Name = "User", NormalizedName = "USER", ConcurrencyStamp = Guid.NewGuid().ToString() }
+                UserName = "JamesLame",
+                Email = "LameyJamey@email.com"
             };
 
-            context.Roles.AddRange(seedRoles);
-            context.SaveChanges();
+            await userManager.CreateAsync(user, "LamePassword1!");
+            await userManager.AddToRoleAsync(user, Roles.teamhr.ToString());
 
-            // Seed data for users
-            var seedUsers = new User[]
-            {
-                new()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "John Doe",
-                    Email = "john.doe@example.com",
-                    PasswordHash = "HashedPassword1",
-                    PasswordSalt = "Salt1",
-                },
-                new()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Jane Smith",
-                    Email = "jane.smith@example.com",
-                    PasswordHash = "HashedPassword2",
-                    PasswordSalt = "Salt2",
-                },
+            DeliveryPerson deli = new DeliveryPerson() {
+                Region = "Rotterdam",
+                EstimatedTime = new TimeSpan(5),
+                User = context.Users.FirstOrDefault<User>(u => u.UserName == user.UserName)
             };
 
-            context.Users.AddRange(seedUsers);
+            context.DeliveryPersons.Add(deli);
             context.SaveChanges();
-
-            // Seed data for UserRoles
-            var userRoles = new UserRoles[]
-            {
-                new() { UserId = seedUsers[0].Id, RoleId = seedRoles[0].Id },
-                new() { UserId = seedUsers[1].Id, RoleId = seedRoles[1].Id },
-            };
-
-            context.UserRoles.AddRange(userRoles);
-            context.SaveChanges();
-
+            
             // Seed data for restaurants
             if (!context.Restaurants.Any())
             {
@@ -98,7 +78,7 @@ namespace AllYourGoods.Api.Data
                             MimeType = "image/jpeg",
                             FileSize = 0.1
                         },
-                        Owner = seedUsers[0],
+                        Owner = context.Users.FirstOrDefault<User>(u => u.UserName == user.UserName),
                         OpeningsTimes = new List<OpeningsTime>
                         {
                             new () { Opening = new TimeOnly(8, 30), Closing = new TimeOnly(22, 30), Day = Day.Monday },
@@ -137,7 +117,7 @@ namespace AllYourGoods.Api.Data
                             MimeType = "image/jpeg",
                             FileSize = 0.2
                         },
-                        Owner = seedUsers[1],
+                        Owner = context.Users.FirstOrDefault<User>(u => u.UserName == user.UserName),
                         OpeningsTimes = new List<OpeningsTime>
                         {
                             new () { Opening = new TimeOnly(9, 00), Closing = new TimeOnly(23, 00), Day = Day.Monday },
@@ -152,6 +132,7 @@ namespace AllYourGoods.Api.Data
                 context.Restaurants.AddRange(seedRestaurants);
                 context.SaveChanges();
             }
+
         }
     }
 }
