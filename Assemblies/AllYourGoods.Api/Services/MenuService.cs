@@ -19,11 +19,11 @@ public class MenuService : IMenuService
 
     public async Task<ResponseMenuDto> GetMenuByRestaurantIdAsync(Guid restaurantId)
     {
-        var restaurant = await _unitOfWork.Repository<Menu>()
-            .GetByIdAsync(restaurantId);
+        var restaurant = await _unitOfWork.Repository<Restaurant>()
+            .GetByIdAsync(restaurantId, r => r.Menus);
 
-        if (restaurant == null) throw new KeyNotFoundException($"Menu with Id: {restaurantId} not found");
+        if (restaurant == null) throw new KeyNotFoundException($"Restaurant with Id: {restaurantId} not found");
 
-        return _mapper.Map<ResponseMenuDto>(restaurant);
+        return _mapper.Map<ResponseMenuDto>(restaurant.Menus);
     }
 }

@@ -36,6 +36,7 @@ public class RestaurantService : IRestaurantService
             restaurantId,
             r => r.Logo,
             r => r.Address,
+            r => r.Menus,
             r => r.Banner,
             r => r.Owner!,
             r => r.OpeningsTimes!);
